@@ -107,7 +107,8 @@ class msSMSallMySMS
 	 */
 	private $_addData4log;
 
-	public function __construct() {
+	public function __construct()
+	{
 		global $p;
 
 		$this->_directory4log = $p['config']['smsLogCampaignDirectory'];
@@ -275,7 +276,6 @@ class msSMSallMySMS
 				foreach ($params as $k => $v) {
 					$destinataire[$k] = $v;
 				}
-
 			}
 			$this->_destinataires[] = $destinataire;
 		}
@@ -369,7 +369,6 @@ class msSMSallMySMS
 
 			//close connection
 			curl_close($ch);
-
 		} else {
 			$result = [];
 			$result['status'] = '0';
@@ -408,7 +407,6 @@ class msSMSallMySMS
 		$logFileDirectory = $this->_directory4log . date('Y/m/d/', $this->_timestamp4log);
 		msTools::checkAndBuildTargetDir($logFileDirectory);
 		file_put_contents($logFileDirectory . $this->_filename4log, $tab, FILE_APPEND);
-
 	}
 
 	/**
@@ -519,7 +517,7 @@ class msSMSallMySMS
 		$smsReturnTab = [];
 
 		if (empty($logDir)) {
-			$logFile = $this->_directory4log. date('Y/m/d/', $date) . $this->_filename4log;
+			$logFile = $this->_directory4log . date('Y/m/d/', $date) . $this->_filename4log;
 		} else {
 			$logFile = $logDir . date('Y/m/d/', $date) . $this->_filename4log;
 		}
@@ -601,7 +599,6 @@ class msSMSallMySMS
 				);
 
 				return array("campaign" => $campaignReturnTab, "sms" => $smsReturnTab);
-
 			}
 		}
 	}
@@ -667,7 +664,7 @@ class msSMSallMySMS
 				$apiResponse['statusText'] = "Une erreur s'est produite lors de l'envoi.";
 
 				if (isset($result['description']) && !empty($result['description']))
-					$apiResponse['statusText'] .= "Description : ".$result['description'];
+					$apiResponse['statusText'] .= "Description : " . $result['description'];
 
 				$result = json_encode($apiResponse);
 			}

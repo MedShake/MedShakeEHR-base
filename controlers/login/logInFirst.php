@@ -25,18 +25,20 @@
  *
  * @author fr33z00 <https://github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$debug='';
-$template="firstLogin";
+$debug = '';
+$template = "firstLogin";
 
 if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM `people` WHERE `type`='pro'") != "0") {
-  msTools::redirRoute('userLogIn');
+	msTools::redirRoute('userLogIn');
 }
 
 // compléter la config par défaut
 $p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
 $form = new msForm();
-$form->setFormIDbyName($p['page']['formIN']='baseFirstLogin');
-$p['page']['form']=$form->getForm();
+$form->setFormIDbyName($p['page']['formIN'] = 'baseFirstLogin');
+$p['page']['form'] = $form->getForm();

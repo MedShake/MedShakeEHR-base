@@ -27,16 +27,16 @@
  */
 
 if (!msUser::checkUserIsAdmin() and $p['config']['droitDossierPeutAssignerPropresGroupesPraticienFils'] != 'true') {
-  die("Erreur: vous n'êtes pas administrateur ou autorisé à effectuer cette action");
+	die("Erreur: vous n'êtes pas administrateur ou autorisé à effectuer cette action");
 }
 
 // vérifier que le pro est bien un fil du user
 if (!msUser::checkUserIsAdmin() and $p['config']['droitDossierPeutAssignerPropresGroupesPraticienFils'] == 'true') {
-  $pro = new msPeople;
-  $pro->setToID($_POST['proID']);
-  if($pro->getFromID() != $p['user']['id']) {
-    die("Erreur: vous n'êtes pas autorisé à effectuer cette action");
-  }
+	$pro = new msPeople;
+	$pro->setToID($_POST['proID']);
+	if ($pro->getFromID() != $p['user']['id']) {
+		die("Erreur: vous n'êtes pas autorisé à effectuer cette action");
+	}
 }
 
 // liens user actif
@@ -45,16 +45,16 @@ $liensUser->setToID($p['user']['id']);
 $liensUser->setRelationType('relationPraticienGroupe');
 $groupesUser = $liensUser->getRelations();
 
-if(!empty($groupesUser)) {
-  $relation = new msPeopleRelations;
-  $relation->setToID($_POST['proID']);
-  $relation->setToStatus('membre');
-  $relation->setFromID($p['user']['id']);
-  $relation->setRelationType('relationPraticienGroupe');
+if (!empty($groupesUser)) {
+	$relation = new msPeopleRelations;
+	$relation->setToID($_POST['proID']);
+	$relation->setToStatus('membre');
+	$relation->setFromID($p['user']['id']);
+	$relation->setRelationType('relationPraticienGroupe');
 
-  foreach($groupesUser as $groupe) {
-    $relation->setWithID($groupe['peopleID']);
-    $relation->setRelation();
-  }
+	foreach ($groupesUser as $groupe) {
+		$relation->setWithID($groupe['peopleID']);
+		$relation->setRelation();
+	}
 }
-exit(json_encode(array('status'=>'ok')));
+exit(json_encode(array('status' => 'ok')));

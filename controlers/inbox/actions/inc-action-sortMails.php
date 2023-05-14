@@ -26,12 +26,12 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['designInboxMailsSortOrder'] == 'desc') {
- $p['page']['sort']='asc';
+if ($p['config']['designInboxMailsSortOrder'] == 'desc') {
+	$p['page']['sort'] = 'asc';
 } else {
- $p['page']['sort']='desc';
+	$p['page']['sort'] = 'desc';
 }
-$conf= msConfiguration::setUserParameterValue('designInboxMailsSortOrder', $p['page']['sort'], $p['user']['id']);
+$conf = msConfiguration::setUserParameterValue('designInboxMailsSortOrder', $p['page']['sort'], $p['user']['id']);
 
 
 msTools::redirection('/inbox/');

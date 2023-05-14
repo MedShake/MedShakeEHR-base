@@ -27,14 +27,14 @@
  */
 
 
-$debug='';
-$m=$match['params']['m'];
+$debug = '';
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'refreshLatColPatientAtcdData', //rafraichir la colonne atcd
+$acceptedModes = array(
+	'refreshLatColPatientAtcdData', //rafraichir la colonne atcd
 );
 
 //inclusion
-if(is_file($p['homepath'].'controlers/module/base/patient/actions/inc-ajax-'.$m.'.php')) {
-   include('inc-ajax-'.$m.'.php');
+if (is_file($p['homepath'] . 'controlers/module/base/patient/actions/inc-ajax-' . $m . '.php')) {
+	include('inc-ajax-' . $m . '.php');
 }

@@ -30,7 +30,7 @@ $events = new msAgenda();
 $events->setStartDate($_GET['start']);
 $events->setEndDate($_GET['end']);
 $events->set_userID($match['params']['userID']);
-if($p['config']['agendaJoursFeriesAfficher'] == 'true') $events->set_addPublicHolidaysToEvents(true);
+if ($p['config']['agendaJoursFeriesAfficher'] == 'true') $events->set_addPublicHolidaysToEvents(true);
 
 header('Content-Type: application/json');
 echo json_encode($events->getEvents());

@@ -26,35 +26,42 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeActiverGroupes'] != 'true') {
- die();
+if ($p['config']['optionGeActiverGroupes'] != 'true') {
+	die();
 }
 
-$term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
-$mss=new msPeopleSearch;
+$mss = new msPeopleSearch;
 $mss->setNameSearchMode('BnFnOrLnFn');
 $mss->setPeopleType(['groupe']);
 $criteres = array(
-  'groupname'=>$term,
+	'groupname' => $_GET['term'],
 );
+
+$is_valid = GUMP::is_valid($criteres, [
+	'groupname' => 'sqlIdentiteSearch|max_len,255',
+]);
+if ($is_valid !== true) {
+	return;
+}
+
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['groupname', 'city', 'country']);
 $mss->setLimitNumber(20);
 
-if($p['user']['rank'] != 'admin' and $p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
-  $mss->setRestricGroupesEstMembre(true);
+if ($p['user']['rank'] != 'admin' and $p['config']['droitGroupePeutVoirTousGroupes'] != 'true') {
+	$mss->setRestricGroupesEstMembre(true);
 }
 
-if ($data=msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql(), $mss->getSqlMarqueurs())) {
 
-	foreach ($data as $k=>$v) {
-    $label = $v['groupname'].' ('.$v['city'].' - '.$v['country'].')';
-		$a_json[]=array(
-			'label'=>trim($label),
-			'value'=>trim($label),
-			'id'=>$v['peopleID'],
+	foreach ($data as $k => $v) {
+		$label = $v['groupname'] . ' (' . $v['city'] . ' - ' . $v['country'] . ')';
+		$a_json[] = array(
+			'label' => trim($label),
+			'value' => trim($label),
+			'id' => $v['peopleID'],
 		);
 	}
 }

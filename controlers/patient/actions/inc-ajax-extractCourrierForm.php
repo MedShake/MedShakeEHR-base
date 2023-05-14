@@ -28,45 +28,45 @@
  */
 
 
- $debug='';
+$debug = '';
 
- //template
- $template="patientCourrierForm";
+//template
+$template = "patientCourrierForm";
 
- //patient
- $p['page']['patient']['id']=$_POST['patientID'];
+//patient
+$p['page']['patient']['id'] = $_POST['patientID'];
 
- $p['page']['printType']='courrier';
+$p['page']['printType'] = 'courrier';
 
- $courrier = new msCourrier();
- $courrier->setModeleIDByName($_POST['modele']);
- $modeleID=$courrier->getModeleID();
- $courrier->setPatientID($_POST['patientID']);
- $courrier->setModule($p['user']['module']);
+$courrier = new msCourrier();
+$courrier->setModeleIDByName($_POST['modele']);
+$modeleID = $courrier->getModeleID();
+$courrier->setPatientID($_POST['patientID']);
+$courrier->setModule($p['user']['module']);
 
- if (isset($_POST['objetID'])) {
-     $dataform = new msObjet();
-     $dataform->setObjetID($_POST['objetID']);
-     $dataform=$dataform->getObjetDataByID(['value']);
-     $p['page']['courrier']['pre']=msTools::unbbcodifier($dataform['value']);
- } elseif (isset($_POST['modele'])) {
+if (isset($_POST['objetID'])) {
+	$dataform = new msObjet();
+	$dataform->setObjetID($_POST['objetID']);
+	$dataform = $dataform->getObjetDataByID(['value']);
+	$p['page']['courrier']['pre'] = msTools::unbbcodifier($dataform['value']);
+} elseif (isset($_POST['modele'])) {
 
-     $p['page']['courrier']=$courrier->getCourrierData();
+	$p['page']['courrier'] = $courrier->getCourrierData();
 
-     $data=new msData();
-     if ($printModel=$data->getDataType($modeleID, ['formValues'], ['formValues'])) {
-         $p['page']['courrier']['printModel']=$printModel['formValues'].'.html.twig';
-     } else {
-         $p['page']['courrier']['printModel']='defaut.html.twig';
-     }
- } else {
-     $p['page']['courrier']['printModel']='defaut.html.twig';
- }
+	$data = new msData();
+	if ($printModel = $data->getDataType($modeleID, ['formValues'], ['formValues'])) {
+		$p['page']['courrier']['printModel'] = $printModel['formValues'] . '.html.twig';
+	} else {
+		$p['page']['courrier']['printModel'] = 'defaut.html.twig';
+	}
+} else {
+	$p['page']['courrier']['printModel'] = 'defaut.html.twig';
+}
 
- $p['page']['courrier']['actionForm']="/makepdf/".$_POST['patientID']."/".$p['page']['printType'].'/';
- if (isset($modeleID)) {
-     $p['page']['courrier']['actionForm'].=$modeleID.'/';
- }
- if (isset($_POST['objetID'])) {
-     $p['page']['courrier']['actionForm'].=$_POST['objetID'].'/';
- }
+$p['page']['courrier']['actionForm'] = "/makepdf/" . $_POST['patientID'] . "/" . $p['page']['printType'] . '/';
+if (isset($modeleID)) {
+	$p['page']['courrier']['actionForm'] .= $modeleID . '/';
+}
+if (isset($_POST['objetID'])) {
+	$p['page']['courrier']['actionForm'] .= $_POST['objetID'] . '/';
+}

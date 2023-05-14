@@ -27,40 +27,40 @@
  */
 
 
-$mailParams=array(
-  "FromEmail"=>$_POST['mailFrom'],
-  "FromName"=>$p['config']['smtpFromName'],
-  "Subject"=>$_POST['mailSujet'],
-  "Text-part"=>$_POST['mailBody'],
-  "Html-part"=>nl2br($_POST['mailBody']),
-  "Recipients"=>[
-    [
-    "Email"=>$_POST['mailTo']
-    ]
-  ],
+$mailParams = array(
+	"FromEmail" => $_POST['mailFrom'],
+	"FromName" => $p['config']['smtpFromName'],
+	"Subject" => $_POST['mailSujet'],
+	"Text-part" => $_POST['mailBody'],
+	"Html-part" => nl2br($_POST['mailBody']),
+	"Recipients" => [
+		[
+			"Email" => $_POST['mailTo']
+		]
+	],
 );
 
 
 if (isset($_POST['objetID'])) {
-    $doc = new msStockage;
-    $doc->setObjetID($_POST['objetID']);
-    $sourceFile=$doc->getPathToDoc();
-    $ext=$doc->getFileExtOfDoc();
-    $mime=msTools::getmimetype($sourceFile);
-    $finalname="document.".$ext;
-    $contenu=file_get_contents($sourceFile);
-    if (!mb_detect_encoding($contenu, 'UTF-8', true) and $mime == 'text/plain') {
-		$contenu = mb_convert_encoding($contenu, 'UTF-8' , mb_detect_encoding($contenu, null, false));
-    }
-    $contenu=base64_encode($contenu);
+	$doc = new msStockage;
+	$doc->setObjetID($_POST['objetID']);
+	$sourceFile = $doc->getPathToDoc();
+	$ext = $doc->getFileExtOfDoc();
+	$mime = msTools::getmimetype($sourceFile);
+	$finalname = "document." . $ext;
+	$contenu = file_get_contents($sourceFile);
+	if (!mb_detect_encoding($contenu, 'UTF-8', true) and $mime == 'text/plain') {
+		$contenu = mb_convert_encoding($contenu, 'UTF-8', mb_detect_encoding($contenu, null, false));
+	}
+	$contenu = base64_encode($contenu);
 
-    $mailParams['Attachments']=[
-      [
-        'Content-type' => $mime,
-        'Filename' => $finalname,
-        'content' => $contenu
-      ]
-    ];
+	$mailParams['Attachments'] = [
+		[
+			'Content-type' => $mime,
+			'Filename' => $finalname,
+			'content' => $contenu
+		]
+	];
 }
 
 $ch = curl_init();
@@ -77,48 +77,48 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 $result = curl_exec($ch);
 if (curl_errno($ch)) {
-    echo 'Error:' . curl_error($ch);
+	echo 'Error:' . curl_error($ch);
 } else {
-    curl_close($ch);
+	curl_close($ch);
 
-    $result = json_decode($result, true);
+	$result = json_decode($result, true);
 
-    if (isset($result['Sent'][0]['MessageID'])) {
-        if (is_numeric($result['Sent'][0]['MessageID'])) {
+	if (isset($result['Sent'][0]['MessageID'])) {
+		if (is_numeric($result['Sent'][0]['MessageID'])) {
 
-            //logs
-            $patient = new msObjet();
-                  $patient->setFromID($p['user']['id']);
-                  $patient->setToID($_POST['patientID']);
+			//logs
+			$patient = new msObjet();
+			$patient->setFromID($p['user']['id']);
+			$patient->setToID($_POST['patientID']);
 
-            //support (avec PJ ou sans)
-            if (isset($_POST['objetID'])) {
-                $supportID=$patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
-            } else {
-                $supportID=$patient->createNewObjetByTypeName('mailPorteur', '');
-            }
+			//support (avec PJ ou sans)
+			if (isset($_POST['objetID'])) {
+				$supportID = $patient->createNewObjetByTypeName('mailPorteur', '', $_POST['objetID']);
+			} else {
+				$supportID = $patient->createNewObjetByTypeName('mailPorteur', '');
+			}
 
-            //trackingID
-            $patient->createNewObjetByTypeName('mailTrackingID', $result['Sent'][0]['MessageID'], $supportID);
+			//trackingID
+			$patient->createNewObjetByTypeName('mailTrackingID', $result['Sent'][0]['MessageID'], $supportID);
 
-            //from
-            $patient->createNewObjetByTypeName('mailFrom', $_POST['mailFrom'], $supportID);
-            //to
-            $patient->createNewObjetByTypeName('mailTo', $_POST['mailTo'], $supportID);
-            //sujet
-            $patient->createNewObjetByTypeName('mailSujet', $_POST['mailSujet'], $supportID);
-            //message
-            $patient->createNewObjetByTypeName('mailBody', $_POST['mailBody'], $supportID);
-            //pj ID
-            if (isset($_POST['objetID'])) {
-                $patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
-            }
+			//from
+			$patient->createNewObjetByTypeName('mailFrom', $_POST['mailFrom'], $supportID);
+			//to
+			$patient->createNewObjetByTypeName('mailTo', $_POST['mailTo'], $supportID);
+			//sujet
+			$patient->createNewObjetByTypeName('mailSujet', $_POST['mailSujet'], $supportID);
+			//message
+			$patient->createNewObjetByTypeName('mailBody', $_POST['mailBody'], $supportID);
+			//pj ID
+			if (isset($_POST['objetID'])) {
+				$patient->createNewObjetByTypeName('mailPJ1', $_POST['objetID'], $supportID);
+			}
 
-             msTools::redirection('/patient/'.$_POST['patientID'].'/');
-        } else {
-            echo "Il semble y avoir un problème. Merci de vérifier dans l'historique d'envoi des mails pour savoir si celui ci est parti ou non !";
-        }
-    } else {
-        echo "Il semble y avoir un problème. Merci de vérifier dans l'historique d'envoi des mails pour savoir si celui ci est parti ou non !";
-    }
+			msTools::redirection('/patient/' . $_POST['patientID'] . '/');
+		} else {
+			echo "Il semble y avoir un problème. Merci de vérifier dans l'historique d'envoi des mails pour savoir si celui ci est parti ou non !";
+		}
+	} else {
+		echo "Il semble y avoir un problème. Merci de vérifier dans l'historique d'envoi des mails pour savoir si celui ci est parti ou non !";
+	}
 }

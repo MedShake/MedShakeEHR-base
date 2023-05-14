@@ -26,9 +26,11 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
- //check & validate datas
- $dataType = new msData();
- $retour = $dataType->createOrUpdateDataType($_POST);
- echo json_encode($retour);
+//check & validate datas
+$dataType = new msData();
+$retour = $dataType->createOrUpdateDataType($_POST);
+echo json_encode($retour);

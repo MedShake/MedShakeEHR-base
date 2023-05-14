@@ -27,53 +27,53 @@
  */
 
 
-$debug='';
-$m=$match['params']['m'];
+$debug = '';
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'cim10search', // chercher des codes CIM10 à partir de mot clé.
-    'allergieSearch', // chercher des codes / label allergie à partir de mot clé
-    'allergieAdd', // ajouter allergies à un dossier patient
-    'allergieDel', // retirer allergies à un dossier patient
-    'searchNewMedic', // checher un médicament
-    'searchNewMedicDetails', // approfondir la recherche
-    'lapPatientLateralDataRefresh', // rafraichier la colonne lat du LAP (patient data)
-    'lapInstallPrescription', //installer la prescription dans la modal
-    'lapAnalyseFrappePrescription', //analyse de la prescription frappée
-    'lapMakeLigneOrdonnance', //généré une ligne d'ordonnance
-    'lapOrdoLiveSave', //sauver l'ordonnance courante à chaque modif
-    'lapOrdoLiveRestore', //restaurer l'ordonnance courante
-    'lapGetPosologies', //obtenir les posologies pour la fenêtre de prescription
-    'lapTTenCoursSaveOrUpdateLigne', // sauver / updater une ligne de TT en cours
-    'lapTTenCoursGet', //obtenir le tt en cours
-    'lapOrdoSave', // sauver ordonnnace
-    'lapOrdoHistoriqueGet', // historique des ordonnnaces
-    'lapOrdoHistoriqueTTGet', // historique des tt
-    'lapOrdoGet', // obtenir l'ordonnnace
-    'lapSaveDateEffectiveArretTT',
-    'lapOrdoAnalyse', // analyser l'ordo
-    'lapOrdoAnalyseResBrut', // voir données brutes pré analyse
-    'lapVoirEffetsIndesirables', // voir effets indésirable d'un medic
-    'lapMonographieSection', // sortir une section de monographie
-    'lapSamRefreshTheSamsZone', // afficher les SAMS ordonnance
-    'lapSamAlerteForNew', // produire une alerte SAM
-    'lapSamSaveSamComment', // sauver le commentaire patient sur le SAM
-    'lapSamToggleForPatient', // basculer l'état dispo / non dispo pour le patient
-    'lapOutilsSearchNewMedic', // recherche de médicaments pour lapOutils
-    'lapOutilDisplayListSamPatients', //btenir la liste des patients dont la condition du SAM est réalisée dernière ordo
-    'lapOutilsSearchPres', //rechercher des prescritions sur critères (outils LAP)
-    'lapPresPreGet', // obtenir les prescriptions préétablies
-    'lapPresPreGetCat', // obtenir les catégories de prescriptions types
-    'modalLapPresPreSaveDo', //enregistrer la prescription type
-    'lapPresTypeGetDetails', //obtenir le json de la prescription type
-    'lapPresTypeGetDelete' // effacer une prescription type
+$acceptedModes = array(
+	'cim10search', // chercher des codes CIM10 à partir de mot clé.
+	'allergieSearch', // chercher des codes / label allergie à partir de mot clé
+	'allergieAdd', // ajouter allergies à un dossier patient
+	'allergieDel', // retirer allergies à un dossier patient
+	'searchNewMedic', // checher un médicament
+	'searchNewMedicDetails', // approfondir la recherche
+	'lapPatientLateralDataRefresh', // rafraichier la colonne lat du LAP (patient data)
+	'lapInstallPrescription', //installer la prescription dans la modal
+	'lapAnalyseFrappePrescription', //analyse de la prescription frappée
+	'lapMakeLigneOrdonnance', //généré une ligne d'ordonnance
+	'lapOrdoLiveSave', //sauver l'ordonnance courante à chaque modif
+	'lapOrdoLiveRestore', //restaurer l'ordonnance courante
+	'lapGetPosologies', //obtenir les posologies pour la fenêtre de prescription
+	'lapTTenCoursSaveOrUpdateLigne', // sauver / updater une ligne de TT en cours
+	'lapTTenCoursGet', //obtenir le tt en cours
+	'lapOrdoSave', // sauver ordonnnace
+	'lapOrdoHistoriqueGet', // historique des ordonnnaces
+	'lapOrdoHistoriqueTTGet', // historique des tt
+	'lapOrdoGet', // obtenir l'ordonnnace
+	'lapSaveDateEffectiveArretTT',
+	'lapOrdoAnalyse', // analyser l'ordo
+	'lapOrdoAnalyseResBrut', // voir données brutes pré analyse
+	'lapVoirEffetsIndesirables', // voir effets indésirable d'un medic
+	'lapMonographieSection', // sortir une section de monographie
+	'lapSamRefreshTheSamsZone', // afficher les SAMS ordonnance
+	'lapSamAlerteForNew', // produire une alerte SAM
+	'lapSamSaveSamComment', // sauver le commentaire patient sur le SAM
+	'lapSamToggleForPatient', // basculer l'état dispo / non dispo pour le patient
+	'lapOutilsSearchNewMedic', // recherche de médicaments pour lapOutils
+	'lapOutilDisplayListSamPatients', //btenir la liste des patients dont la condition du SAM est réalisée dernière ordo
+	'lapOutilsSearchPres', //rechercher des prescritions sur critères (outils LAP)
+	'lapPresPreGet', // obtenir les prescriptions préétablies
+	'lapPresPreGetCat', // obtenir les catégories de prescriptions types
+	'modalLapPresPreSaveDo', //enregistrer la prescription type
+	'lapPresTypeGetDetails', //obtenir le json de la prescription type
+	'lapPresTypeGetDelete' // effacer une prescription type
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
 //inclusion
-if(is_file($p['homepath'].'controlers/lap/actions/inc-ajax-'.$m.'.php')) {
-   include('inc-ajax-'.$m.'.php');
+if (is_file($p['homepath'] . 'controlers/lap/actions/inc-ajax-' . $m . '.php')) {
+	include('inc-ajax-' . $m . '.php');
 }

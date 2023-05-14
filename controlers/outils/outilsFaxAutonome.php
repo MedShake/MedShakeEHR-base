@@ -26,14 +26,14 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="outilsFaxAutonome";
-$debug='';
+$template = "outilsFaxAutonome";
+$debug = '';
 
 //fichier déjà présent ?
-$destination_file=$p['config']['workingDirectory'].$p['user']['id'].'/pdf2fax.pdf';
-if(is_file($destination_file)) {
-  $p['page']['destination_file']=str_replace($p['config']['webDirectory'], '', $destination_file);
-  $p['page']['destination_file_present'] = TRUE;
+$destination_file = $p['config']['workingDirectory'] . $p['user']['id'] . '/pdf2fax.pdf';
+if (is_file($destination_file)) {
+	$p['page']['destination_file'] = str_replace($p['config']['webDirectory'], '', $destination_file);
+	$p['page']['destination_file_present'] = TRUE;
 } else {
-  $p['page']['destination_file_present'] = FALSE;
+	$p['page']['destination_file_present'] = FALSE;
 }

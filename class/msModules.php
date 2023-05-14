@@ -24,51 +24,56 @@
  * Modules
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 class msModules
 {
 
-/**
- * Obtenir une liste des modules installés
- * @return array array moduleName=>moduleName
- */
-  public static function getInstalledModulesNames() {
-    return msSQL::sql2tabKey("SELECT name FROM `system` WHERE groupe='module' order by name", "name", "name");
-  }
+	/**
+	 * Obtenir une liste des modules installés
+	 * @return array array moduleName=>moduleName
+	 */
+	public static function getInstalledModulesNames()
+	{
+		return msSQL::sql2tabKey("SELECT name FROM `system` WHERE groupe='module' order by name", "name", "name");
+	}
 
-/**
- * Obtenir une liste des modules et versions
- * @return array k=>['module','version']
- */
-  public static function getInstalledModulesNamesAndVersions() {
-    return msSQL::sql2tab("SELECT name, value AS version FROM `system` WHERE groupe='module'");
-  }
+	/**
+	 * Obtenir une liste des modules et versions
+	 * @return array k=>['module','version']
+	 */
+	public static function getInstalledModulesNamesAndVersions()
+	{
+		return msSQL::sql2tab("SELECT name, value AS version FROM `system` WHERE groupe='module'");
+	}
 
-/**
- * Obtenir une liste des versions des modules
- * @return array module => 'version'
- */
-  public static function getInstalledModulesVersions() {
-    if($r = msSQL::sql2tabKey("SELECT name, value AS version FROM `system` WHERE groupe='module' ", "name", "version")) {
-      return $r;
-    } else {
-      return [];
-    }
-  }
+	/**
+	 * Obtenir une liste des versions des modules
+	 * @return array module => 'version'
+	 */
+	public static function getInstalledModulesVersions()
+	{
+		if ($r = msSQL::sql2tabKey("SELECT name, value AS version FROM `system` WHERE groupe='module' ", "name", "version")) {
+			return $r;
+		} else {
+			return [];
+		}
+	}
 
-/**
- * Obtenir les infos génériques sur un module à partir du fichier aboutMod*Module*.yml
- * @param  string $name nom cours du module
- * @return array       paramètres extraits
- */
-  public static function getModuleInfosGen($name) {
-      global $p;
-      $file=$p['homepath'].'aboutMod'.ucfirst($name).'.yml';
-      if(is_file($file)) {
-        return Spyc::YAMLLoad($file);
-      }
-      return [];
-  }
-
+	/**
+	 * Obtenir les infos génériques sur un module à partir du fichier aboutMod*Module*.yml
+	 * @param  string $name nom cours du module
+	 * @return array       paramètres extraits
+	 */
+	public static function getModuleInfosGen($name)
+	{
+		global $p;
+		$file = $p['homepath'] . 'aboutMod' . ucfirst($name) . '.yml';
+		if (is_file($file)) {
+			return msYAML::yamlFileRead($file);
+		}
+		return [];
+	}
 }

@@ -26,8 +26,10 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur ou autorisé à effectuer cette action");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur ou autorisé à effectuer cette action");
+}
 
-$output = $homepath.'public_html/bddEdit.php';
-exec('wget https://www.adminer.org/latest.php -O '.$output);
+$output = $homepath . 'public_html/bddEdit.php';
+exec('wget https://www.adminer.org/latest.php -O ' . $output);
 msTools::redirection('/configuration/');

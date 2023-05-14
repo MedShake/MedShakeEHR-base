@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
+$debug = '';
 
 $sam = new msLapSAM;
 $sam->setFromID($p['user']['id']);
@@ -36,10 +36,10 @@ $sam->setSamID($_POST['samID']);
 $samStatut = $sam->getSamStatusForPatient();
 
 
-if( $samStatut == 'enabled' ) {
-  $sam->setSamDisabledForPatient();
+if ($samStatut == 'enabled') {
+	$sam->setSamDisabledForPatient();
 } else {
-  $sam->setSamEnabledForPatient();
+	$sam->setSamEnabledForPatient();
 }
 
-echo json_encode(array('statut'=>'ok'));
+echo json_encode(array('statut' => 'ok'));

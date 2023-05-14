@@ -26,20 +26,20 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 if (!empty($p['config']['smtpTracking'])) {
-    $msMailTracking='msMailTracking'.$p['config']['smtpTracking'];
-    if (class_exists($msMailTracking)) {
+	$msMailTracking = 'msMailTracking' . $p['config']['smtpTracking'];
+	if (class_exists($msMailTracking)) {
 
-        if ($data= $msMailTracking::getMessageTrackingData($_POST['mailID'])) {
-            $res=[];
-            $res['numberEvents']= $data['Count'];
-            $res['mailTrackingID']=$_POST['mailID'];
-            foreach ($data['Data'] as $k=>$v) {
-                $res['lastStatus']=$v['EventType'];
-                $res['lastDate']=date("d/m/Y H:i:s", $v['EventAt']);
-                $res['data'][$k]=$v;
-            }
+		if ($data = $msMailTracking::getMessageTrackingData($_POST['mailID'])) {
+			$res = [];
+			$res['numberEvents'] = $data['Count'];
+			$res['mailTrackingID'] = $_POST['mailID'];
+			foreach ($data['Data'] as $k => $v) {
+				$res['lastStatus'] = $v['EventType'];
+				$res['lastDate'] = date("d/m/Y H:i:s", $v['EventAt']);
+				$res['data'][$k] = $v;
+			}
 
-            echo json_encode($res);
-        }
-    } 
+			echo json_encode($res);
+		}
+	}
 }

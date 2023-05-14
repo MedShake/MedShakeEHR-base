@@ -29,9 +29,9 @@
 
 $scrap = new msCcamNgapApi;
 $scrap->setActeCode($_POST['acteCode']);
-if(empty($_POST['activiteCode'])) $_POST['activiteCode']=1;
+if (empty($_POST['activiteCode'])) $_POST['activiteCode'] = 1;
 $scrap->setActiviteCode($_POST['activiteCode']);
-if(empty($_POST['phaseCode'])) $_POST['phaseCode']=0;
+if (empty($_POST['phaseCode'])) $_POST['phaseCode'] = 0;
 $scrap->setPhaseCode($_POST['phaseCode']);
 $scrap->setActeType($_POST['acteType']);
 $scrap->setActeCodeProf($_POST['codeProf']);

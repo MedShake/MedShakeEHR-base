@@ -25,17 +25,20 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-if(!is_numeric($_POST['id'])) die;
-$actualRank=msSQL::sqlUniqueChamp("select `rank` from people where id = '".$_POST['id']."' limit 1");
-
-if( $actualRank == 'admin') {
-  msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'rank'=>''));
+if (!is_numeric($_POST['id'])) die;
+$actualRank = msSQL::sqlUniqueChamp("select `rank` from people where id = :id limit 1", ['id' => $_POST['id']]);
+if ($actualRank == 'admin') {
+	msSQL::sqlInsert('people', array('id' => $_POST['id'], 'rank' => ''));
 } else {
-  msSQL::sqlInsert('people', array('id'=>$_POST['id'], 'rank'=>'admin'));
+	msSQL::sqlInsert('people', array('id' => $_POST['id'], 'rank' => 'admin'));
 }
 
 echo json_encode(array('ok'));

@@ -26,28 +26,28 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
+$debug = '';
 
-$fichier=new msStockage();
+$fichier = new msStockage();
 $fichier->setObjetID($match['params']['fichierID']);
 if ($fichier->testDocExist()) {
 
-    //vérifier les droits
-    $droits = new msPeopleDroits($p['user']['id']);
-    if(!$droits->checkUserCanSeePatientData($fichier->getToID())) {
-      $template="forbidden";
-      return;
-    }
+	//vérifier les droits
+	$droits = new msPeopleDroits($p['user']['id']);
+	if (!$droits->checkUserCanSeePatientData($fichier->getToID())) {
+		$template = "forbidden";
+		return;
+	}
 
-    $mimetype=msTools::getmimetype($fichier->getPathToDoc());
-    header("Content-type: ".$mimetype);
-    if($mimetype == 'text/plain') {
-      $content=file_get_contents($fichier->getPathToDoc());
-      if (!mb_detect_encoding($content, 'utf-8', true)) {
-        header('Content-Type: '.$mimetype.'; charset=iso-8859-1');
-      }
-    }
-    readfile($fichier->getPathToDoc());
+	$mimetype = msTools::getmimetype($fichier->getPathToDoc());
+	header("Content-type: " . $mimetype);
+	if ($mimetype == 'text/plain') {
+		$content = file_get_contents($fichier->getPathToDoc());
+		if (!mb_detect_encoding($content, 'utf-8', true)) {
+			header('Content-Type: ' . $mimetype . '; charset=iso-8859-1');
+		}
+	}
+	readfile($fichier->getPathToDoc());
 } else {
-    die("Ce document n'existe pas.");
+	die("Ce document n'existe pas.");
 }

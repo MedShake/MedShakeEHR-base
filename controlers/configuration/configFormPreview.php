@@ -25,38 +25,40 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $debug='';
-     $template="configFormPreview";
-     if(!is_numeric($match['params']['form'])) die();
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$debug = '';
+	$template = "configFormPreview";
+	if (!is_numeric($match['params']['form'])) die();
 
-     // liste des forms par catégorie
-     $listForms=new msForms;
-     $p['page']['tabTypes']=$listForms->getFormsListByCatName();
+	// liste des forms par catégorie
+	$listForms = new msForms;
+	$p['page']['tabTypes'] = $listForms->getFormsListByCatName();
 
-     // liste des catégories
-     $p['page']['catList']=$listForms->getCatListByID();
+	// liste des catégories
+	$p['page']['catList'] = $listForms->getCatListByID();
 
-     //liste des modules
-     $p['page']['modules']=msModules::getInstalledModulesNames();
+	//liste des modules
+	$p['page']['modules'] = msModules::getInstalledModulesNames();
 
 
-     //sortie du formulaire et préparation à son exploitation par le templates
-     if ($p['page']['formData']=msSQL::sqlUnique("select * from forms where id='".$match['params']['form']."' limit 1")) {
+	//sortie du formulaire et préparation à son exploitation par le templates
+	if ($p['page']['formData'] = msSQL::sqlUnique("SELECT * from forms where id= :id limit 1", ['id' => $match['params']['form']])) {
 
-         //formulaire
-         $forceAllTemplates="oui";
-         $form = new msForm();
-         $form->setFormID($match['params']['form']);
-         $p['page']['form']=$form->getForm();
+		//formulaire
+		$forceAllTemplates = "oui";
+		$form = new msForm();
+		$form->setFormID($match['params']['form']);
+		$p['page']['form'] = $form->getForm();
 
-         $p['page']['basicTemplateCode']=$form->getFlatBasicTemplateCode();
-         $sqlGen = new msSqlGenerate;
-         $p['page']['sqlCode']=$sqlGen->getSqlForForm($form->getFormIN());
-     }
- }
+		$p['page']['basicTemplateCode'] = $form->getFlatBasicTemplateCode();
+		$sqlGen = new msSqlGenerate;
+		$p['page']['sqlCode'] = $sqlGen->getSqlForForm($form->getFormIN());
+	}
+}

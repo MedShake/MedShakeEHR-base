@@ -24,29 +24,29 @@
  * Patients > ajax : ajout / retrait d'un dossier à la liste des Praticiens.
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 header('Content-Type: application/json');
 
-if(is_numeric($_POST['patientID'])) {
-  if($statutActu=msSQL::sqlUniqueChamp("select type from people where id='".$_POST['patientID']."'")) {
-    if($statutActu=='patient') {
-      $statutFutur='pro';
-      if($p['config']['droitDossierPeutCreerPraticien'] != 'true') die();
-    } else {
-      $statutFutur='patient';
-      if($p['config']['droitDossierPeutRetirerPraticien'] != 'true') die();
-    }
+if (is_numeric($_POST['patientID'])) {
+	if ($statutActu = msSQL::sqlUniqueChamp("select type from people where id = :id ", ['id' => $_POST['patientID']])) {
+		if ($statutActu == 'patient') {
+			$statutFutur = 'pro';
+			if ($p['config']['droitDossierPeutCreerPraticien'] != 'true') die();
+		} else {
+			$statutFutur = 'patient';
+			if ($p['config']['droitDossierPeutRetirerPraticien'] != 'true') die();
+		}
 
-    $data=array(
-      'id'=>$_POST['patientID'],
-      'type'=>$statutFutur
-    );
+		$data = array(
+			'id' => $_POST['patientID'],
+			'type' => $statutFutur
+		);
 
-    msSQL::sqlInsert('people', $data);
+		msSQL::sqlInsert('people', $data);
 
-    echo json_encode($data);
-
-  }
-
+		echo json_encode($data);
+	}
 }

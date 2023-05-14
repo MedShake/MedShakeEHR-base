@@ -24,19 +24,26 @@
  * Config : fixer les displayOrder de data types en fonction de l'odre d'apparition dans un form
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-if(!isset($_POST['formid']) or !is_numeric($_POST['formid'])) die("Error");
+if (!isset($_POST['formid']) or !is_numeric($_POST['formid'])) die("Error");
 
 $form = new msForm;
 $form->setFormID($_POST['formid']);
-$yaml=$form->getFormRawData(['yamlStructure'])['yamlStructure'];
+$yaml = $form->getFormRawData(['yamlStructure'])['yamlStructure'];
 preg_match_all("#\s+ - (?!template|label)([\w]+)#i", $yaml, $matchIN);
-if(!empty($matchIN[1])) {
-  foreach($matchIN[1] as $k=>$v) {
-    msSQL::sqlQuery("update data_types set displayOrder='".($k+1)."' where name='".$v."' limit 1");
-  }
+if (!empty($matchIN[1])) {
+	foreach ($matchIN[1] as $k => $v) {
+		msSQL::sqlQuery(
+			"UPDATE data_types SET displayOrder = :displayOrder where name = :name limit 1",
+			['displayOrder' => ($k + 1), 'name' => $v]
+		);
+	}
 }
 exit(json_encode(array('ok')));

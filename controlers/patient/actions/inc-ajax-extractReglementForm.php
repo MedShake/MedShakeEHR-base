@@ -27,50 +27,50 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$debug='';
-$template="patientReglementForm";
-$forceAllTemplates=TRUE;
+$debug = '';
+$template = "patientReglementForm";
+$forceAllTemplates = TRUE;
 
 $hono = new msReglement;
 $hono->setPatientID($_POST['patientID']);
 
 if (!isset($delegate)) {
-  if (!isset($_POST['objetID']) or $_POST['objetID']==='') {
-    $hono->setReglementForm($_POST['reglementForm']);
-    $hono->setPorteur($_POST['porteur']);
-    $hono->setUserID($userID=is_numeric($_POST['asUserID']) ? $_POST['asUserID'] : $p['user']['id']);
-    $hono->setModule($_POST['module']);
-  } else {
-    $hono->setObjetID($_POST['objetID']);
-  }
-  if(isset($_POST['asUserID']) and is_numeric($_POST['asUserID'])) $hono->setAsUserID($_POST['asUserID']);
+	if (!isset($_POST['objetID']) or $_POST['objetID'] === '') {
+		$hono->setReglementForm($_POST['reglementForm']);
+		$hono->setPorteur($_POST['porteur']);
+		$hono->setUserID($userID = is_numeric($_POST['asUserID']) ? $_POST['asUserID'] : $p['user']['id']);
+		$hono->setModule($_POST['module']);
+	} else {
+		$hono->setObjetID($_POST['objetID']);
+	}
+	if (isset($_POST['asUserID']) and is_numeric($_POST['asUserID'])) $hono->setAsUserID($_POST['asUserID']);
 
-  //si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
-  if (!in_array($hono->getReglementForm(), ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
-      $hook=$p['homepath'].'/controlers/module/'.$hono->getModule().'/patient/actions/inc-hook-extractReglementForm.php';
-      if ($hono->getModule()!='' and $hono->getModule()!='base' and is_file($hook)) {
-          include $hook;
-      }
-      if (!isset($delegate)) {
-          return;
-      }
-  }
+	//si le formulaire de règlement n'est pas celui de base, c'est au module de gérer (à moins qu'il délègue)
+	if (!in_array($hono->getReglementForm(), ['baseReglementLibre', 'baseReglementS1', 'baseReglementS2'])) {
+		$hook = $p['homepath'] . '/controlers/module/' . $hono->getModule() . '/patient/actions/inc-hook-extractReglementForm.php';
+		if ($hono->getModule() != '' and $hono->getModule() != 'base' and is_file($hook)) {
+			include $hook;
+		}
+		if (!isset($delegate)) {
+			return;
+		}
+	}
 }
 
 //pour menu de choix de l'acte, par catégories
-$p['page']['menusActes']=$hono->getFacturesTypesMenus();
+$p['page']['menusActes'] = $hono->getFacturesTypesMenus();
 
 //edition : acte choisi :
-$p['page']['selectedFactureTypeID']=$hono->getFactureTypeIDFromObjetID();
+$p['page']['selectedFactureTypeID'] = $hono->getFactureTypeIDFromObjetID();
 
 $form = new msForm();
 $form->setFormIDbyName($hono->getReglementForm());
 $form->setTypeForNameInForm('byName');
 if ($_POST['objetID'] > 0) {
-  $prevalues=$hono->getPreValuesForReglementForm();
-  $form->setPrevalues($prevalues);
+	$prevalues = $hono->getPreValuesForReglementForm();
+	$form->setPrevalues($prevalues);
 }
-$p['page']['form']=$form->getForm();
+$p['page']['form'] = $form->getForm();
 $form->addSubmitToForm($p['page']['form'], 'btn-warning btn-lg btn-block');
 
 // déterminer les secteurs tarifaires
@@ -80,6 +80,6 @@ $hono->setSecteursTarifaires();
 $hono->setHiddenInputToReglementForm($p['page']['form']);
 
 // Data complémentaires templates
-$p['page']['formIN']=$hono->getReglementForm();
-$p['page']['modifcateursCcam']=$hono->getModificateursCcam();
-$p['page']['patient']['id']=$_POST['patientID'];
+$p['page']['formIN'] = $hono->getReglementForm();
+$p['page']['modifcateursCcam'] = $hono->getModificateursCcam();
+$p['page']['patient']['id'] = $_POST['patientID'];

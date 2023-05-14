@@ -28,49 +28,50 @@
 
 // pour le configurateur de cron
 if (isset($p)) {
-    $p['page']['availableCrons']['clicRDV']=array(
-        'task' => 'clicRDV',
-        'defaults' => array('m'=>'0,15,30,45','h'=>'8-19','M'=>'*','dom'=>'*','dow'=>'1,2,3,4,5,6'),
-        'description' => 'Synchronisation de l\'agenda interne avec clicRDV. Si vos rendez-vous sont pris autant par clicRDV que par un secrétariat, préférez une fréquence élevée (toutes les 5 minutes) pour limiter les risques de conflits sur les créneaux.');
-    return;
+	$p['page']['availableCrons']['clicRDV'] = array(
+		'task' => 'clicRDV',
+		'defaults' => array('m' => '0,15,30,45', 'h' => '8-19', 'M' => '*', 'dom' => '*', 'dow' => '1,2,3,4,5,6'),
+		'description' => 'Synchronisation de l\'agenda interne avec clicRDV. Si vos rendez-vous sont pris autant par clicRDV que par un secrétariat, préférez une fréquence élevée (toutes les 5 minutes) pour limiter les risques de conflits sur les créneaux.'
+	);
+	return;
 }
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
-else $homepath=preg_replace("#cron$#", '', __DIR__);
+if (!empty($homepath = getenv("MEDSHAKEEHRPATH"))) $homepath = getenv("MEDSHAKEEHRPATH");
+else $homepath = preg_replace("#cron$#", '', __DIR__);
 
 /////////// Composer class auto-upload
-require $homepath.'vendor/autoload.php';
+require $homepath . 'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    global $homepath;
-    include $homepath.'class/' . $class . '.php';
+	global $homepath;
+	include $homepath . 'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['config']=yaml_parse_file($homepath.'config/config.yml');
-$p['homepath']=$homepath;
+$p['config'] = msYAML::yamlFileRead($homepath . 'config/config.yml');
+$p['homepath'] = $homepath;
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo = msSQL::sqlConnect();
 
 
-$clicUsers=msPeople::getUsersWithSpecificParam('clicRdvUserId');
+$clicUsers = msPeople::getUsersWithSpecificParam('clicRdvUserId');
 if (!is_array($clicUsers)) {
-    return;
+	return;
 }
-$clicrdv=new msClicRDV();
-$startdate=date("Y-m-d H:i:s");
-foreach($clicUsers as $userid=>$value) {
-    $clicrdv->setUserID($userid);
-    $ret=$clicrdv->syncEvents();
-    if ($ret!==false and $ret!==true) {
-        echo $ret."\n";
-    }
+$clicrdv = new msClicRDV();
+$startdate = date("Y-m-d H:i:s");
+foreach ($clicUsers as $userid => $value) {
+	$clicrdv->setUserID($userid);
+	$ret = $clicrdv->syncEvents();
+	if ($ret !== false and $ret !== true) {
+		echo $ret . "\n";
+	}
 }
-msSQL::sqlInsert('system', array('name'=>'clicRDV', 'groupe'=>'cron', 'value'=>$startdate));
+msSQL::sqlInsert('system', array('name' => 'clicRDV', 'groupe' => 'cron', 'value' => $startdate));

@@ -27,61 +27,61 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- //admin uniquement
+//admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-    $template="forbidden";
-    return;
+	$template = "forbidden";
+	return;
 }
-$template="configApicryptClefs";
-$debug='';
+$template = "configApicryptClefs";
+$debug = '';
 
 //utilisateurs ayant un repertoire de clefs spécifiques
-$p['page']['apicryptClefsUsers']=msPeople::getUsersWithSpecificParam('apicryptCheminVersClefs');
+$p['page']['apicryptClefsUsers'] = msPeople::getUsersWithSpecificParam('apicryptCheminVersClefs');
 
 // si user
 if (isset($match['params']['userID'])) {
-    $user=array('id'=>$match['params']['userID'], 'module'=>'');
-    $p['page']['repertoireClefs']=msConfiguration::getParameterValue('apicryptCheminVersClefs', $user).'Clefs/';
-    $p['page']['selectUser']=$match['params']['userID'];
+	$user = array('id' => $match['params']['userID'], 'module' => '');
+	$p['page']['repertoireClefs'] = msConfiguration::getParameterValue('apicryptCheminVersClefs', $user) . 'Clefs/';
+	$p['page']['selectUser'] = $match['params']['userID'];
 } else {
-    $p['page']['repertoireClefs']=msConfiguration::getParameterValue('apicryptCheminVersClefs').'Clefs/';
+	$p['page']['repertoireClefs'] = msConfiguration::getParameterValue('apicryptCheminVersClefs') . 'Clefs/';
 }
 
 //test autorisation de lecture du dossier clef
 if (is_readable($p['page']['repertoireClefs'])) {
-    $p['page']['listeClefsAutorisationLecture'] = true;
+	$p['page']['listeClefsAutorisationLecture'] = true;
 } else {
-    $p['page']['listeClefsAutorisationLecture'] = false;
+	$p['page']['listeClefsAutorisationLecture'] = false;
 }
 
 //test autorisation d'écriture' du dossier clef
 if (is_writable($p['page']['repertoireClefs'])) {
-    $p['page']['listeClefsAutorisationEcriture'] = true;
+	$p['page']['listeClefsAutorisationEcriture'] = true;
 } else {
-    $p['page']['listeClefsAutorisationEcriture'] = false;
+	$p['page']['listeClefsAutorisationEcriture'] = false;
 }
 
 //clefs si lecture répertoire ok
 if ($p['page']['listeClefsAutorisationLecture']) {
-    if ($listeClefs=array_diff(scandir($p['page']['repertoireClefs']), array('..', '.'))) {
-        foreach ($listeClefs as $k=>$clef) {
-            if(is_dir($p['page']['repertoireClefs'].$clef)) {
-              continue;
-            }
-            $p['page']['listeClefs'][$k]['file']=$clef;
-            $p['page']['listeClefs'][$k]['filesize']=msTools::getFileSize($p['page']['repertoireClefs'].$clef, 2);
-            $p['page']['listeClefs'][$k]['fileInfo']=pathinfo($p['page']['repertoireClefs'].$clef);
+	if ($listeClefs = array_diff(scandir($p['page']['repertoireClefs']), array('..', '.'))) {
+		foreach ($listeClefs as $k => $clef) {
+			if (is_dir($p['page']['repertoireClefs'] . $clef)) {
+				continue;
+			}
+			$p['page']['listeClefs'][$k]['file'] = $clef;
+			$p['page']['listeClefs'][$k]['filesize'] = msTools::getFileSize($p['page']['repertoireClefs'] . $clef, 2);
+			$p['page']['listeClefs'][$k]['fileInfo'] = pathinfo($p['page']['repertoireClefs'] . $clef);
 
-            if (is_readable($p['page']['repertoireClefs'].$clef)) {
-               $p['page']['listeClefs'][$k]['autorisationLecture'] = true;
-            } else {
-               $p['page']['listeClefs'][$k]['autorisationLecture'] = false;
-            }
-            if (is_writable($p['page']['repertoireClefs'].$clef)) {
-               $p['page']['listeClefs'][$k]['autorisationEcriture'] = true;
-            } else {
-               $p['page']['listeClefs'][$k]['autorisationEcriture'] = false;
-            }
-        }
-    }
+			if (is_readable($p['page']['repertoireClefs'] . $clef)) {
+				$p['page']['listeClefs'][$k]['autorisationLecture'] = true;
+			} else {
+				$p['page']['listeClefs'][$k]['autorisationLecture'] = false;
+			}
+			if (is_writable($p['page']['repertoireClefs'] . $clef)) {
+				$p['page']['listeClefs'][$k]['autorisationEcriture'] = true;
+			} else {
+				$p['page']['listeClefs'][$k]['autorisationEcriture'] = false;
+			}
+		}
+	}
 }

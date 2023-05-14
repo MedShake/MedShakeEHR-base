@@ -25,7 +25,8 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='';
+
+$debug = '';
 $lapOrdo = new msLapOrdo;
 $lapOrdo->setFromID($p['user']['id']);
 echo json_encode($lapOrdo->getCatPresPre());

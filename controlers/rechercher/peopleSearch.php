@@ -26,92 +26,96 @@
  * @author	Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00				<https://github.com/fr33z00>
  * @contrib DEMAREST Maxime		<maxime@indelog.fr>
+ *
+ * SQLPREPOK
  */
 
-$debug='';
+$debug = '';
 
 if (isset($match['params']['porp'])) {
-    $p['page']['porp']=$match['params']['porp'];
+	$p['page']['porp'] = $match['params']['porp'];
 }
 
 // si groupe, on vérifie que l'option générale est ON et on 404 sinon
-if($p['page']['porp'] == 'groupe' and $p['config']['optionGeActiverGroupes'] != 'true') {
-    $template="404";
-    return;
+if ($p['page']['porp'] == 'groupe' and $p['config']['optionGeActiverGroupes'] != 'true') {
+	$template = "404";
+	return;
 }
 
 // si registre, on vérifie que l'option générale est ON et on 404 sinon
-if($p['page']['porp'] == 'registre' and $p['config']['optionGeActiverRegistres'] != 'true') {
-    $template="404";
-    return;
+if ($p['page']['porp'] == 'registre' and $p['config']['optionGeActiverRegistres'] != 'true') {
+	$template = "404";
+	return;
 }
 
 // Template et liste des types par catégorie avec restriction aux types employés dans le form de création
 $form = new msForm;
-if($p['page']['porp'] == 'pro') {
-  $template="searchPeoplePatientsAndPros";
-  $form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
-} elseif($p['page']['porp'] == 'patient' || $p['page']['porp'] == 'externe' || $p['page']['porp'] == 'today') {
-  $template="searchPeoplePatientsAndPros";
-  $form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
-} elseif($p['page']['porp'] == 'groupe') {
-  $template="searchPeopleGroupes";
-  $form->setFormIDbyName($p['config']['formFormulaireNouveauGroupe']);
-} elseif($p['page']['porp'] == 'registre') {
-  $template="searchPeopleRegistres";
-  $form->setFormIDbyName($p['config']['formFormulaireNouveauRegistre']);
+if ($p['page']['porp'] == 'pro') {
+	$template = "searchPeoplePatientsAndPros";
+	$form->setFormIDbyName($p['config']['formFormulaireNouveauPraticien']);
+} elseif ($p['page']['porp'] == 'patient' || $p['page']['porp'] == 'externe' || $p['page']['porp'] == 'today') {
+	$template = "searchPeoplePatientsAndPros";
+	$form->setFormIDbyName($p['config']['formFormulaireNouveauPatient']);
+} elseif ($p['page']['porp'] == 'groupe') {
+	$template = "searchPeopleGroupes";
+	$form->setFormIDbyName($p['config']['formFormulaireNouveauGroupe']);
+} elseif ($p['page']['porp'] == 'registre') {
+	$template = "searchPeopleRegistres";
+	$form->setFormIDbyName($p['config']['formFormulaireNouveauRegistre']);
 }
 
 // si administrateur on injecte la possibilité de chercher par identifiant d'export
 if ((msUser::checkUserIsAdmin() or $p['config']['droitDossierPeutRechercherParPeopleExportID'] == 'true') and $p['config']['optionGeCreationAutoPeopleExportID'] == 'true') {
-  $addExportIdSearch = ", '".msData::getTypeIDFromName('peopleExportID')."'";
+	$addExportIdSearch['peopleExportID'] = msData::getTypeIDFromName('peopleExportID');
 } else {
-  $addExportIdSearch = '';
+	$addExportIdSearch['peopleExportID'] = '';
 }
 
-if ($tabTypes=msSQL::sql2tab("select t.label, t.name as id, c.label as catName, c.label as catLabel
+$sqlImplode = msSQL::sqlGetTagsForWhereIn(array_merge($form->formExtractDistinctTypes(), $addExportIdSearch));
+
+if ($tabTypes = msSQL::sql2tab("select t.label, t.name as id, c.label as catName, c.label as catLabel
   from data_types as t
   left join data_cat as c on c.id=t.cat
-  where t.id > 0 and t.groupe = 'admin' and t.formType != 'group' and t.id in ('".implode("', '", $form->formExtractDistinctTypes())."' ".$addExportIdSearch.")
-  order by c.label asc, t.label asc")) {
-    foreach ($tabTypes as $v) {
-        $p['page']['tabTypes'][$v['catName']][]=$v;
-    }
+  where t.id > 0 and t.groupe = 'admin' and t.formType != 'group' and t.id in (" . $sqlImplode['in'] . ")
+  order by c.label asc, t.label asc", $sqlImplode['execute'])) {
+	foreach ($tabTypes as $v) {
+		$p['page']['tabTypes'][$v['catName']][] = $v;
+	}
 }
 
 // Transmissions
-if($p['config']['transmissionsPeutCreer'] == 'true'  and in_array($p['page']['porp'], ['patient', 'pro'])) {
-  $trans = new msTransmissions();
-  $trans->setUserID($p['user']['id']);
-  $p['page']['transmissionsListeDestinatairesPossibles']=$trans->getTransmissionDestinatairesPossibles();
-  $p['page']['transmissionsListeDestinatairesDefaut']=explode(',', $p['config']['transmissionsDefautDestinataires']);
+if ($p['config']['transmissionsPeutCreer'] == 'true'  and in_array($p['page']['porp'], ['patient', 'pro'])) {
+	$trans = new msTransmissions();
+	$trans->setUserID($p['user']['id']);
+	$p['page']['transmissionsListeDestinatairesPossibles'] = $trans->getTransmissionDestinatairesPossibles();
+	$p['page']['transmissionsListeDestinatairesDefaut'] = explode(',', $p['config']['transmissionsDefautDestinataires']);
 }
 
 // Modules & templates nouvel utilisateur
 if (msUser::checkUserIsAdmin() and in_array($p['page']['porp'], ['patient', 'pro'])) {
-  $p['page']['modules']=msModules::getInstalledModulesNames();
-  $p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
+	$p['page']['modules'] = msModules::getInstalledModulesNames();
+	$p['page']['userTemplates'] = msConfiguration::getUserTemplatesList();
 
-  // Formulaire nouvel utilisateur
-  $formModal = new msForm;
-  $formModal->setFormIDbyName($p['page']['formModalIN']='baseNewUserFromPeople');
-  $formModal->setOptionsForSelect(array(
-    'template'=>[''=>'aucun'] + $p['page']['userTemplates'],
-    'module'=>$p['page']['modules'],
-  ));
+	// Formulaire nouvel utilisateur
+	$formModal = new msForm;
+	$formModal->setFormIDbyName($p['page']['formModalIN'] = 'baseNewUserFromPeople');
+	$formModal->setOptionsForSelect(array(
+		'template' => ['' => 'aucun'] + $p['page']['userTemplates'],
+		'module' => $p['page']['modules'],
+	));
 
-  $formModal->setPrevalues(['template'=> $p['config']['optionGeLoginCreationDefaultTemplate'], 'module'=> $p['config']['optionGeLoginCreationDefaultModule']]);
+	$formModal->setPrevalues(['template' => $p['config']['optionGeLoginCreationDefaultTemplate'], 'module' => $p['config']['optionGeLoginCreationDefaultModule']]);
 
-  $p['page']['formModal']=$formModal->getForm();
-  if($p['config']['optionGeLoginPassAttribution'] == 'random') {
-    $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder'=>'aléatoire envoyé par mail', 'readonly'=>'readonly']);
-  } else {
-    $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required'=>'required']);
-  }
-  $formModal->addHiddenInput($p['page']['formModal'], ['preUserID'=>'']);
+	$p['page']['formModal'] = $formModal->getForm();
+	if ($p['config']['optionGeLoginPassAttribution'] == 'random') {
+		$formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder' => 'aléatoire envoyé par mail', 'readonly' => 'readonly']);
+	} else {
+		$formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required' => 'required']);
+	}
+	$formModal->addHiddenInput($p['page']['formModal'], ['preUserID' => '']);
 }
 
-// Filtre de recherche avec les TAGs universel
+// Filtre de recherche avec les TAGs universels
 if ($p['config']['optionGeActiverUnivTags'] == 'true') {
 	$p['page']['univTags'] = array();
 	switch ($p['page']['porp']) {
@@ -122,6 +126,7 @@ if ($p['config']['optionGeActiverUnivTags'] == 'true') {
 			$p['page']['univTags']['typeID'] = msUnivTags::getTypeIdByName('pros');
 			break;
 	}
-	if (! empty($p['page']['univTags']['typeID']) && msUnivTags::getIfTypeIsActif($p['page']['univTags']['typeID']))
+	if (!empty($p['page']['univTags']['typeID']) && msUnivTags::getIfTypeIsActif($p['page']['univTags']['typeID'])) {
 		$p['page']['univTags']['filterSearchHTML'] = msUnivTags::getListHtml($p['page']['univTags']['typeID'], 0, 'search');
+	}
 }

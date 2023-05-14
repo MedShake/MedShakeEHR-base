@@ -25,102 +25,108 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://www.github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
-if ($_POST['ordoForm']!='') {
-      $hook=$p['homepath'].'/controlers/module/'.$_POST['module'].'/patient/actions/inc-action-saveOrdoForm.php';
-      if ($_POST['module']!='' and $_POST['module']!='base' and is_file($hook)) {
-          include $hook;
-      }
-      if (!isset($delegate)) {
-          return;
-      }
+if ($_POST['ordoForm'] != '') {
+	$hook = $p['homepath'] . '/controlers/module/' . $_POST['module'] . '/patient/actions/inc-action-saveOrdoForm.php';
+	if ($_POST['module'] != '' and $_POST['module'] != 'base' and is_file($hook)) {
+		include $hook;
+	}
+	if (!isset($delegate)) {
+		return;
+	}
 }
 
-if (count($_POST)>2) {
-    $patient = new msObjet();
-    $patient->setFromID($_POST['asUserID']?:$p['user']['id']);
-    $patient->setToID($_POST['patientID']);
-    if ($_POST['asUserID']) {
-        $patient->setByID($p['user']['id']);
-    }
+if (count($_POST) > 2) {
+	$patient = new msObjet();
+	$patient->setFromID($_POST['asUserID'] ?: $p['user']['id']);
+	$patient->setToID($_POST['patientID']);
+	if ($_POST['asUserID']) {
+		$patient->setByID($p['user']['id']);
+	}
 
-    //support
-    if(isset($_POST['porteur'])) {
-      if(is_numeric($_POST['porteur'])) {
-        $porteurName=msData::getNameFromTypeID($_POST['porteur']);
-      } else {
-        $porteurName=$_POST['porteur'];
-      }
-    } else {
-      $porteurName='ordoPorteur';
-    }
-    if (isset($_POST['objetID'])) {
-        $supportID=$patient->createNewObjetByTypeName($porteurName, '', '0', '0', $_POST['objetID']);
-    } else {
-        $supportID=$patient->createNewObjetByTypeName($porteurName, '');
-    }
+	//support
+	if (isset($_POST['porteur'])) {
+		if (is_numeric($_POST['porteur'])) {
+			$porteurName = msData::getNameFromTypeID($_POST['porteur']);
+		} else {
+			$porteurName = $_POST['porteur'];
+		}
+	} else {
+		$porteurName = 'ordoPorteur';
+	}
+	if (isset($_POST['objetID'])) {
+		$supportID = $patient->createNewObjetByTypeName($porteurName, '', '0', '0', $_POST['objetID']);
+	} else {
+		$supportID = $patient->createNewObjetByTypeName($porteurName, '');
+	}
 
-    // pour plus de clarté
-    if(isset($_POST['objetID']) and $supportID == $_POST['objetID']) {
-      $modeAction = 'edition';
-    } else {
-      $modeAction = 'renouv';
-    }
+	// pour plus de clarté
+	if (isset($_POST['objetID']) and $supportID == $_POST['objetID']) {
+		$modeAction = 'edition';
+	} else {
+		$modeAction = 'renouv';
+	}
 
-    //par précaution on supprime le pdf antérieur
-    if($modeAction == 'edition') {
-      $doc= new msStockage();
-      $doc->setObjetID($supportID);
-      $doc->deleteDoc();
-    }
+	//par précaution on supprime le pdf antérieur
+	if ($modeAction == 'edition') {
+		$doc = new msStockage();
+		$doc->setObjetID($supportID);
+		$doc->deleteDoc();
+	}
 
-    //type d'impression modeprintObjetID
-    if (isset($_POST['modeprintObjetID'])) {
-        $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID, '0', $_POST['modeprintObjetID']);
-        $patient->createNewObjetByTypeName('ordoImpressionNbLignes', $_POST['ordoImpressionNbLignes'], $supportID, '0', $_POST['modeprintObjetID']);
-    } else {
-        $patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID);
-        $patient->createNewObjetByTypeName('ordoImpressionNbLignes', $_POST['ordoImpressionNbLignes'], $supportID);
-    }
+	//type d'impression modeprintObjetID
+	if (isset($_POST['modeprintObjetID'])) {
+		$patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID, '0', $_POST['modeprintObjetID']);
+		$patient->createNewObjetByTypeName('ordoImpressionNbLignes', $_POST['ordoImpressionNbLignes'], $supportID, '0', $_POST['modeprintObjetID']);
+	} else {
+		$patient->createNewObjetByTypeName('ordoTypeImpression', $_POST['ordoTypeImpression'], $supportID);
+		$patient->createNewObjetByTypeName('ordoImpressionNbLignes', $_POST['ordoImpressionNbLignes'], $supportID);
+	}
 
-    foreach ($_POST as $k=>$v) {
-        if (preg_match("#^([0-9]+)_[0-9]+_([0-9]+)$#", $k, $m)) {
-            if ($m[2]>0) {
-                $postObjetId=$m[2];
-            } else {
-                $postObjetId='0';
-            }
-            if(!empty(trim($v))) {
-              $id=$patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
-            }
-            if ($postObjetId>0) {
-                if($v=='' and $modeAction == 'edition') {
-                  $objDel = new msObjet;
-                  $objDel->setFromID($_POST['asUserID']?:$p['user']['id']);
-                  $objDel->setObjetID($postObjetId);
-                  $objDel->setDeletedObjetAndSons();
-                } else {
-                  msSQL::sqlQuery("delete from objets_data where instance='".$postObjetId."' and typeID='".msData::getTypeIDFromName('ordoLigneOrdoALDouPas')."' ");
-                }
-            }
+	foreach ($_POST as $k => $v) {
+		if (preg_match("#^([0-9]+)_[0-9]+_([0-9]+)$#", $k, $m)) {
+			if ($m[2] > 0) {
+				$postObjetId = $m[2];
+			} else {
+				$postObjetId = '0';
+			}
+			if (!empty(trim($v))) {
+				$id = $patient->createNewObjetByTypeName('ordoLigneOrdo', $v, $supportID, $m[1], $postObjetId);
+			}
+			if ($postObjetId > 0) {
+				if ($v == '' and $modeAction == 'edition') {
+					$objDel = new msObjet;
+					$objDel->setFromID($_POST['asUserID'] ?: $p['user']['id']);
+					$objDel->setObjetID($postObjetId);
+					$objDel->setDeletedObjetAndSons();
+				} else {
+					$marqueurs = [
+						'postObjetId' => $postObjetId,
+						'ordoLigneOrdoALDouPas' => msData::getTypeIDFromName('ordoLigneOrdoALDouPas')
+					];
+					msSQL::sqlQuery("DELETE from objets_data where instance = :postObjetId and typeID = :ordoLigneOrdoALDouPas", $marqueurs);
+				}
+			}
 
-            if (isset($_POST[$k.'CB'])) {
-                $patient->createNewObjetByTypeName('ordoLigneOrdoALDouPas', $_POST[$k.'CB'], $id);
-            }
-        }
-    }
+			if (isset($_POST[$k . 'CB'])) {
+				$patient->createNewObjetByTypeName('ordoLigneOrdoALDouPas', $_POST[$k . 'CB'], $id);
+			}
+		}
+	}
 
-    $pdf= new msPDF();
+	$pdf = new msPDF();
 
-    $pdf->setFromID($p['user']['id']);
-    $pdf->setToID($_POST['patientID']);
-    $pdf->setType('ordo');
-    $pdf->setObjetID($supportID);
+	$pdf->setFromID($p['user']['id']);
+	$pdf->setToID($_POST['patientID']);
+	$pdf->setType('ordo');
+	$pdf->setObjetID($supportID);
 
-    $pdf->makePDF();
-    $pdf->savePDF();
-    $pdf->showPDF();
+	$pdf->makePDF();
+	$pdf->savePDF();
+	$pdf->showPDF();
 } else {
-    echo 'Ordonnance vide !';
+	echo 'Ordonnance vide !';
 }

@@ -27,31 +27,31 @@
  */
 
 $reg = new msReglementActe;
-if($_GET['regleSecteurHonoraires']) {
-  $reg->setSecteurTarifaire($_GET['regleSecteurHonoraires']);
+if ($_GET['regleSecteurHonoraires']) {
+	$reg->setSecteurTarifaire($_GET['regleSecteurHonoraires']);
 } else {
-  $reg->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
+	$reg->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
 }
-if($_GET['regleSecteurHonoraires']) {
-  $reg->setSecteurTarifaireNgap($_GET['regleSecteurHonorairesNgap']);
+if ($_GET['regleSecteurHonoraires']) {
+	$reg->setSecteurTarifaireNgap($_GET['regleSecteurHonorairesNgap']);
 } else {
-  $reg->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
+	$reg->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
 }
-if($_GET['regleSecteurGeoTarifaire']) {
-  $reg->setSecteurTarifaireGeo($_GET['regleSecteurGeoTarifaire']);
+if ($_GET['regleSecteurGeoTarifaire']) {
+	$reg->setSecteurTarifaireGeo($_GET['regleSecteurGeoTarifaire']);
 } else {
-  $reg->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
+	$reg->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
 }
-if($data = $reg->getActeDataFromTerm($_GET['term'])) {
-  foreach($data as $k=>$v) {
-    $data[$k]['labelo'] = $v['label'];
-    $data[$k]['label'] = $v['code'].' '.$v['label'];
-    $data[$k]['base'] = $v['tarif'];
-    $data[$k]['tarif'] = $v['tarif'];
-    $data[$k]['total'] = $v['tarif'];
-    $data[$k]['pourcents'] = '100';
-    $data[$k]['depassement'] = '0';
-    $data[$k]['codeAsso'] = '';
-  }
+if ($data = $reg->getActeDataFromTerm($_GET['term'])) {
+	foreach ($data as $k => $v) {
+		$data[$k]['labelo'] = $v['label'];
+		$data[$k]['label'] = $v['code'] . ' ' . $v['label'];
+		$data[$k]['base'] = $v['tarif'];
+		$data[$k]['tarif'] = $v['tarif'];
+		$data[$k]['total'] = $v['tarif'];
+		$data[$k]['pourcents'] = '100';
+		$data[$k]['depassement'] = '0';
+		$data[$k]['codeAsso'] = '';
+	}
 }
 exit(json_encode($data));

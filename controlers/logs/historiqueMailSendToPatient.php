@@ -26,19 +26,19 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template="historiqueMailSendToPatient";
+$debug = '';
+$template = "historiqueMailSendToPatient";
 
 $patient = new msPeople();
 $patient->setToID($match['params']['patientID']);
-$p['page']['patientData']= $patient->getSimpleAdminDatasByName();
-$p['page']['patientData']['id']=$match['params']['patientID'];
+$p['page']['patientData'] = $patient->getSimpleAdminDatasByName();
+$p['page']['patientData']['id'] = $match['params']['patientID'];
 
-$msMailTracking='msMailTracking'.$p['config']['smtpTracking'];
+$msMailTracking = 'msMailTracking' . $p['config']['smtpTracking'];
 if (class_exists($msMailTracking)) {
-    $mj = new $msMailTracking();
-    $mj->set_contactEmail($p['page']['patientData']['personalEmail']);
-    $mj->getListMessagesSendedToContact();
-    $mj->addCampaignDataToMessagesList();
-    $p['page']['listeMessages']=$mj->get_contactMessagesList();
+	$mj = new $msMailTracking();
+	$mj->set_contactEmail($p['page']['patientData']['personalEmail']);
+	$mj->getListMessagesSendedToContact();
+	$mj->addCampaignDataToMessagesList();
+	$p['page']['listeMessages'] = $mj->get_contactMessagesList();
 }

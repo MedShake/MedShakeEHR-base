@@ -28,8 +28,8 @@
 
 //admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
+	$template = "forbidden";
 } else {
-     $template="configApplyUpdates";
-     $debug='';
+	$template = "configApplyUpdates";
+	$debug = '';
 }

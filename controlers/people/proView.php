@@ -27,96 +27,95 @@
  * @contrib	DEMAREST Maxime		<maxime@indelog.fr>
  */
 
-$debug='';
-$template='proView';
+$debug = '';
+$template = 'proView';
 
-if(!is_numeric($match['params']['proID'])) die;
-$p['page']['proDataID']=$match['params']['proID'];
+if (!is_numeric($match['params']['proID'])) die;
+$p['page']['proDataID'] = $match['params']['proID'];
 
 //contrôle sur droit à voir le prat (même groupe ou enfant du user) si restriction active
 if (!msUser::checkUserIsAdmin() and $p['config']['droitDossierPeutVoirUniquementPraticiensGroupes'] == 'true') {
-  // même groupe
-  $frat = new msPeopleRelations;
-  $frat->setToID($p['page']['proDataID']);
-  $frat->setRelationType('relationPraticienGroupe');
-  $ids = $frat->getSiblingIDs($p['user']['id']);
-  // parent
-  $parentID = $frat->getFromID();
+	// même groupe
+	$frat = new msPeopleRelations;
+	$frat->setToID($p['page']['proDataID']);
+	$frat->setRelationType('relationPraticienGroupe');
+	$ids = $frat->getSiblingIDs($p['user']['id']);
+	// parent
+	$parentID = $frat->getFromID();
 
-  if(!in_array($p['page']['proDataID'], $ids) and $parentID != $p['user']['id']) {
-    $template = "forbidden";
-    return;
-  }
+	if (!in_array($p['page']['proDataID'], $ids) and $parentID != $p['user']['id']) {
+		$template = "forbidden";
+		return;
+	}
 }
 
 $patient = new msPeopleDroits($p['page']['proDataID']);
 
-if($patient->getType() != 'pro') {
-  $template = "404";
-  return;
+if ($patient->getType() != 'pro') {
+	$template = "404";
+	return;
 }
 
-$p['page']['proData']=$patient->getLabelForSimpleAdminDatas($patient->getSimpleAdminDatasByName());
-$p['page']['proData']['isUser']=$patient->checkIsUser();
-$p['page']['proData']['dossierType']=$patient->getType();
-$p['page']['proData']['parentID']=$patient->getFromID();
+$p['page']['proData'] = $patient->getLabelForSimpleAdminDatas($patient->getSimpleAdminDatasByName());
+$p['page']['proData']['isUser'] = $patient->checkIsUser();
+$p['page']['proData']['dossierType'] = $patient->getType();
+$p['page']['proData']['parentID'] = $patient->getFromID();
 
 $labels = new msData();
 $p['page']['proDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['page']['proData']));
 
 //les patients connus
-if($p['config']['optionGePraticienMontrerPatientsLies'] == 'true') {
-  $patients = new msPeopleRelations;
-  $patients->setToID($p['page']['proDataID']);
-  $patients->setRelationType('relationPatientPraticien');
-  $patients->setReturnedPeopleTypes(['patient']);
-  $p['page']['patientsConnus'] = $patients->getRelations(['identite', 'ageCalcule']);
-  msTools::array_unatsort_by('identiteChainePourTri', $p['page']['patientsConnus']);
+if ($p['config']['optionGePraticienMontrerPatientsLies'] == 'true') {
+	$patients = new msPeopleRelations;
+	$patients->setToID($p['page']['proDataID']);
+	$patients->setRelationType('relationPatientPraticien');
+	$patients->setReturnedPeopleTypes(['patient']);
+	$p['page']['patientsConnus'] = $patients->getRelations(['identite', 'ageCalcule']);
+	msTools::array_unatsort_by('identiteChainePourTri', $p['page']['patientsConnus']);
 }
 
 // gestion groupe
-if($p['config']['optionGeActiverGroupes'] == 'true') {
+if ($p['config']['optionGeActiverGroupes'] == 'true') {
 
-  //sortir les choix de relations praticien <-> groupe
-  $data = new msData();
-  $typeID = $data->getTypeIDFromName('relationPraticienGroupe');
-  $options = $data->getSelectOptionValue(array($typeID));
-  foreach($options[$typeID] as $k=>$v) {
-    $p['page']['preRelationPraticienGroupe']['formValues'][$k]=$v;
-  }
+	//sortir les choix de relations praticien <-> groupe
+	$data = new msData();
+	$typeID = $data->getTypeIDFromName('relationPraticienGroupe');
+	$options = $data->getSelectOptionValue(array($typeID));
+	foreach ($options[$typeID] as $k => $v) {
+		$p['page']['preRelationPraticienGroupe']['formValues'][$k] = $v;
+	}
 
-  // vérifier le droit de gérer les groupes du prat
-  if($p['user']['rank'] == 'admin' or ($patient->getFromID() == $p['user']['id'] and $p['config']['droitDossierPeutAssignerPropresGroupesPraticienFils'] == 'true')) {
-    $p['page']['proData']['canModifyGroups'] = true;
-  } else {
-    $p['page']['proData']['canModifyGroups'] = false;
-  }
-
+	// vérifier le droit de gérer les groupes du prat
+	if ($p['user']['rank'] == 'admin' or ($patient->getFromID() == $p['user']['id'] and $p['config']['droitDossierPeutAssignerPropresGroupesPraticienFils'] == 'true')) {
+		$p['page']['proData']['canModifyGroups'] = true;
+	} else {
+		$p['page']['proData']['canModifyGroups'] = false;
+	}
 }
 
 //Poste admin registre connus
-if($p['config']['optionGeActiverRegistres'] == 'true') {
-  $registres = new msPeopleRelations;
-  $registres->setToID($p['page']['proDataID']);
-  $registres->setRelationType('relationRegistrePraticien');
-  $p['page']['posteAdminRegistre'] = $registres->getRelations(['registryname']);
+if ($p['config']['optionGeActiverRegistres'] == 'true') {
+	$registres = new msPeopleRelations;
+	$registres->setToID($p['page']['proDataID']);
+	$registres->setRelationType('relationRegistrePraticien');
+	$p['page']['posteAdminRegistre'] = $registres->getRelations(['registryname']);
 }
 
-if($p['config']['droitDossierPeutTransformerPraticienEnUtilisateur'] == 'true') {
-  $p['page']['loginUsername'] = msUser::makeRandomUniqLoginUsername(@$p['page']['proData']['firstname'], @$p['page']['proData']['lastname'], @$p['page']['proData']['birthname']);
+if ($p['config']['droitDossierPeutTransformerPraticienEnUtilisateur'] == 'true') {
+	$p['page']['loginUsername'] = msUser::makeRandomUniqLoginUsername(@$p['page']['proData']['firstname'], @$p['page']['proData']['lastname'], @$p['page']['proData']['birthname']);
 }
 
 // Retrouve le svg pour le code bare svg et adeli si il existe
 if ($p['config']['activGenBarreCode'] == 'true') {
-	$barcodedir = $p['config']['stockageLocation'].'barecode/';
+	$barcodedir = $p['config']['stockageLocation'] . 'barecode/';
 	// Retrouve le svg pour le RPPS
-	if (isset($p['page']['proData']['rpps']) and file_exists($barcodedir.'barecode-rpps-'.$p['page']['proData']['rpps'].'.svg'))
-		$p['page']['svgRPPS'] =  file_get_contents($barcodedir.'barecode-rpps-'.$p['page']['proData']['rpps'].'.svg');
+	if (isset($p['page']['proData']['rpps']) and file_exists($barcodedir . 'barecode-rpps-' . $p['page']['proData']['rpps'] . '.svg'))
+		$p['page']['svgRPPS'] =  file_get_contents($barcodedir . 'barecode-rpps-' . $p['page']['proData']['rpps'] . '.svg');
 	else
 		$p['page']['svgRPPS'] = '';
 	// Retrouve le svg pour le ADELI
-	if (isset($p['page']['proData']['adeli']) and file_exists($barcodedir.'barecode-adeli-'.$p['page']['proData']['adeli'].'.svg'))
-		$p['page']['svgADELI'] =  file_get_contents($barcodedir.'barecode-adeli-'.$p['page']['proData']['adeli'].'.svg');
+	if (isset($p['page']['proData']['adeli']) and file_exists($barcodedir . 'barecode-adeli-' . $p['page']['proData']['adeli'] . '.svg'))
+		$p['page']['svgADELI'] =  file_get_contents($barcodedir . 'barecode-adeli-' . $p['page']['proData']['adeli'] . '.svg');
 	else
 		$p['page']['svgADELI'] = '';
 }

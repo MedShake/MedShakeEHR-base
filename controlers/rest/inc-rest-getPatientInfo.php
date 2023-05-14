@@ -25,24 +25,26 @@
  *
  * @author fr33z00 <https://github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 
-$user=new msUser();
+$user = new msUser();
 if (!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) or !$user->checkLogin($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
-   http_response_code(401);
-   die;
+	http_response_code(401);
+	die;
 }
-$userID=msSQL::sqlUniqueChamp("select id from people where name='".msSQL::cleanVar($_SERVER['PHP_AUTH_USER'])."'");
+$userID = msSQL::sqlUniqueChamp("SELECT id from people where name = :name", ['name' => $_SERVER['PHP_AUTH_USER']]);
 
 
 // récupérer data prat & patient
-$data=json_decode(file_get_contents($p['config']['workingDirectory'].$userID.'/workList.json'), true);
+$data = json_decode(file_get_contents($p['config']['workingDirectory'] . $userID . '/workList.json'), true);
 
-if(!is_array($data)) {
-    http_response_code(204);
-    die;
+if (!is_array($data)) {
+	http_response_code(204);
+	die;
 }
 
 header('Content-Type: application/json');
-die (json_encode($data));
+die(json_encode($data));

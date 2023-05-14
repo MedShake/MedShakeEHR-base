@@ -26,8 +26,8 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$destination_file=$p['config']['workingDirectory'].$p['user']['id'].'/pdf2fax.pdf';
-if(is_file($destination_file)) {
-  @unlink($destination_file);
+$destination_file = $p['config']['workingDirectory'] . $p['user']['id'] . '/pdf2fax.pdf';
+if (is_file($destination_file)) {
+	@unlink($destination_file);
 }
 die();

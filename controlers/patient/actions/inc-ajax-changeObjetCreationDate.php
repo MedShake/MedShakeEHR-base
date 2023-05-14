@@ -28,19 +28,19 @@
  */
 
 if (isset($_POST['objetID']) and isset($_POST['newCreationDate'])) {
-    if (!is_numeric($_POST['objetID'])) {
-        die("Erreur:L'objet indiqué n'est pas valide");
-    }
-    if (!msTools::validateDate($_POST['newCreationDate'], 'Y-m-d H:i:s')) {
-        die("Erreur:La date indiquée n'est pas valide");
-    }
+	if (!is_numeric($_POST['objetID'])) {
+		die("Erreur:L'objet indiqué n'est pas valide");
+	}
+	if (!msTools::validateDate($_POST['newCreationDate'], 'Y-m-d H:i:s')) {
+		die("Erreur:La date indiquée n'est pas valide");
+	}
 
-    $objet=new msObjet();
-    $objet->setObjetID($_POST['objetID']);
-    $objet->setCreationDate($_POST['newCreationDate']);
-    $objet->changeCreationDate();
+	$objet = new msObjet();
+	$objet->setObjetID($_POST['objetID']);
+	$objet->setCreationDate($_POST['newCreationDate']);
+	$objet->changeCreationDate();
 
-    echo('ReloadHistorique');
+	echo ('ReloadHistorique');
 } else {
-  echo('Avertissement: aucun élément modifié');
+	echo ('Avertissement: aucun élément modifié');
 }

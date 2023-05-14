@@ -27,10 +27,10 @@
  */
 
 
-if(isset($_POST['patientID'])) {
-  $patientID=$_POST['patientID'];
-} elseif(isset($_GET['patientID'])) {
-  $patientID=$_GET['patientID'];
+if (isset($_POST['patientID'])) {
+	$patientID = $_POST['patientID'];
+} elseif (isset($_GET['patientID'])) {
+	$patientID = $_GET['patientID'];
 }
 $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($patientID);
@@ -38,4 +38,4 @@ $liensPrat->setReturnedPeopleTypes(['pro']);
 
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationPatientPraticien');
-exit(json_encode($liensPrat->getRelations(['identite','titre'])));
+exit(json_encode($liensPrat->getRelations(['identite', 'titre'])));

@@ -25,17 +25,19 @@
  * (action via Orthanc, cf class msDicom)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$debug='';
-$template='viewStudy';
+$debug = '';
+$template = 'viewStudy';
 
 //le patient
 $patient = new msPeople();
 $patient->setToID($match['params']['patientID']);
-$p['page']['patient']['id']=$match['params']['patientID'];
-$p['page']['patient']['administrativeDatas']=$patient->getAdministrativesDatas();
-$p['page']['patient']['administrativeDatas'][8]['age']=$patient->getAge();
+$p['page']['patient']['id'] = $match['params']['patientID'];
+$p['page']['patient']['administrativeDatas'] = $patient->getAdministrativesDatas();
+$p['page']['patient']['administrativeDatas'][8]['age'] = $patient->getAge();
 
 //l'examen
 $dc = new msDicomSR();
@@ -44,20 +46,23 @@ $dc->setDcStudyID($match['params']['dcStudyID']);
 $p['page']['studyDcData'] = $dc->getStudyDcData();
 
 if (count($p['page']['studyDcData']) > 0) {
-    $p['page']['studyDcData']['Datetime'] =  $p['page']['studyDcData']['MainDicomTags']['StudyDate'].'T'.round($p['page']['studyDcData']['MainDicomTags']['StudyTime']);
-    $p['page']['imagesPath'] = $dc->getAllImagesFromStudy();
+	$p['page']['studyDcData']['Datetime'] =  $p['page']['studyDcData']['MainDicomTags']['StudyDate'] . 'T' . round($p['page']['studyDcData']['MainDicomTags']['StudyTime']);
+	$p['page']['imagesPath'] = $dc->getAllImagesFromStudy();
 
 
-    //Données du SR via le XML
-    $dc->getSRinstanceFromStudy();
-    $p['page']['studyDcDataSRFull']=$dc->getSrData();
+	//Données du SR via le XML
+	$dc->getSRinstanceFromStudy();
+	$p['page']['studyDcDataSRFull'] = $dc->getSrData();
 
-    //on cherche les examens EHR qui peuvent être attachés.
-    if ($d=msSQL::sqlUniqueChamp("select instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$p['page']['patient']['id']."' and value='".msSQL::cleanVar($match['params']['dcStudyID'])."' ")) {
-        $ob = new msObjet();
-        $ob->setObjetID($d);
-        $p['page']['studyDcDataRapro']=$ob->getCompleteObjetDataByID();
-    }
+	//on cherche les examens EHR qui peuvent être attachés.
+	if ($d = msSQL::sqlUniqueChamp(
+		"select instance from objets_data where typeID = :typeID and toID = :toID and value = :value ",
+		['typeID' => msData::getTypeIDFromName('dicomStudyID'), 'toID' => $p['page']['patient']['id'], 'value' => $match['params']['dcStudyID']]
+	)) {
+		$ob = new msObjet();
+		$ob->setObjetID($d);
+		$p['page']['studyDcDataRapro'] = $ob->getCompleteObjetDataByID();
+	}
 } else {
-    die("Cette page n'existe pas");
+	die("Cette page n'existe pas");
 }

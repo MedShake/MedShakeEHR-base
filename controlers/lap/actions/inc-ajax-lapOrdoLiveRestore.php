@@ -25,13 +25,14 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
+
 header('Content-Type: application/json');
-$file=$p['config']['workingDirectory'].'/'.$p['user']['id'].'/ordoLive.json';
+$file = $p['config']['workingDirectory'] . '/' . $p['user']['id'] . '/ordoLive.json';
 if (is_file($file)) {
-    $retour['statut'] = 'ok';
-    $retour['ordoLive'] = json_decode(file_get_contents($file), 1);
+	$retour['statut'] = 'ok';
+	$retour['ordoLive'] = json_decode(file_get_contents($file), 1);
 } else {
-    $retour['statut'] = 'nofile';
+	$retour['statut'] = 'nofile';
 }
 
 echo json_encode($retour);

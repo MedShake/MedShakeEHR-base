@@ -27,31 +27,30 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template='configJdvShow';
+$debug = '';
+$template = 'configJdvShow';
 
-if(is_dir($p['homepath'].'ressources/JDV/')) {
-  foreach(glob($p['homepath'].'ressources/JDV/*.xml') as $file) {
-    $path_parts = pathinfo($file);
-    $p['page']['files'][$path_parts['filename']]= msExternalData::getJdvDataFromXml($path_parts['basename']);
-  }
+if (is_dir($p['homepath'] . 'ressources/JDV/')) {
+	foreach (glob($p['homepath'] . 'ressources/JDV/*.xml') as $file) {
+		$path_parts = pathinfo($file);
+		$p['page']['files'][$path_parts['filename']] = msExternalData::getJdvDataFromXml($path_parts['basename']);
+	}
 
-  if(array_key_exists('JDV_J01-XdsAuthorSpecialty-CI-SIS', $p['page']['files'])) {
-    $p['page']['filesPresence']['JDV_J01-XdsAuthorSpecialty-CI-SIS']=true;
-  } else {
-    $p['page']['filesPresence']['JDV_J01-XdsAuthorSpecialty-CI-SIS']=false;
-  }
+	if (array_key_exists('JDV_J01-XdsAuthorSpecialty-CI-SIS', $p['page']['files'])) {
+		$p['page']['filesPresence']['JDV_J01-XdsAuthorSpecialty-CI-SIS'] = true;
+	} else {
+		$p['page']['filesPresence']['JDV_J01-XdsAuthorSpecialty-CI-SIS'] = false;
+	}
 
-  if(array_key_exists('JDV_J02-HealthcareFacilityTypeCode_CI-SIS', $p['page']['files'])) {
-    $p['page']['filesPresence']['JDV_J02-HealthcareFacilityTypeCode_CI-SIS']=true;
-  } else {
-    $p['page']['filesPresence']['JDV_J02-HealthcareFacilityTypeCode_CI-SIS']=false;
-  }
+	if (array_key_exists('JDV_J02-HealthcareFacilityTypeCode_CI-SIS', $p['page']['files'])) {
+		$p['page']['filesPresence']['JDV_J02-HealthcareFacilityTypeCode_CI-SIS'] = true;
+	} else {
+		$p['page']['filesPresence']['JDV_J02-HealthcareFacilityTypeCode_CI-SIS'] = false;
+	}
 
-  if(array_key_exists('JDV_J07-XdsTypeCode_CI-SIS', $p['page']['files'])) {
-    $p['page']['filesPresence']['JDV_J07-XdsTypeCode_CI-SIS']=true;
-  } else {
-    $p['page']['filesPresence']['JDV_J07-XdsTypeCode_CI-SIS']=false;
-  }
-
+	if (array_key_exists('JDV_J07-XdsTypeCode_CI-SIS', $p['page']['files'])) {
+		$p['page']['filesPresence']['JDV_J07-XdsTypeCode_CI-SIS'] = true;
+	} else {
+		$p['page']['filesPresence']['JDV_J07-XdsTypeCode_CI-SIS'] = false;
+	}
 }

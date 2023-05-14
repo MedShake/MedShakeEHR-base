@@ -25,31 +25,34 @@
  * (action via Orthanc, cf class msDicom)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
- if(!is_numeric($match['params']['patientID'])) die;
- $template='inc-patientDicomStudiesList';
+if (!is_numeric($match['params']['patientID'])) die;
+$template = 'inc-patientDicomStudiesList';
 
- $dc = new msDicom();
- $dc->setToID($match['params']['patientID']);
- $p['page']['studiesDcData']=$dc->getAllStudiesFromPatientDcData();
- if (!isset($p['page']['studiesDcData']['HttpError'])) {
+$dc = new msDicom();
+$dc->setToID($match['params']['patientID']);
+$p['page']['studiesDcData'] = $dc->getAllStudiesFromPatientDcData();
+if (!isset($p['page']['studiesDcData']['HttpError'])) {
 
-   //on complète les data dicom avec un datetime facilement exploitable
-   if(isset($p['page']['studiesDcData'])) {
-     foreach ($p['page']['studiesDcData'] as $k=>$v) {
-         $p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'].'T'.round($v['MainDicomTags']['StudyTime']);
-     }
-   }
+	//on complète les data dicom avec un datetime facilement exploitable
+	if (isset($p['page']['studiesDcData'])) {
+		foreach ($p['page']['studiesDcData'] as $k => $v) {
+			if (empty($v['MainDicomTags']['StudyTime'])) $v['MainDicomTags']['StudyTime'] = 120000;
+			$p['page']['studiesDcData'][$k]['Datetime'] =  $v['MainDicomTags']['StudyDate'] . 'T' . round((int)$v['MainDicomTags']['StudyTime']);
+		}
+	}
 
-   //on cherche les examens EHR qui peuvent être attachés.
-   if ($d=msSQL::sql2tabKey("select value, instance from objets_data where typeID='".msData::getTypeIDFromName('dicomStudyID')."' and toID='".$match['params']['patientID']."' ", 'instance', 'value')) {
-       foreach ($d as $k=>$v) {
-           $ob = new msObjet();
-           $ob->setObjetID($k);
-           $p['page']['studiesDcDataRapro'][$v]=$ob->getCompleteObjetDataByID();
-       }
-   }
- } else {
-     unset($p['page']['studiesDcData']);
- }
+	//on cherche les examens EHR qui peuvent être attachés.
+	if ($d = msSQL::sql2tabKey("SELECT value, instance from objets_data where typeID = :dicomStudyID and toID = :patientID", 'instance', 'value', ['patientID' => $match['params']['patientID'], 'dicomStudyID' => msData::getTypeIDFromName('dicomStudyID')])) {
+		foreach ($d as $k => $v) {
+			$ob = new msObjet();
+			$ob->setObjetID($k);
+			$p['page']['studiesDcDataRapro'][$v] = $ob->getCompleteObjetDataByID();
+		}
+	}
+} else {
+	unset($p['page']['studiesDcData']);
+}

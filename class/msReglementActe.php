@@ -25,210 +25,238 @@
  *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 class msReglementActe extends msReglement
 {
+	private $_acteCode;
+	private $_acteType;
+	private $_acteActivite = 1;
+	private $_actePhase = 0;
 
-  private $_acteCode;
-  private $_acteType;
-  private $_acteActivite=1;
-  private $_actePhase=0;
+	/**
+	 * Définir le code de l'acte
+	 * @param string $acteCode code de l'acte
+	 */
+	public function setActeCode($acteCode)
+	{
+		if (!is_string($acteCode)) throw new Exception('ActeCode is not string');
+		$this->_acteCode = $acteCode;
+		$this->getActeType();
+		return $this->_acteCode;
+	}
 
-/**
- * Définir le code de l'acte
- * @param string $acteCode code de l'acte
- */
-  public function setActeCode($acteCode) {
-    if(!is_string($acteCode)) throw new Exception('ActeCode is not string');
-    $this->_acteCode=$acteCode;
-    $this->getActeType();
-    return $this->_acteCode;
-  }
+	/**
+	 * Définir le code activité (acte CCAM)
+	 * @param int $acteActivite code activité
+	 */
+	public function setActeActivite($acteActivite)
+	{
+		if (!is_numeric($acteActivite)) throw new Exception('ActeActivite is not numeric');
+		return $this->_acteActivite = $acteActivite;
+	}
 
-/**
- * Définir le code activité (acte CCAM)
- * @param int $acteActivite code activité
- */
-  public function setActeActivite($acteActivite) {
-    if(!is_numeric($acteActivite)) throw new Exception('ActeActivite is not numeric');
-    return $this->_acteActivite=$acteActivite;
-  }
+	/**
+	 * Définir le code phase (acte CCAM)
+	 * @param int $actePhase code phase
+	 */
+	public function setActePhase($actePhase)
+	{
+		if (!is_numeric($actePhase)) throw new Exception('ActePhase is not numeric');
+		return $this->_actePhase = $actePhase;
+	}
 
-/**
- * Définir le code phase (acte CCAM)
- * @param int $actePhase code phase
- */
-  public function setActePhase($actePhase) {
-    if(!is_numeric($actePhase)) throw new Exception('ActePhase is not numeric');
-    return $this->_actePhase=$actePhase;
-  }
+	/**
+	 * Déterminer le type de l'acte
+	 * @return string type de l'acte
+	 */
+	public function getActeType()
+	{
+		if (isset($this->_acteType)) return $this->_acteType;
+		if (preg_match('#[A-Z]{4}[0-9]{3}#i', $this->_acteCode)) {
+			return $this->_acteType = 'CCAM';
+		} elseif ($type = msSQL::sqlUniqueChamp("SELECT `type` from `actes_base` where `code`= :code and `type` ='NGAP' limit 1 ", ['code' => $this->_acteCode])) {
+			return $this->_acteType = $type;
+		} else {
+			return $this->_acteType = 'Libre';
+		}
+	}
 
-/**
- * Déterminer le type de l'acte
- * @return string type de l'acte
- */
-  public function getActeType() {
-    if(isset($this->_acteType)) return $this->_acteType;
-    if(preg_match('#[A-Z]{4}[0-9]{3}#i',$this->_acteCode)) {
-      return $this->_acteType='CCAM';
-    } elseif($type = msSQL::sqlUniqueChamp("select `type` from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type` ='NGAP' limit 1 ")) {
-      return $this->_acteType=$type;
-    } else {
-      return $this->_acteType='Libre';
-    }
-  }
+	/**
+	 * Obtenir le tarif de l'acte dans son contexte
+	 * @return float tarif de l'acte
+	 */
+	public function getActeTarifBase()
+	{
 
-/**
- * Obtenir le tarif de l'acte dans son contexte
- * @return float tarif de l'acte
- */
-  public function getActeTarifBase() {
+		if (!isset($this->_acteCode)) {
+			throw new Exception('ActeCode is not set');
+		}
+		if (!isset($this->_acteType)) {
+			throw new Exception('ActeType is not set');
+		}
+		if (!isset($this->_secteurTarifaire)) {
+			throw new Exception('SecteurTarifaire is not set');
+		}
+		if (!isset($this->_secteurTarifaireGeo)) {
+			throw new Exception('SecteurTarifaireGeo is not set');
+		}
+		if (!isset($this->_secteurTarifaireNgap)) {
+			throw new Exception('SecteurTarifaireNgap is not set');
+		}
 
-    if (!isset($this->_acteCode)) {
-        throw new Exception('ActeCode is not set');
-    }
-    if (!isset($this->_acteType)) {
-        throw new Exception('ActeType is not set');
-    }
-    if (!isset($this->_secteurTarifaire)) {
-        throw new Exception('SecteurTarifaire is not set');
-    }
-    if (!isset($this->_secteurTarifaireGeo)) {
-        throw new Exception('SecteurTarifaireGeo is not set');
-    }
-    if (!isset($this->_secteurTarifaireNgap)) {
-        throw new Exception('SecteurTarifaireNgap is not set');
-    }
+		if ($this->_acteType == 'CCAM' and !empty($this->_secteurTarifaire)) {
+			if ($d = $this->_getActeCcamData(['dataYaml'])) {
+				// application coeff majoration DOM
+				if (isset($d['dataYaml']['majorationsDom'][$this->_secteurTarifaireGeo])) {
+					$tarif =  round(($d['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT' . $this->_secteurTarifaire] * $d['dataYaml']['majorationsDom'][$this->_secteurTarifaireGeo]), 2);
+				} else {
+					$tarif =  $d['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT' . $this->_secteurTarifaire];
+				}
+			}
+		} elseif ($this->_acteType == 'mCCAM' and !empty($this->_secteurTarifaire)) {
+			if ($d = $this->_getActeModifCcamData(['dataYaml'])) {
+				$tarif =  $d['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT' . $this->_secteurTarifaire];
+			}
+		} elseif ($this->_acteType == 'NGAP' and !empty($this->_secteurTarifaireNgap)) {
+			if ($d = $this->_getActeNgapData(['dataYaml'])) {
+				$tarif =  $d['dataYaml']['tarifParZone'][$this->_secteurTarifaireGeo];
+			}
+		} elseif ($this->_acteType == 'Libre') {
+			if ($d = $this->_getActeLibreData(['dataYaml'])) {
+				$tarif =  $d['dataYaml']['tarifBase'];
+			}
+		}
 
-    if($this->_acteType=='CCAM' and !empty($this->_secteurTarifaire)) {
-      if($d = $this->_getActeCcamData(['dataYaml'])) {
-        // application coeff majoration DOM
-        if(isset($d['dataYaml']['majorationsDom'][$this->_secteurTarifaireGeo])) {
-          $tarif =  round(($d['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire]*$d['dataYaml']['majorationsDom'][$this->_secteurTarifaireGeo]),2);
-        } else {
-          $tarif =  $d['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire];
-        }
-      }
+		if (isset($tarif) and is_numeric($tarif)) {
+			return number_format($tarif, 2, '.', '');
+		} else {
+			return '';
+		}
+	}
 
-    } elseif($this->_acteType=='mCCAM' and !empty($this->_secteurTarifaire)) {
-      if($d = $this->_getActeModifCcamData(['dataYaml'])) {
-        $tarif =  $d['dataYaml']['tarifParGrilleTarifaire']['CodeGrilleT'.$this->_secteurTarifaire];
-      }
+	/**
+	 * Obtenir la tableau de correspondance entre codePro et labels
+	 * @param  string $sort trier par label ou pas code
+	 * @return array       tableau de correspodance trié
+	 */
+	public static function getCodeProfLabel($sort = 'label')
+	{
+		$d = array(
+			"mbio" => "Biologie",
+			"mcardio" => "Cardiologie",
+			"mchirortho" => "Chirurgie orthopédique",
+			"mcure" => "Cure thermale",
+			"mdermato" => "Dermatologie",
+			"mendoc" => "Endocrinologie",
+			"mg" => "Médecine générale",
+			"mgo" => "Gynécologie Obstétrique",
+			"mhge" => "Hépato-gastro-entérologie",
+			"minterne" => "Médecine interne",
+			"mmpr" => "MPR",
+			"mnephro" => "Néphrologie",
+			"mophtalmo" => "Ophtalmologie",
+			"mpedia" => "Pédiatrie",
+			"mpneumo" => "Pneumologie",
+			"mpsy" => "Psychiatrie",
+			"mrhumato" => "Rhumatologie",
+			"mspe" => "Autres spécialités médicales",
+			"msto" => "Stomato & Chirugie maxillo-faciale",
+			"mvasc" => "Médecine vasculaire",
+			"sf" => "Sage-femme",
+		);
+		if ($sort == "label") {
+			asort($d);
+		} else {
+			ksort($d);
+		}
+		return $d;
+	}
 
-    } elseif($this->_acteType=='NGAP' and !empty($this->_secteurTarifaireNgap)) {
-      if($d = $this->_getActeNgapData(['dataYaml'])) {
-        $tarif =  $d['dataYaml']['tarifParZone'][$this->_secteurTarifaireGeo];
-      }
+	/**
+	 * Obtenir les data en base sur un acte CCAM
+	 * @param  array  $cols colonnes sql à extraire
+	 * @return array       data acte
+	 */
+	private function _getActeCcamData($cols = ['*'])
+	{
+		if (!msSQL::sqlValidQueryCols($cols, msSQL::sqlGetColumnNames('actes_base')) and $cols != ['*']) {
+			throw new Exception("Les colonnes demandées pour la table actes_base sont invalides");
+		}
 
-    } elseif($this->_acteType=='Libre') {
-      if($d = $this->_getActeLibreData(['dataYaml'])) {
-        $tarif =  $d['dataYaml']['tarifBase'];
-      }
-    }
+		$marqueurs = [
+			'code' => $this->_acteCode,
+			'activite' => $this->_acteActivite,
+			'phase' => $this->_actePhase
+		];
+		if ($d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='CCAM' and `activite`= :activite and `phase`= :phase limit 1", $marqueurs)) {
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
+			return $d;
+		} else {
+			return false;
+		}
+	}
 
-    if(isset($tarif) and is_numeric($tarif)) {
-      return number_format($tarif, 2, '.', '');
-    } else {
-      return '';
-     }
+	/**
+	 * Obtenir les data en base sur un modificateur CCAM
+	 * @param  array  $cols colonnes sql à extraire
+	 * @return array       data acte
+	 */
+	private function _getActeModifCcamData($cols = ['*'])
+	{
 
-  }
+		if (!msSQL::sqlValidQueryCols($cols, msSQL::sqlGetColumnNames('actes_base')) and $cols != ['*']) {
+			throw new Exception("Les colonnes demandées pour la table actes_base sont invalides");
+		}
 
-/**
- * Obtenir la tableau de correspondance entre codePro et labels
- * @param  string $sort trier par label ou pas code
- * @return array       tableau de correspodance trié
- */
-  public static function getCodeProfLabel($sort='label') {
-    $d = array(
-      "mbio"=>"Biologie",
-      "mcardio"=>"Cardiologie",
-      "mchirortho"=>"Chirurgie orthopédique",
-      "mcure"=>"Cure thermale",
-      "mdermato"=>"Dermatologie",
-      "mendoc"=>"Endocrinologie",
-      "mg"=>"Médecine générale",
-      "mgo"=>"Gynécologie Obstétrique",
-      "mhge"=>"Hépato-gastro-entérologie",
-      "minterne"=>"Médecine interne",
-      "mmpr"=>"MPR",
-      "mnephro"=>"Néphrologie",
-      "mophtalmo"=>"Ophtalmologie",
-      "mpedia"=>"Pédiatrie",
-      "mpneumo"=>"Pneumologie",
-      "mpsy"=>"Psychiatrie",
-      "mrhumato"=>"Rhumatologie",
-      "mspe"=>"Autres spécialités médicales",
-      "msto"=>"Stomato & Chirugie maxillo-faciale",
-      "mvasc"=>"Médecine vasculaire",
-      "sf"=>"Sage-femme",
-    );
-    if($sort == "label") {
-      asort($d);
-    } else {
-      ksort($d);
-    }
-    return $d;
-  }
+		if ($d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='mCCAM' limit 1", ['code' => $this->_acteCode])) {
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
+			return $d;
+		} else {
+			return false;
+		}
+	}
 
-/**
- * Obtenir les data en base sur un acte CCAM
- * @param  array  $cols colonnes sql à extraire
- * @return array       data acte
- */
-  private function _getActeCcamData($cols=['*']) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='CCAM' and `activite`='".$this->_acteActivite."' and `phase`='".$this->_actePhase."' limit 1")) {
-      if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
-      return $d;
-    } else {
-      return false;
-    }
-  }
+	/**
+	 * Obtenir les data en base sur un acte NGAP
+	 * @param  array  $cols colonnes sql à extraire
+	 * @return array       data acte
+	 */
+	private function _getActeNgapData($cols = ['*'], $strict = FALSE)
+	{
+		if (!msSQL::sqlValidQueryCols($cols, msSQL::sqlGetColumnNames('actes_base')) and $cols != ['*']) {
+			throw new Exception("Les colonnes demandées pour la table actes_base sont invalides");
+		}
 
-/**
- * Obtenir les data en base sur un modificateur CCAM
- * @param  array  $cols colonnes sql à extraire
- * @return array       data acte
- */
-  private function _getActeModifCcamData($cols=['*']) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='mCCAM' limit 1")) {
-      if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
-      return $d;
-    } else {
-      return false;
-    }
-  }
+		if ($d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='NGAP' and `codeProf` = :secteurTarifaireNgap limit 1", ['code' => $this->_acteCode, 'secteurTarifaireNgap' => $this->_secteurTarifaireNgap])) {
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
+			return $d;
+		} elseif ($strict == FALSE and $d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='NGAP' limit 1", ['code' => $this->_acteCode])) {
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
+			return $d;
+		} else {
+			return false;
+		}
+	}
 
-/**
- * Obtenir les data en base sur un acte NGAP
- * @param  array  $cols colonnes sql à extraire
- * @return array       data acte
- */
-  private function _getActeNgapData($cols=['*'], $strict=FALSE) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='NGAP' and `codeProf`='".msSQL::cleanVar($this->_secteurTarifaireNgap)."' limit 1")) {
-      if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
-      return $d;
-    } elseif ($strict == FALSE and $d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='NGAP' limit 1")) {
-      if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
-      return $d;
-    } else {
-      return false;
-    }
-  }
+	/**
+	 * Obtenir les data en base sur un acte libre
+	 * @param  array  $cols colonnes sql à extraire
+	 * @return array       data acte
+	 */
+	private function _getActeLibreData($cols = ['*'])
+	{
+		if (!msSQL::sqlValidQueryCols($cols, msSQL::sqlGetColumnNames('actes_base')) and $cols != ['*']) {
+			throw new Exception("Les colonnes demandées pour la table actes_base sont invalides");
+		}
 
-/**
- * Obtenir les data en base sur un acte libre
- * @param  array  $cols colonnes sql à extraire
- * @return array       data acte
- */
-  private function _getActeLibreData($cols=['*']) {
-    if($d = msSQL::sqlUnique("select ".implode(', ', msSQL::cleanArray($cols))." from `actes_base` where `code`='".msSQL::cleanVar($this->_acteCode)."' and `type`='Libre' limit 1")) {
-      if(isset($d['dataYaml'])) $d['dataYaml']=Spyc::YAMLLoad($d['dataYaml']);
-      return $d;
-    } else {
-      return false;
-    }
-  }
-
+		if ($d = msSQL::sqlUnique("SELECT " . implode(', ', $cols) . " from `actes_base` where `code`= :code and `type`='Libre' limit 1", ['code' => $this->_acteCode])) {
+			if (isset($d['dataYaml'])) $d['dataYaml'] = msYAML::yamlYamlToArray($d['dataYaml']);
+			return $d;
+		} else {
+			return false;
+		}
+	}
 }

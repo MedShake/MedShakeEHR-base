@@ -24,51 +24,56 @@
  * Plugins
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 class msPlugins
 {
 
-/**
- * Obtenir une liste des plugins installés
- * @return array array pluginName=>pluginName
- */
-  public static function getInstalledPluginsNames() {
-    return msSQL::sql2tabKey("SELECT name FROM `system` WHERE groupe='plugin' order by name", "name", "name");
-  }
+	/**
+	 * Obtenir une liste des plugins installés
+	 * @return array array pluginName=>pluginName
+	 */
+	public static function getInstalledPluginsNames()
+	{
+		return msSQL::sql2tabKey("SELECT name FROM `system` WHERE groupe='plugin' order by name", "name", "name");
+	}
 
-/**
- * Obtenir une liste des plugins et versions
- * @return array k=>['plugin','version']
- */
-  public static function getInstalledPluginsNamesAndVersions() {
-    return msSQL::sql2tab("SELECT name, value AS version FROM `system` WHERE groupe='plugin' order by name");
-  }
+	/**
+	 * Obtenir une liste des plugins et versions
+	 * @return array k=>['plugin','version']
+	 */
+	public static function getInstalledPluginsNamesAndVersions()
+	{
+		return msSQL::sql2tab("SELECT name, value AS version FROM `system` WHERE groupe='plugin' order by name");
+	}
 
-/**
- * Obtenir une liste des versions des plugins
- * @return array plugin=>'version'
- */
-  public static function getInstalledPluginsVersions() {
-    if($r = msSQL::sql2tabKey("SELECT name, value AS version FROM `system` WHERE groupe='plugin'", "name", "version")) {
-      return $r;
-    } else {
-      return [];
-    }
-  }
+	/**
+	 * Obtenir une liste des versions des plugins
+	 * @return array plugin=>'version'
+	 */
+	public static function getInstalledPluginsVersions()
+	{
+		if ($r = msSQL::sql2tabKey("SELECT name, value AS version FROM `system` WHERE groupe='plugin'", "name", "version")) {
+			return $r;
+		} else {
+			return [];
+		}
+	}
 
-/**
- * Obtenir les infos génériques sur un plugin à partir du fichier aboutPlugin*Plugin*.yml
- * @param  string $name nom du plugin
- * @return array       paramètres extraits
- */
-  public static function getPluginInfosGen($name) {
-      global $p;
-      $file=$p['homepath'].'config/plugins/'.$name.'/aboutPlugin'.ucfirst($name).'.yml';
-      if(is_file($file)) {
-        return Spyc::YAMLLoad($file);
-      }
-      return [];
-  }
-
+	/**
+	 * Obtenir les infos génériques sur un plugin à partir du fichier aboutPlugin*Plugin*.yml
+	 * @param  string $name nom du plugin
+	 * @return array       paramètres extraits
+	 */
+	public static function getPluginInfosGen($name)
+	{
+		global $p;
+		$file = $p['homepath'] . 'config/plugins/' . $name . '/aboutPlugin' . ucfirst($name) . '.yml';
+		if (is_file($file)) {
+			return msYAML::yamlFileRead($file);
+		}
+		return [];
+	}
 }

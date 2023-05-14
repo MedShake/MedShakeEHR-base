@@ -26,125 +26,126 @@
  * @author 2021-2022      DEMAREST Maxime <maxime@indelog.fr>
  */
 
-function returnJson(bool $status, string $message, array $data = []) {
-    header('Content-Type: application/json');
-    header('Cache-Control: no-store');
-    $ret = array(
-        'status' => $status ? 'ok' : 'error',
-        'message' => $message,
-        'data' => $data,
-    );
-    print json_encode($ret);
-    exit();
+function returnJson(bool $status, string $message, array $data = [])
+{
+	header('Content-Type: application/json');
+	header('Cache-Control: no-store');
+	$ret = array(
+		'status' => $status ? 'ok' : 'error',
+		'message' => $message,
+		'data' => $data,
+	);
+	print json_encode($ret);
+	exit();
 }
 
 if ($p['config']['optionsDossierPatientActiverMotSuivi'] == 'false') {
-    $ret_arr['statut'] = 'error';
-    $ret_arr['message'] = array("L'option optionsDossierPatientActiverMotSuivi n'est pas activée pour cette utilisateur.");
-    returnJson($ret_arr, "L'option optionsDossierPatientActiverMotSuivi n'est pas activée pour cette utilisateur.");
+	$ret_arr['statut'] = 'error';
+	$ret_arr['message'] = array("L'option optionsDossierPatientActiverMotSuivi n'est pas activée pour cette utilisateur.");
+	returnJson($ret_arr, "L'option optionsDossierPatientActiverMotSuivi n'est pas activée pour cette utilisateur.");
 }
 
 $tabReturn = array();
 $gump = new GUMP('fr');
 $fromID = $p['user']['id'];
 $motSuivi = new msMotSuivi();
-$data = Array();
+$data = array();
 
 switch ($_POST['action']) {
-case 'create':
-    $gump->validation_rules(array(
-        'toID' => 'required|numeric',
-        'dateTime' => 'required|date,d/m/Y H:i',
-        'texte' => 'required|max_len,224',
-    ));
-    $gump->filter_rules(array(
-        'texte' => 'trim|sanitize_string',
-    ));
-    $validated_data = $gump->run($_POST);
-    if ($validated_data) {
-        try {
-            $motSuivi->setTexte($validated_data['texte']);
-            $motSuivi->setDateTime($validated_data['dateTime']);
-            $motSuivi->create($fromID, $validated_data['toID']);
-            $data['html'] = msMotSuivi::getListHtmlTab($validated_data['toID']);
-            returnJson(true, 'Mot de suivi créé.', $data);
-        } catch (Exception $e) {
-            returnJson(false, $e->getMessage());
-        }
-    } else {
-        returnJson(false, $gump->get_readable_errors(true));
-    }
-    break;
-case 'update':
-    $gump->validation_rules(array(
-        'ID' => 'required|numeric',
-        'dateTime' => 'required|date,d/m/Y H:i',
-        'texte' => 'required|max_len,224',
-    ));
-    $gump->filter_rules(array(
-        'texte' => 'trim|sanitize_string',
-    ));
-    $validated_data = $gump->run($_POST);
-    if ($validated_data) {
-        try {
-            $motSuivi = new msMotSuivi;
-            if (! $motSuivi->fetch($validated_data['ID'])) throw new Exception('mot suivi non existant');
-            $toID = $motSuivi->getToID();
-            $fromID = $motSuivi->getFromID();
-            // Si l'utilisateur n'a pas le droit de modififier un mot suivi qui n'est pas le sien
-            if ($p['user']['id'] != $fromID && !filter_var($p['config']['droitMotSuiviPeutModifierSuprimerDunAutre'], FILTER_VALIDATE_BOOLEAN))
-                returnJson(false, 'Cette utilisateur ne peut pas modifier un mot suivi qui n\'est pas le sien');
-            $motSuivi->setTexte($validated_data['texte']);
-            $motSuivi->setDateTime($validated_data['dateTime']);
-            $motSuivi->update();
-            $data['html'] = msMotSuivi::getListHtmlTab($toID);
+	case 'create':
+		$gump->validation_rules(array(
+			'toID' => 'required|numeric',
+			'dateTime' => 'required|date,d/m/Y H:i',
+			'texte' => 'required|max_len,224',
+		));
+		$gump->filter_rules(array(
+			'texte' => 'trim|sanitize_string',
+		));
+		$validated_data = $gump->run($_POST);
+		if ($validated_data) {
+			try {
+				$motSuivi->setTexte($validated_data['texte']);
+				$motSuivi->setDateTime($validated_data['dateTime']);
+				$motSuivi->create($fromID, $validated_data['toID']);
+				$data['html'] = msMotSuivi::getListHtmlTab($validated_data['toID']);
+				returnJson(true, 'Mot de suivi créé.', $data);
+			} catch (Exception $e) {
+				returnJson(false, $e->getMessage());
+			}
+		} else {
+			returnJson(false, $gump->get_readable_errors(true));
+		}
+		break;
+	case 'update':
+		$gump->validation_rules(array(
+			'ID' => 'required|numeric',
+			'dateTime' => 'required|date,d/m/Y H:i',
+			'texte' => 'required|max_len,224',
+		));
+		$gump->filter_rules(array(
+			'texte' => 'trim|sanitize_string',
+		));
+		$validated_data = $gump->run($_POST);
+		if ($validated_data) {
+			try {
+				$motSuivi = new msMotSuivi;
+				if (!$motSuivi->fetch($validated_data['ID'])) throw new Exception('mot suivi non existant');
+				$toID = $motSuivi->getToID();
+				$fromID = $motSuivi->getFromID();
+				// Si l'utilisateur n'a pas le droit de modififier un mot suivi qui n'est pas le sien
+				if ($p['user']['id'] != $fromID && !filter_var($p['config']['droitMotSuiviPeutModifierSuprimerDunAutre'], FILTER_VALIDATE_BOOLEAN))
+					returnJson(false, 'Cette utilisateur ne peut pas modifier un mot suivi qui n\'est pas le sien');
+				$motSuivi->setTexte($validated_data['texte']);
+				$motSuivi->setDateTime($validated_data['dateTime']);
+				$motSuivi->update();
+				$data['html'] = msMotSuivi::getListHtmlTab($toID);
 
-            returnJson(true, 'Mot de suivi modifié.', $data);
-        } catch (Exception $e) {
-            returnJson(false, $e->getMessage());
-        }
-    } else {
-        returnJson(false, $gump->get_readable_errors(true));
-    }
-    break;
-case 'delete':
-    $gump->validation_rules(array('ID' => 'required|numeric'));
-    $validated_data = $gump->run($_POST);
-    if ($validated_data) {
-        try {
-            $motSuivi->fetch($validated_data['ID']);
-            $toID = $motSuivi->getToID();
-            $fromID = $motSuivi->getFromID();
-            // Si l'utilisateur n'a pas le droit de modififier un mot suivi qui n'est pas le sien
-            if ($p['user']['id'] != $fromID && !filter_var($p['config']['droitMotSuiviPeutModifierSuprimerDunAutre'], FILTER_VALIDATE_BOOLEAN))
-                returnJson(false, 'Cette utilisateur ne peut pas supprimer un mot suivi qui n\'est pas le sien');
-            $motSuivi->delete();
-            $data['html'] = msMotSuivi::getListHtmlTab($toID);
-            returnJson(true, 'Mot de suivi supprimé.', $data);
-        } catch (Exception $e) {
-            returnJson(false, $e->getMessage());
-        }
-    } else {
-        returnJson(false, $gump->get_readable_errors(true));
-    }
-    break;
-case 'list':
-    $gump->validation_rules(array(
-        'toID' => 'required|numeric',
-        'nb' => 'required|numeric',
-    ));
-    $validated_data = $gump->run($_POST);
-    if ($validated_data) {
-        try {
-            $nb_total = msMotSuivi::getNbTotal($validated_data['toID']);
-            $data['html'] = msMotSuivi::getListHtmlTab($validated_data['toID'], $validated_data['nb']);
-            returnJson(true, 'Liste actualisée.', $data);
-        } catch (Exception $e) {
-            returnJson(false, $e->getMessage());
-        }
-    } else {
-        returnJson(false, $gump->get_readable_errors(true));
-    }
-default:
-    returnJson(false, 'action non prise en charge');
+				returnJson(true, 'Mot de suivi modifié.', $data);
+			} catch (Exception $e) {
+				returnJson(false, $e->getMessage());
+			}
+		} else {
+			returnJson(false, $gump->get_readable_errors(true));
+		}
+		break;
+	case 'delete':
+		$gump->validation_rules(array('ID' => 'required|numeric'));
+		$validated_data = $gump->run($_POST);
+		if ($validated_data) {
+			try {
+				$motSuivi->fetch($validated_data['ID']);
+				$toID = $motSuivi->getToID();
+				$fromID = $motSuivi->getFromID();
+				// Si l'utilisateur n'a pas le droit de modififier un mot suivi qui n'est pas le sien
+				if ($p['user']['id'] != $fromID && !filter_var($p['config']['droitMotSuiviPeutModifierSuprimerDunAutre'], FILTER_VALIDATE_BOOLEAN))
+					returnJson(false, 'Cette utilisateur ne peut pas supprimer un mot suivi qui n\'est pas le sien');
+				$motSuivi->delete();
+				$data['html'] = msMotSuivi::getListHtmlTab($toID);
+				returnJson(true, 'Mot de suivi supprimé.', $data);
+			} catch (Exception $e) {
+				returnJson(false, $e->getMessage());
+			}
+		} else {
+			returnJson(false, $gump->get_readable_errors(true));
+		}
+		break;
+	case 'list':
+		$gump->validation_rules(array(
+			'toID' => 'required|numeric',
+			'nb' => 'required|numeric',
+		));
+		$validated_data = $gump->run($_POST);
+		if ($validated_data) {
+			try {
+				$nb_total = msMotSuivi::getNbTotal($validated_data['toID']);
+				$data['html'] = msMotSuivi::getListHtmlTab($validated_data['toID'], $validated_data['nb']);
+				returnJson(true, 'Liste actualisée.', $data);
+			} catch (Exception $e) {
+				returnJson(false, $e->getMessage());
+			}
+		} else {
+			returnJson(false, $gump->get_readable_errors(true));
+		}
+	default:
+		returnJson(false, 'action non prise en charge');
 }

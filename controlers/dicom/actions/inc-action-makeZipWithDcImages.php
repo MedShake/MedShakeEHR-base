@@ -27,23 +27,23 @@
  */
 
 //patient
-$patient= new msPeople();
+$patient = new msPeople();
 $patient->setToID($_POST['patientID']);
-$p['page']['courrier']=$patient->getSimpleAdminDatas();
+$p['page']['courrier'] = $patient->getSimpleAdminDatas();
 
 // dicom
 $dc = new msDicom();
 $dc->setToID($_POST['patientID']);
 $dc->setDcStudyID($_POST['dcStudyID']);
 $data = $dc->getStudyDcData();
-$dcStudyDate=$data['MainDicomTags']['StudyDate'].'T'.round($data['MainDicomTags']['StudyTime']);
+$dcStudyDate = $data['MainDicomTags']['StudyDate'] . 'T' . round($data['MainDicomTags']['StudyTime']);
 
 //forger la description TXT pour le support
-$nbImages=count($_POST['images']);
-$txt="Zip de ".$nbImages." images(s) de l'étude ".$_POST['dcStudyID']." du ".date("d/m/Y H:i", strtotime($dcStudyDate))." :\n";
+$nbImages = count($_POST['images']);
+$txt = "Zip de " . $nbImages . " images(s) de l'étude " . $_POST['dcStudyID'] . " du " . date("d/m/Y H:i", strtotime($dcStudyDate)) . " :\n";
 // images
-foreach ($_POST['images'] as $k=>$v) {
-    $txt.='- '.$v.".png\n";
+foreach ($_POST['images'] as $k => $v) {
+	$txt .= '- ' . $v . ".png\n";
 }
 
 // nouveau document support
@@ -51,40 +51,40 @@ $doc = new msObjet();
 $doc->setFromID($p['user']['id']);
 $doc->setToID($_POST['patientID']);
 
-if ($supportID=$doc->createNewObjetByTypeName('docPorteur', $txt)) {
+if ($supportID = $doc->createNewObjetByTypeName('docPorteur', $txt)) {
 
-    //type et origine
-    $doc->createNewObjetByTypeName('docType', 'zip', $supportID);
-    $doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
+	//type et origine
+	$doc->createNewObjetByTypeName('docType', 'zip', $supportID);
+	$doc->createNewObjetByTypeName('docOrigine', 'interne', $supportID);
 
-    //titre doc
-    $doc->setTitleObjet($supportID, 'zip '.$nbImages.' images du '.date("d/m/Y H:i", strtotime($dcStudyDate)));
+	//titre doc
+	$doc->setTitleObjet($supportID, 'zip ' . $nbImages . ' images du ' . date("d/m/Y H:i", strtotime($dcStudyDate)));
 
-    //stockage
-    $stockage = new msStockage();
-    $stockage->setObjetID($supportID);
-    $file = $stockage->getPathToDoc();
-    $directory = $p['config']['stockageLocation'].$stockage->getFolder($supportID);
-    msTools::checkAndBuildTargetDir($directory) ;
+	//stockage
+	$stockage = new msStockage();
+	$stockage->setObjetID($supportID);
+	$file = $stockage->getPathToDoc();
+	$directory = $p['config']['stockageLocation'] . $stockage->getFolder($supportID);
+	msTools::checkAndBuildTargetDir($directory);
 
-    //nouveau zip
-    $zip = new ZipArchive();
+	//nouveau zip
+	$zip = new ZipArchive();
 
-    if ($zip->open($file, ZipArchive::CREATE)!==TRUE) {
-        exit("Impossible d'ouvrir le fichier <$file>\n");
-    } else {
+	if ($zip->open($file, ZipArchive::CREATE) !== TRUE) {
+		exit("Impossible d'ouvrir le fichier <$file>\n");
+	} else {
 
-      $i=1;
-      foreach ($_POST['images'] as $k=>$v) {
-        $imagepath=$p['config']['dicomWorkingDirectory'].$p['user']['id'].'/'.$_POST['dcStudyID'].'/'.$v.'.png';
-        if(is_file($imagepath)) {
-          $zip->addFile($imagepath, "image".$i.".png");
-          $i++;
-        }
-      }
+		$i = 1;
+		foreach ($_POST['images'] as $k => $v) {
+			$imagepath = $p['config']['dicomWorkingDirectory'] . $p['user']['id'] . '/' . $_POST['dcStudyID'] . '/' . $v . '.png';
+			if (is_file($imagepath)) {
+				$zip->addFile($imagepath, "image" . $i . ".png");
+				$i++;
+			}
+		}
 
-      $zip->close();
-    }
+		$zip->close();
+	}
 }
 
-msTools::redirection('/patient/'.$_POST['patientID'].'/');
+msTools::redirection('/patient/' . $_POST['patientID'] . '/');

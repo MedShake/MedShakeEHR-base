@@ -27,7 +27,6 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-$term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
 // Permet d'affiner les résultat sur des noms qui peuvent resembler à des
@@ -36,28 +35,38 @@ $a_json = array();
 // en donnant le prossiblité de préciser la recherche en séparrant les noms et
 // prénoms par un ":". Dans le cas le nom est le premier terme et le prénom le
 // second.
-$split_term = explode(':', $term);
+$split_term = explode(':', $_GET['term']);
 if (count($split_term) > 1) {
-	$mss=new msPeopleSearch;
-	$mss->setPeopleType(['pro','patient']);
+	$mss = new msPeopleSearch;
+	$mss->setPeopleType(['pro', 'patient']);
 	$criteres = array(
-		'birthname'=>trim($split_term[0]),
-		'lastname'=>trim($split_term[0]),
-		'firstname'=>trim($split_term[1]),
-	  );
+		'birthname' => trim($split_term[0]),
+		'lastname' => trim($split_term[0]),
+		'firstname' => trim($split_term[1]),
+	);
 } else {
-	$mss=new msPeopleSearch;
+	$mss = new msPeopleSearch;
 	$mss->setNameSearchMode('BnFnOrLnFn');
-	$mss->setPeopleType(['pro','patient']);
+	$mss->setPeopleType(['pro', 'patient']);
 	$criteres = array(
-		'birthname'=>$term,
-	  );
+		'birthname' => $_GET['term'],
+	);
+}
+
+$is_valid = GUMP::is_valid($criteres, [
+	'birthname' => 'sqlIdentiteSearch|max_len,60',
+	'lastname' => 'sqlIdentiteSearch|max_len,60',
+	'firstname' => 'sqlIdentiteSearch|max_len,60',
+]);
+if ($is_valid !== true) {
+	return;
 }
 
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['deathdate', 'identite', 'birthdate']);
 $mss->setLimitNumber(20);
-if ($data=msSQL::sql2tab($mss->getSql())) {
+
+if ($data = msSQL::sql2tab($mss->getSql(), $mss->getSqlMarqueurs())) {
 
 	if ($p['config']['optionGeActiverUnivTags'] == 'true') {
 		$univTagsTypeID = msUnivTags::getTypeIdByName('patients');
@@ -66,13 +75,13 @@ if ($data=msSQL::sql2tab($mss->getSql())) {
 		}
 	};
 
- 	foreach ($data as $k=>$v) {
+	foreach ($data as $k => $v) {
 
 		// Tag universel pour le dossier médical d'un patient
 		// permet de récupérer les pastille de couleur pour les afficher dans
 		// les résultat de la recherche.
 		$tagParams = array();
-		$tagParams['circle']='';
+		$tagParams['circle'] = '';
 		if (!empty($univTagsTypeID)) {
 			$tagParams = msUnivTags::getList($univTagsTypeID, $v['peopleID'], true);
 			$tagParams['circle'] = $tagCircle = msUnivTags::getTagsCircleHtml($tagParams);
@@ -80,13 +89,13 @@ if ($data=msSQL::sql2tab($mss->getSql())) {
 
 		// Si le patient possède des tags le recherche pour afficher la
 		// patstille dans les résultat de recherche.
- 		$a_json[]=array(
- 			'label'=>trim($v['identite']).' '.$v['birthdate'],
- 			'value'=>trim($v['identite']),
- 			'patientID'=>$v['peopleID'],
-			'tagParams'=>$tagParams,
- 		);
- 	}
+		$a_json[] = array(
+			'label' => trim($v['identite']) . ' ' . $v['birthdate'],
+			'value' => trim($v['identite']),
+			'patientID' => $v['peopleID'],
+			'tagParams' => $tagParams,
+		);
+	}
 }
 
 header('Content-Type: application/json');

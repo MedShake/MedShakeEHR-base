@@ -25,29 +25,31 @@
  * (déjà archivé à la pahase de classement)
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if(!is_numeric($_POST['mailID'])) die;
+if (!is_numeric($_POST['mailID'])) die;
 
-if ($data=msSQL::sqlUnique("select txtFileName, hprimAllSerialize, pjSerializeName  from inbox where id='".msSQL::cleanVar($_POST['mailID'])."' and archived='c' ")) {
-    $pj['pjSerializeName']=unserialize($data['pjSerializeName']);
-    $sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
+if ($data = msSQL::sqlUnique("SELECT txtFileName, hprimAllSerialize, pjSerializeName  from inbox where id = :id and archived = 'c' ", ['id' => $_POST['mailID']])) {
+	$pj['pjSerializeName'] = unserialize($data['pjSerializeName']);
+	$sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
 
-    if (count($pj['pjSerializeName'])>0) {
-        foreach ($pj['pjSerializeName'] as $file) {
+	if (count($pj['pjSerializeName']) > 0) {
+		foreach ($pj['pjSerializeName'] as $file) {
 
-            $source=$p['config']['apicryptCheminInbox'].$sourceFolder.'/'.$file;
+			$source = $p['config']['apicryptCheminInbox'] . $sourceFolder . '/' . $file;
 
-            if (is_file($source)) {
-                unlink($source);
-            }
-        }
+			if (is_file($source)) {
+				unlink($source);
+			}
+		}
 
-        rmdir($p['config']['apicryptCheminInbox'].$sourceFolder.'/');
-    }
+		rmdir($p['config']['apicryptCheminInbox'] . $sourceFolder . '/');
+	}
 
-    unlink($p['config']['apicryptCheminInbox'].$data['txtFileName']);
-    msSQL::sqlQuery("update inbox set archived='y' where id='".msSQL::cleanVar($_POST['mailID'])."' limit 1");
+	unlink($p['config']['apicryptCheminInbox'] . $data['txtFileName']);
+	msSQL::sqlQuery("UPDATE inbox set archived = 'y' where id = :id limit 1", ['id' => $_POST['mailID']]);
 }
 
 msTools::redirection('/inbox/');

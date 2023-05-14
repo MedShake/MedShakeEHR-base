@@ -28,71 +28,71 @@
  */
 
 //construction du répertoire
-msTools::checkAndBuildTargetDir($p['homepath'].'config/agendas/');
+msTools::checkAndBuildTargetDir($p['homepath'] . 'config/agendas/');
 
-$params=array('Lundi'=>array(), 'Mardi'=>array(), 'Mercredi'=>array(), 'Jeudi'=>array(), 'Vendredi'=>array(), 'Samedi'=>array(), 'Dimanche'=>array());
-$js=array();
-$js[]="businessHours = [\n";
-$hiddenDays=[];
-$day=1;
-foreach($params as $k=>$v) {
-    if(!isset($_POST['workOn_'.$k])) $_POST['workOn_'.$k]=false;
-    if(!isset($_POST['visible_'.$k])) $_POST['visible_'.$k]=false;
+$params = array('Lundi' => array(), 'Mardi' => array(), 'Mercredi' => array(), 'Jeudi' => array(), 'Vendredi' => array(), 'Samedi' => array(), 'Dimanche' => array());
+$js = array();
+$js[] = "businessHours = [\n";
+$hiddenDays = [];
+$day = 1;
+foreach ($params as $k => $v) {
+	if (!isset($_POST['workOn_' . $k])) $_POST['workOn_' . $k] = false;
+	if (!isset($_POST['visible_' . $k])) $_POST['visible_' . $k] = false;
 
-    $params[$k]=array('worked'=>$_POST['workOn_'.$k], 'visible'=>$_POST['visible_'.$k], 'minTime'=> $_POST['minTime_'.$k], 'maxTime'=> $_POST['maxTime_'.$k]);
-    $js[]="  {\n";
-    $js[]="    dow: [".$day."],\n";
-    $js[]="    start: '".$_POST['minTime_'.$k].":00',\n";
-    $js[]="    end: '".$_POST['maxTime_'.$k].":00',\n";
-    $js[]="  },\n";
-    if ($_POST['visible_'.$k]!=true) {
-        $hiddenDays[]=$day;
-    }
-    $day++;
-    $day%=7;
+	$params[$k] = array('worked' => $_POST['workOn_' . $k], 'visible' => $_POST['visible_' . $k], 'minTime' => $_POST['minTime_' . $k], 'maxTime' => $_POST['maxTime_' . $k]);
+	$js[] = "  {\n";
+	$js[] = "    dow: [" . $day . "],\n";
+	$js[] = "    start: '" . $_POST['minTime_' . $k] . ":00',\n";
+	$js[] = "    end: '" . $_POST['maxTime_' . $k] . ":00',\n";
+	$js[] = "  },\n";
+	if ($_POST['visible_' . $k] != true) {
+		$hiddenDays[] = $day;
+	}
+	$day++;
+	$day %= 7;
 }
-$js[]="];\n";
+$js[] = "];\n";
 
-$js[]="hiddenDays = [".implode(', ', $hiddenDays)."];\n";
+$js[] = "hiddenDays = [" . implode(', ', $hiddenDays) . "];\n";
 
-$js[]="eventSources = [{\n";
-$js[]="    url: urlBase + '/agenda/".$p['user']['id']."/ajax/getEvents/'\n";
-$js[]="  },\n";
-$js[]="  {\n";
-$js[]="    events:[\n";
-$day=1;
-foreach($params as $k=>$v) {
-    $params[$k]['pauseStart']=$_POST['pauseStart_'.$k];
-    $params[$k]['pauseEnd']=$_POST['pauseEnd_'.$k];
-    if ($_POST['pauseStart_'.$k] != $_POST['pauseEnd_'.$k] and !in_array($day, $hiddenDays)) {
-        $js[]="      {\n";
-        $js[]="        start: '".$_POST['pauseStart_'.$k].":00',\n";
-        $js[]="        end: '".$_POST['pauseEnd_'.$k].":00',\n";
-        $js[]="        dow: [".$day."],\n";
-        $js[]="        rendering: 'background',\n";
-        $js[]="        className: 'fc-nonbusiness'\n";
-        $js[]="      },\n";
-    }
-    $day++;
-    $day%=7;
+$js[] = "eventSources = [{\n";
+$js[] = "    url: urlBase + '/agenda/" . $p['user']['id'] . "/ajax/getEvents/'\n";
+$js[] = "  },\n";
+$js[] = "  {\n";
+$js[] = "    events:[\n";
+$day = 1;
+foreach ($params as $k => $v) {
+	$params[$k]['pauseStart'] = $_POST['pauseStart_' . $k];
+	$params[$k]['pauseEnd'] = $_POST['pauseEnd_' . $k];
+	if ($_POST['pauseStart_' . $k] != $_POST['pauseEnd_' . $k] and !in_array($day, $hiddenDays)) {
+		$js[] = "      {\n";
+		$js[] = "        start: '" . $_POST['pauseStart_' . $k] . ":00',\n";
+		$js[] = "        end: '" . $_POST['pauseEnd_' . $k] . ":00',\n";
+		$js[] = "        dow: [" . $day . "],\n";
+		$js[] = "        rendering: 'background',\n";
+		$js[] = "        className: 'fc-nonbusiness'\n";
+		$js[] = "      },\n";
+	}
+	$day++;
+	$day %= 7;
 }
-$js[]="    ]\n";
-$js[]="  }\n";
-$js[]="];\n";
+$js[] = "    ]\n";
+$js[] = "  }\n";
+$js[] = "];\n";
 
-$params['minTime']=$_POST['minTime'];
-$js[]="minTime = '".$params['minTime'].":00';\n";
-$params['maxTime']=$_POST['maxTime'];
-$js[]="maxTime = '".$params['maxTime'].":00';\n";
-$params['slotDuration']=$_POST['slotDuration'];
-$js[]="slotDuration = '".$params['slotDuration'].":00';\n";
+$params['minTime'] = $_POST['minTime'];
+$js[] = "minTime = '" . $params['minTime'] . ":00';\n";
+$params['maxTime'] = $_POST['maxTime'];
+$js[] = "maxTime = '" . $params['maxTime'] . ":00';\n";
+$params['slotDuration'] = $_POST['slotDuration'];
+$js[] = "slotDuration = '" . $params['slotDuration'] . ":00';\n";
 
-file_put_contents($p['homepath'].'config/agendas/agenda'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true));
+msYAML::yamlFileWrite($p['homepath'] . 'config/agendas/agenda' . $p['user']['id'] . '.yml', $params);
 
-if(file_put_contents($p['homepath'].'config/agendas/agenda'.$p['user']['id'].'.js', $js)) {
-  header('Content-Type: application/json');
-  exit(json_encode(array('status'=>'success')));
+if (file_put_contents($p['homepath'] . 'config/agendas/agenda' . $p['user']['id'] . '.js', $js)) {
+	header('Content-Type: application/json');
+	exit(json_encode(array('status' => 'success')));
 } else {
-  header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-  exit();
+	header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+	exit();
 }

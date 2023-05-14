@@ -26,14 +26,16 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
 msApicrypt2::getDecryptKey($_POST['source'], $_POST['destination'], $_POST['code']);
 
 if (is_file($_POST['destination'])) {
-    echo json_encode(array('ok'));
-    @unlink($_POST['source']);
+	echo json_encode(array('ok'));
+	@unlink($_POST['source']);
 } else {
-    http_response_code(404);
+	http_response_code(404);
 }
 die;

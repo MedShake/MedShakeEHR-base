@@ -24,33 +24,29 @@
  * Config : LAP => afficher les données de la BDPM si présente
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 //admin uniquement
 if (!msUser::checkUserIsAdmin() or $p['config']['theriaqueMode'] != 'BDPM') {
-	$template="forbidden";
+	$template = "forbidden";
 } else {
-	$template="configLapBDPM";
+	$template = "configLapBDPM";
 
-	if($bdpm=yaml_parse_file($homepath.'config/bdpm/configBdpm.yml')) {
+	if ($bdpm = msYAML::yamlFileRead($homepath . 'config/bdpm/configBdpm.yml')) {
 
-		$dirRessourcesBdpm = $homepath.'ressources/bdpm/';
+		$dirRessourcesBdpm = $homepath . 'ressources/bdpm/';
 
-		$dataParsing=msSQL::sql2tabKey("select * from bdpm_updates", 'fileName', 'fileLastParse');
+		$dataParsing = msSQL::sql2tabKey("select * from bdpm_updates", 'fileName', 'fileLastParse');
 
-		foreach($bdpm['dataBdpm'] as $table=>$v) {
+		foreach ($bdpm['dataBdpm'] as $table => $v) {
 			$p['page']['dataBdpm'][$table] = array(
 				'file' => $v['file'],
-				'filePath' => $dirRessourcesBdpm.$v['file'],
-				'filePresence' => file_exists($dirRessourcesBdpm.$v['file']),
+				'filePath' => $dirRessourcesBdpm . $v['file'],
+				'filePresence' => file_exists($dirRessourcesBdpm . $v['file']),
 				'fileLastParsing' =>  $dataParsing[$v['file']]
 			);
-
 		}
 	}
-
-
-
-
-
 }

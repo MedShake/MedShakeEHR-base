@@ -26,7 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="inc-allergieSearchTableResults";
-$lap=new msLap;
-$p['page']['allergieCode']=$lap->getAllergieFromKeywords(str_replace(' ', '%',$_POST['term']));
-$p['page']['parentID']=$_POST['parentid'];
+$template = "inc-allergieSearchTableResults";
+$lap = new msLap;
+$p['page']['allergieCode'] = $lap->getAllergieFromKeywords(str_replace(' ', '%', $_POST['term']));
+$p['page']['parentID'] = $_POST['parentid'];

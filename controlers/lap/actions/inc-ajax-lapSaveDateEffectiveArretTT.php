@@ -27,13 +27,13 @@
  */
 
 header('Content-Type: application/json');
-if(is_numeric($_POST['ligneID']) and isset($_POST['date'])) {
+if (is_numeric($_POST['ligneID']) and isset($_POST['date'])) {
 
-  $ob = new msObjet;
-  $ob->setToID($_POST['patientID']);
-  $ob->setFromID($p['user']['id']);
-  $ob->createNewObjetByTypeName('lapLignePrescriptionDatePriseFinEffective',$_POST['date'],$_POST['ligneID']);
-  echo json_encode(array('statut'=>'ok'));
+	$ob = new msObjet;
+	$ob->setToID($_POST['patientID']);
+	$ob->setFromID($p['user']['id']);
+	$ob->createNewObjetByTypeName('lapLignePrescriptionDatePriseFinEffective', $_POST['date'], $_POST['ligneID']);
+	echo json_encode(array('statut' => 'ok'));
 } else {
-  echo json_encode(array('statut'=>'ko'));
+	echo json_encode(array('statut' => 'ko'));
 }

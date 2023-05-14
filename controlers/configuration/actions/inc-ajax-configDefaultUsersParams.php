@@ -21,58 +21,66 @@
  */
 
 /**
- * Config > action : enregistrer les paramètres par défaut des utilisateurs
+ * Config > action : enregistrer les paramètres globaux de configuration
  *
  * @author fr33z00 <https://github.com/fr33z00>
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
-
-$booleans=array(
-          'twigEnvironnementAutoescape',
-          'twigEnvironnementCache',
-          'twigDebug'
-          );
-
-$toyaml=array(
-        'protocol'=>'',
-        'host'=>'',
-        'urlHostSuffixe'=>'',
-        'webDirectory'=>'',
-        'stockageLocation'=>'',
-        'backupLocation'=>'',
-        'workingDirectory'=>'',
-        'cookieDomain'=>'',
-        'cookieDuration'=>'',
-        'fingerprint'=>'',
-        'sqlServeur'=>'',
-        'sqlBase'=>'',
-        'sqlUser'=>'',
-        'sqlPass'=>'',
-        'sqlVarPassword'=>'',
-        'templatesFolder'=>'',
-        'twigEnvironnementCache'=>'',
-        'twigEnvironnementAutoescape'=>'',
-        'twigDebug'=>''
-        );
-
-foreach ($toyaml as $k=>$v) {
-    if (isset($_POST[$k])) {
-        if (in_array($k, $booleans)) {
-            $toyaml[$k]=$_POST[$k]==='true'?true:false;
-        } else {
-            $toyaml[$k]=$_POST[$k];
-        }
-        unset($_POST[$k]);
-    }
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
 }
-file_put_contents($p['homepath'].'config/config.yml', Spyc::YAMLDump($toyaml, false, 0, true));
 
-$params='';
-foreach ($_POST as $param=>$value) {
-    $params.=" WHEN '".msSQL::cleanVar($param)."' THEN '".msSQL::cleanVar($value)."'";
+$booleans = array(
+	'twigEnvironnementAutoescape',
+	'twigEnvironnementCache',
+	'twigDebug'
+);
+
+$toyaml = array(
+	'protocol' => '',
+	'host' => '',
+	'urlHostSuffixe' => '',
+	'webDirectory' => '',
+	'stockageLocation' => '',
+	'backupLocation' => '',
+	'workingDirectory' => '',
+	'cookieDomain' => '',
+	'cookieDuration' => '',
+	'fingerprint' => '',
+	'sqlServeur' => '',
+	'sqlBase' => '',
+	'sqlUser' => '',
+	'sqlPass' => '',
+	'sqlVarPassword' => '',
+	'templatesFolder' => '',
+	'twigEnvironnementCache' => '',
+	'twigEnvironnementAutoescape' => '',
+	'twigDebug' => ''
+);
+
+foreach ($toyaml as $k => $v) {
+	if (isset($_POST[$k])) {
+		if (in_array($k, $booleans)) {
+			$toyaml[$k] = $_POST[$k] === 'true' ? true : false;
+		} else {
+			$toyaml[$k] = $_POST[$k];
+		}
+		unset($_POST[$k]);
+	}
 }
-msSQL::sqlQuery("UPDATE configuration SET value = CASE name ".$params." ELSE value END WHERE level='default' and name in ('".implode("','", array_keys($_POST))."')");
+file_put_contents($p['homepath'] . 'config/config.yml', msYAML::yamlArrayToYaml($toyaml));
 
+$sql = "UPDATE configuration SET value = :value WHERE name = :name AND level = 'default' LIMIT 1";
+$stmt = $pdo->prepare($sql);
+
+foreach ($_POST as $name => $value) {
+	if (!$stmt->execute(['name' => $name, 'value' => $value])) {
+		echo json_encode(array('ko'));
+		die();
+	}
+}
 
 echo json_encode(array('ok'));

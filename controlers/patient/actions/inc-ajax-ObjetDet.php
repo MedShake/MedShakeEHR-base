@@ -29,51 +29,50 @@
 
 if (is_numeric($_GET['objetID'])) {
 
-    $preview = new msModBaseObjetPreview;
-    $preview->setObjetID($_GET['objetID']);
-    $objetGroupe=$preview->getObjetGroupe();
-    $objetName=$preview->getObjetName();
-    $objetModule=$preview->getObjetModule();
+	$preview = new msModBaseObjetPreview;
+	$preview->setObjetID($_GET['objetID']);
+	$objetGroupe = $preview->getObjetGroupe();
+	$objetName = $preview->getObjetName();
+	$objetModule = $preview->getObjetModule();
 
-    if ($objetGroupe=="doc") {
-        echo $preview->getGenericPreviewDocument();
-    } elseif ($objetGroupe=="reglement") {
-        echo $preview->getGenericPreviewReglement();
-    } elseif ($objetGroupe=="mail") {
-        echo $preview->getGenericPreviewMail();
-    } elseif ($objetGroupe=="ordo" and $objetName=="lapExtOrdonnance") {
-        echo $preview->getGenericPreviewOrdoLapExt();
-    } elseif ($objetGroupe=="ordo") {
-        echo $preview->getGenericPreviewOrdo();
-    } elseif ($objetGroupe=="courrier") {
-        echo $preview->getGenericPreviewCourrier();
-    } elseif($objetGroupe=="typecs") {
+	if ($objetGroupe == "doc") {
+		echo $preview->getGenericPreviewDocument();
+	} elseif ($objetGroupe == "reglement") {
+		echo $preview->getGenericPreviewReglement();
+	} elseif ($objetGroupe == "mail") {
+		echo $preview->getGenericPreviewMail();
+	} elseif ($objetGroupe == "ordo" and $objetName == "lapExtOrdonnance") {
+		echo $preview->getGenericPreviewOrdoLapExt();
+	} elseif ($objetGroupe == "ordo") {
+		echo $preview->getGenericPreviewOrdo();
+	} elseif ($objetGroupe == "courrier") {
+		echo $preview->getGenericPreviewCourrier();
+	} elseif ($objetGroupe == "typecs") {
 
 
-        $classModuleObjet = 'msMod'.ucfirst($objetModule).'ObjetPreview';
-        $methode = 'getPreview'.ucfirst($objetName);
+		$classModuleObjet = 'msMod' . ucfirst($objetModule) . 'ObjetPreview';
+		$methode = 'getPreview' . ucfirst($objetName);
 
-        //si méthode existe dans base
-        if(method_exists('msModBaseObjetPreview',$methode)) {
-          echo $preview->$methode();
-        }
-        // si méthode existe dans extension proposé par le module dont le type dépend
-        elseif(method_exists($classModuleObjet,$methode)) {
-          $previewExtend = new $classModuleObjet;
-          $previewExtend->setObjetID($_GET['objetID']);
-          echo $previewExtend->$methode();
-        }
-        // si document qui peut être signé -> affichage du PDF
-        elseif($preview->getCanBeSigned()) {
-          echo $preview->getGenericPreviewPDF();
-        }
-        // sinon on tente au final avec le template impression
-        else {
-          echo $preview->getGenericPreviewFromPrintTemplate();
-        }
-
-    } else {
-      echo $preview->getGenericPreviewFromPrintTemplate();
-    }
-    exit();
+		//si méthode existe dans base
+		if (method_exists('msModBaseObjetPreview', $methode)) {
+			echo $preview->$methode();
+		}
+		// si méthode existe dans extension proposé par le module dont le type dépend
+		elseif (method_exists($classModuleObjet, $methode)) {
+			$previewExtend = new $classModuleObjet;
+			$previewExtend->setObjetID($_GET['objetID']);
+			echo $previewExtend->$methode();
+		}
+		// si document qui peut être signé -> affichage du PDF
+		elseif ($preview->getCanBeSigned()) {
+			echo $preview->getGenericPreviewPDF();
+		}
+		// sinon on tente au final avec le template impression
+		else {
+			echo $preview->getGenericPreviewFromPrintTemplate();
+		}
+	} else {
+		echo $preview->getGenericPreviewFromPrintTemplate();
+	}
+	exit();
 }

@@ -29,33 +29,33 @@
 
 header('Content-Type: application/json');
 
-$debug='';
-$m=$match['params']['m'];
-$acceptedModes=array(
-    'getRelationsPraticiens', // autocomplete : obtenir le json des praticiens
-    'removeRelation', // Retirer une relation entre 2 peopleID
-    'getRelationsPatientPraticiensTab', // Obtenir le tableau de relations patient <-> praticiens
-    'getRelationsPatients', //Autocomplete : obtenir le json des patients
-    'getRelationsPatientPatientsTab', // Obtenir le tableau de relations patient <-> patients
-    'setExternAsPatient', //relier un externe à un patient
-    'setExternAsNewPatient', //transformer un externe en patient
-    'peopleDestroy', //détruire un dossier
-    'getRelationsGroupes', // autocomplete : obtenir le json des groupes
-    'getRelationsPraticienGroupesTab', // obtenir le tableau relations praticien <-> groupes
-    'setRelation', // définir une relation entre 2 peopleID
-    'getRelationsRegistres', // autocomplete : obtenir le json registres
-    'getRelationsGroupeRegistresTab', // obtenir tableau de relation groupe <-> registres
-    'getRelationsRegistrePraticiensTab', // obtenir le tableau de relation registre <-> praticiens
-    'getRelationsGroupePraticiensTab', // obtenir le tableau de relation groupe <-> praticiens
-    'getRelationsRegistreGroupesTab', // obtenir le tableau de relation registre <-> groupes
-    'getRelationsPatientGroupesTab', // obtenir le tableau de relation patient <-> groupes
-    'autoAssignOwnGroupsToUser', // autoassigner ses propres groupes à un user fils
-    'userCreate', // créer un utilisateur en 1 clic depuis fiche pro.
+$debug = '';
+$m = $match['params']['m'];
+$acceptedModes = array(
+	'getRelationsPraticiens', // autocomplete : obtenir le json des praticiens
+	'removeRelation', // Retirer une relation entre 2 peopleID
+	'getRelationsPatientPraticiensTab', // Obtenir le tableau de relations patient <-> praticiens
+	'getRelationsPatients', //Autocomplete : obtenir le json des patients
+	'getRelationsPatientPatientsTab', // Obtenir le tableau de relations patient <-> patients
+	'setExternAsPatient', //relier un externe à un patient
+	'setExternAsNewPatient', //transformer un externe en patient
+	'peopleDestroy', //détruire un dossier
+	'getRelationsGroupes', // autocomplete : obtenir le json des groupes
+	'getRelationsPraticienGroupesTab', // obtenir le tableau relations praticien <-> groupes
+	'setRelation', // définir une relation entre 2 peopleID
+	'getRelationsRegistres', // autocomplete : obtenir le json registres
+	'getRelationsGroupeRegistresTab', // obtenir tableau de relation groupe <-> registres
+	'getRelationsRegistrePraticiensTab', // obtenir le tableau de relation registre <-> praticiens
+	'getRelationsGroupePraticiensTab', // obtenir le tableau de relation groupe <-> praticiens
+	'getRelationsRegistreGroupesTab', // obtenir le tableau de relation registre <-> groupes
+	'getRelationsPatientGroupesTab', // obtenir le tableau de relation patient <-> groupes
+	'autoAssignOwnGroupsToUser', // autoassigner ses propres groupes à un user fils
+	'userCreate', // créer un utilisateur en 1 clic depuis fiche pro.
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
 //inclusion
-include('inc-ajax-'.$m.'.php');
+include('inc-ajax-' . $m . '.php');

@@ -25,12 +25,12 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='';
-$template='configPlugins';
+$debug = '';
+$template = 'configPlugins';
 
-if($p['page']['plugins']=msPlugins::getInstalledPluginsNamesAndVersions()) {
-  foreach($p['page']['plugins'] as $k=>$v) {
-    // infos génériques
-    $p['page']['pluginsInfosGen'][$v['name']]=msPlugins::getPluginInfosGen($v['name']);
-  }
+if ($p['page']['plugins'] = msPlugins::getInstalledPluginsNamesAndVersions()) {
+	foreach ($p['page']['plugins'] as $k => $v) {
+		// infos génériques
+		$p['page']['pluginsInfosGen'][$v['name']] = msPlugins::getPluginInfosGen($v['name']);
+	}
 }

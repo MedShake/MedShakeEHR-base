@@ -24,11 +24,13 @@
  * People : ajax > change un externe en un patient
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
 
-if($_POST['externID']<1 or !is_numeric($_POST['externID'])) die;
+if ($_POST['externID'] < 1 or !is_numeric($_POST['externID'])) die;
 
-msSQL::sqlQuery("UPDATE `people` SET `type`='patient' WHERE `id`='".$_POST['externID']."'");
+msSQL::sqlQuery("UPDATE `people` SET `type`='patient' WHERE `id`= :externID", ['externID' => $_POST['externID']]);
 
 echo json_encode(array('ok'));

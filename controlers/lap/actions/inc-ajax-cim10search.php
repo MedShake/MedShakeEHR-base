@@ -26,34 +26,33 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template='inc-cim10searchTableResults';
+$template = 'inc-cim10searchTableResults';
 
-$lap=new msLap;
-$rd=[];
-$data=$lap->getCIM10fromKeywords(str_replace(' ', '%',$_POST['term']));
+$lap = new msLap;
+$rd = [];
+$data = $lap->getCIM10fromKeywords(str_replace(' ', '%', $_POST['term']));
 if (is_array($data)) {
-    foreach ($data as $code=>$label) {
-        if (strlen($code)<=4 and strlen($code)>=3) {
-            $codepere=substr($code, 0, 3);
-            if (key_exists($codepere, $data)) {
-                $rd[$codepere][$code]=$label;
-                ksort($rd[$codepere]);
-            } else {
-                if($peresearch = $lap->getCIM10LabelFromCode($codepere)) {
-                  $rd[$codepere][$codepere]=$peresearch;
-                  $rd[$codepere][$code]=$label;
-                } else {
-                  $rd['ZZ']['A0']="Autres";
-                  $rd['ZZ'][$code]=$label;
-                  ksort($rd['ZZ']);
-                }
-
-            }
-        }
-    }
+	foreach ($data as $code => $label) {
+		if (strlen($code) <= 4 and strlen($code) >= 3) {
+			$codepere = substr($code, 0, 3);
+			if (key_exists($codepere, $data)) {
+				$rd[$codepere][$code] = $label;
+				ksort($rd[$codepere]);
+			} else {
+				if ($peresearch = $lap->getCIM10LabelFromCode($codepere)) {
+					$rd[$codepere][$codepere] = $peresearch;
+					$rd[$codepere][$code] = $label;
+				} else {
+					$rd['ZZ']['A0'] = "Autres";
+					$rd['ZZ'][$code] = $label;
+					ksort($rd['ZZ']);
+				}
+			}
+		}
+	}
 }
 
 ksort($rd);
 
-$p['page']['cim10code']=$rd;
+$p['page']['cim10code'] = $rd;
 unset($rd);

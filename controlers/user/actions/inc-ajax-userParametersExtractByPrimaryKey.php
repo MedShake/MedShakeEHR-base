@@ -24,29 +24,31 @@
  * Paramètres utilisateur > ajax : extraire une entrée via la primary key
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$acceptedTables=array(
-    'prescriptions',
-    'prescriptions_cat',
-    'actes',
-    'actes_cat',
-    'actes_base',
+$acceptedTables = array(
+	'prescriptions',
+	'prescriptions_cat',
+	'actes',
+	'actes_cat',
+	'actes_base',
 );
 
-$do=true;
-$table=msSQL::cleanVar($_POST['table']);
-$id=msSQL::cleanVar($_POST['id']);
+$do = true;
+$table = $_POST['table'];
+$id = $_POST['id'];
 if (!is_numeric($id) or !in_array($table, $acceptedTables)) {
-    $do=false;
+	$do = false;
 }
 
 if ($do) {
-    if ($data=msSQL::sqlUnique("select * from $table where id = '$id' limit 1")) {
-        echo json_encode($data);
-    } else {
-        http_response_code(401);
-    }
+	if ($data = msSQL::sqlUnique("SELECT * from $table where id = :id limit 1", ['id' => $id])) {
+		echo json_encode($data);
+	} else {
+		http_response_code(401);
+	}
 } else {
-    http_response_code(401);
+	http_response_code(401);
 }

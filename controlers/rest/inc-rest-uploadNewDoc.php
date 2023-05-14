@@ -25,6 +25,8 @@
  *
  * @author fr33z00 <https://github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 $user=new msUser();
@@ -32,7 +34,7 @@ if (!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) or !$us
    http_response_code(401);
    die;
 }
-$userID=msSQL::sqlUniqueChamp("select id from people where name='".msSQL::cleanVar($_SERVER['PHP_AUTH_USER'])."'");
+$userID=msSQL::sqlUniqueChamp("select id from people where name = :name", ['name' => $_SERVER['PHP_AUTH_USER']]);
 
 if ((!array_key_exists('timestamp', $parameters) or $parameters['timestamp'] < date_sub(new Datetime(), new Dateinterval("PT0H15M0S"))->format("Y-m-d H:i:s"))) {
    http_response_code(401);

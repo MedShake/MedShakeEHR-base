@@ -25,9 +25,10 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='';
-$template='inc-lapPresPreGet';
+
+$debug = '';
+$template = 'inc-lapPresPreGet';
 $lapOrdo = new msLapOrdo;
 $lapOrdo->setFromID($p['user']['id']);
-$p['page']['cat']=$lapOrdo->getCatPresPre();
-$p['page']['pres']=$lapOrdo->getPresPre();
+$p['page']['cat'] = $lapOrdo->getCatPresPre();
+$p['page']['pres'] = $lapOrdo->getPresPre();

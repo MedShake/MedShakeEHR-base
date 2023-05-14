@@ -28,201 +28,200 @@
 
 class msMailTrackingMailjet
 {
-    /**
-   * ContactData
-   * @var array
-   */
-    private $_contactData;
+	/**
+	 * ContactData
+	 * @var array
+	 */
+	private $_contactData;
 
-  /**
-   * Contact Email
-   * @var string
-   */
-    private $_contactEmail;
+	/**
+	 * Contact Email
+	 * @var string
+	 */
+	private $_contactEmail;
 
-  /**
-   * ContactID
-   * @var array
-   */
-    private $_contactID;
+	/**
+	 * ContactID
+	 * @var array
+	 */
+	private $_contactID;
 
-  /**
-   * Contact Messages List
-   * @var array
-   */
-    private $_contactMessagesList;
+	/**
+	 * Contact Messages List
+	 * @var array
+	 */
+	private $_contactMessagesList;
 
-  /**
-   * Campaigns Data
-   * @var array
-   */
-    private $_campaignsData;
+	/**
+	 * Campaigns Data
+	 * @var array
+	 */
+	private $_campaignsData;
 
-  /**
-   * @param string $_contactEmail
-   *
-   * @return static
-   */
-    public function set_contactEmail($_contactEmail)
-    {
-        $this->_contactEmail = $_contactEmail;
-        $this->_getContactDataWithEmail();
-        return $this;
-    }
+	/**
+	 * @param string $_contactEmail
+	 *
+	 * @return static
+	 */
+	public function set_contactEmail($_contactEmail)
+	{
+		$this->_contactEmail = $_contactEmail;
+		$this->_getContactDataWithEmail();
+		return $this;
+	}
 
-  /**
-   * @return array
-   */
-    public function get_contactData()
-    {
-        return $this->_contactData;
-    }
+	/**
+	 * @return array
+	 */
+	public function get_contactData()
+	{
+		return $this->_contactData;
+	}
 
-  /**
-   * @return array
-   */
-    public function get_contactMessagesList()
-    {
-        return $this->_contactMessagesList;
-    }
+	/**
+	 * @return array
+	 */
+	public function get_contactMessagesList()
+	{
+		return $this->_contactMessagesList;
+	}
 
-  /**
-   * Obtenir les informations du contact via son email
-   * @return array array des informations contact
-   */
+	/**
+	 * Obtenir les informations du contact via son email
+	 * @return array array des informations contact
+	 */
 
-    private function _getContactDataWithEmail()
-    {
-        global $p;
+	private function _getContactDataWithEmail()
+	{
+		global $p;
 
-        if (!isset($this->_contactEmail)) {
-            throw new Exception("L'adresse email n'est pas spécifiée");
-        }
+		if (!isset($this->_contactEmail)) {
+			throw new Exception("L'adresse email n'est pas spécifiée");
+		}
 
-        $ch = curl_init();
+		$ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3/REST/contactdata/".$this->_contactEmail);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+		curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3/REST/contactdata/" . $this->_contactEmail);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 
-        curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
+		curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
 
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            throw new Exception('Curl error:' . curl_error($ch));
-        } else {
-            curl_close($ch);
-            $this->_contactData=json_decode($result, true);
-            $this->_contactID=$this->_contactData['Data'][0]['ID'];
-        }
-    }
+		$result = curl_exec($ch);
+		if (curl_errno($ch)) {
+			throw new Exception('Curl error:' . curl_error($ch));
+		} else {
+			curl_close($ch);
+			$this->_contactData = json_decode($result, true);
+			$this->_contactID = $this->_contactData['Data'][0]['ID'];
+		}
+	}
 
-  /**
-   * Obtenir la liste des messages envoyés à ce contact
-   * @return [type] [description]
-   */
-    public function getListMessagesSendedToContact()
-    {
-        global $p;
+	/**
+	 * Obtenir la liste des messages envoyés à ce contact
+	 * @return [type] [description]
+	 */
+	public function getListMessagesSendedToContact()
+	{
+		global $p;
 
-        if (!isset($this->_contactID)) {
-            throw new Exception("Le contactID n'est pas spécifié");
-        }
+		if (!isset($this->_contactID)) {
+			throw new Exception("Le contactID n'est pas spécifié");
+		}
 
-        $ch = curl_init();
+		$ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3/REST/message?Contact=".$this->_contactID."&Limit=500");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+		curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3/REST/message?Contact=" . $this->_contactID . "&Limit=500");
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 
-        curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
+		curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
 
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            throw new Exception('Curl error:' . curl_error($ch));
-        } else {
-            curl_close($ch);
-            $result=json_decode($result, true);
-            foreach($result['Data'] as $v) {
-              $tabsort[$v['ArrivedAt']]=$v;
-            }
-            krsort($tabsort);
-            $result['Data']=$tabsort;
-            return $this->_contactMessagesList=$result;
-        }
-    }
+		$result = curl_exec($ch);
+		if (curl_errno($ch)) {
+			throw new Exception('Curl error:' . curl_error($ch));
+		} else {
+			curl_close($ch);
+			$result = json_decode($result, true);
+			foreach ($result['Data'] as $v) {
+				$tabsort[$v['ArrivedAt']] = $v;
+			}
+			krsort($tabsort);
+			$result['Data'] = $tabsort;
+			return $this->_contactMessagesList = $result;
+		}
+	}
 
-/**
- * Ajouter les data de la campagne à chaque message
- */
-    public function addCampaignDataToMessagesList()
-    {
-        if(!isset($this->_contactMessagesList['Data'])) {
-          throw new Exception("La liste des messages n'existe pas");
-        }
+	/**
+	 * Ajouter les data de la campagne à chaque message
+	 */
+	public function addCampaignDataToMessagesList()
+	{
+		if (!isset($this->_contactMessagesList['Data'])) {
+			throw new Exception("La liste des messages n'existe pas");
+		}
 
-        foreach ($this->_contactMessagesList['Data'] as $k=>$v) {
-            $this->getCampaignData($v['CampaignID']);
-            $this->_contactMessagesList['Data'][$k]['CampaignData'] = $this->_campaignsData[$v['CampaignID']]['Data'][0];
-        }
-    }
+		foreach ($this->_contactMessagesList['Data'] as $k => $v) {
+			$this->getCampaignData($v['CampaignID']);
+			$this->_contactMessagesList['Data'][$k]['CampaignData'] = $this->_campaignsData[$v['CampaignID']]['Data'][0];
+		}
+	}
 
-/**
- * Obtenir les data d'une campagne
- * @param  int $id ID de la campagne
- * @return array     array des data
- */
-    public function getCampaignData($id)
-    {
-        if (isset($this->_campaignsData[$id])) {
-            return $this->_campaignsData[$id];
-        }
+	/**
+	 * Obtenir les data d'une campagne
+	 * @param  int $id ID de la campagne
+	 * @return array     array des data
+	 */
+	public function getCampaignData($id)
+	{
+		if (isset($this->_campaignsData[$id])) {
+			return $this->_campaignsData[$id];
+		}
 
-        global $p;
-        $ch = curl_init();
+		global $p;
+		$ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3/REST/campaign/".$id);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+		curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3/REST/campaign/" . $id);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 
-        curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
+		curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
 
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
-        } else {
-            curl_close($ch);
-            $result=json_decode($result, true);
-            return $this->_campaignsData[$id]=$result;
-        }
-    }
+		$result = curl_exec($ch);
+		if (curl_errno($ch)) {
+			echo 'Error:' . curl_error($ch);
+		} else {
+			curl_close($ch);
+			$result = json_decode($result, true);
+			return $this->_campaignsData[$id] = $result;
+		}
+	}
 
-/**
- * Obtenir les infos sur un mail particulier
- * @param  int $id ID du mail
- * @return array     array des infos
- */
-    public static function getMessageTrackingData($id) {
+	/**
+	 * Obtenir les infos sur un mail particulier
+	 * @param  int $id ID du mail
+	 * @return array     array des infos
+	 */
+	public static function getMessageTrackingData($id)
+	{
 
-      global $p;
+		global $p;
 
-      $ch = curl_init();
+		$ch = curl_init();
 
-      curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3/REST/messagehistory/".$id);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+		curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3/REST/messagehistory/" . $id);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 
-      curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
+		curl_setopt($ch, CURLOPT_USERPWD, $p['config']['smtpUsername'] . ":" . $p['config']['smtpPassword']);
 
-      $result = curl_exec($ch);
-      if (curl_errno($ch)) {
-          echo 'Error:' . curl_error($ch);
-      } else {
-          curl_close($ch);
-          $result=json_decode($result, true);
-          return $result;
-      }
-
-    }
-
+		$result = curl_exec($ch);
+		if (curl_errno($ch)) {
+			echo 'Error:' . curl_error($ch);
+		} else {
+			curl_close($ch);
+			$result = json_decode($result, true);
+			return $result;
+		}
+	}
 }

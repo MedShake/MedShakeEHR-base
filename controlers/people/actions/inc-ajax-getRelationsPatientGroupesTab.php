@@ -26,14 +26,14 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeActiverGroupes'] != 'true') {
- die();
+if ($p['config']['optionGeActiverGroupes'] != 'true') {
+	die();
 }
 
-if(isset($_POST['patientID'])) {
-  $patientID=$_POST['patientID'];
-} elseif(isset($_GET['patientID'])) {
-  $patientID=$_GET['patientID'];
+if (isset($_POST['patientID'])) {
+	$patientID = $_POST['patientID'];
+} elseif (isset($_GET['patientID'])) {
+	$patientID = $_GET['patientID'];
 }
 $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($patientID);
@@ -41,7 +41,7 @@ $liensPrat->setToID($patientID);
 header('Content-Type: application/json');
 $liensPrat->setRelationType('relationPatientGroupe');
 $liensPrat->setReturnedPeopleTypes(['groupe']);
-$groupes = $liensPrat->getRelations(['groupname', 'city','country']);
+$groupes = $liensPrat->getRelations(['groupname', 'city', 'country']);
 msTools::array_unatsort_by('groupname', $groupes);
 
 exit(json_encode(array_merge($groupes)));

@@ -26,164 +26,166 @@
  * On redirige vers dossier patient.
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if(!is_numeric($_POST['patientID'])) die;
-if(!is_numeric($_POST['mailID'])) die;
+if (!is_numeric($_POST['patientID'])) die;
+if (!is_numeric($_POST['mailID'])) die;
 
 //sortir data hprim
-if ($data=msSQL::sqlUnique("select txtFileName,  pjSerializeName, hprimExpediteur  from inbox where id='".msSQL::cleanVar($_POST['mailID'])."' ")) {
-    $pj['pjSerializeName']=unserialize($data['pjSerializeName']);
+if ($data = msSQL::sqlUnique("SELECT txtFileName,  pjSerializeName, hprimExpediteur  from inbox where id = :id ", ['id' => $_POST['mailID']])) {
+	$pj['pjSerializeName'] = unserialize($data['pjSerializeName']);
 
-    $corps=msInbox::getMessageBody($p['config']['apicryptCheminInbox'].'/'.$data['txtFileName']);
-    if (!mb_detect_encoding($corps, 'UTF-8', true)) {
+	$corps = msInbox::getMessageBody($p['config']['apicryptCheminInbox'] . '/' . $data['txtFileName']);
+	if (!mb_detect_encoding($corps, 'UTF-8', true)) {
 		$corps = mb_convert_encoding($corps, 'UTF-8', mb_detect_encoding($corps, null, false));
-    }
-    $sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
+	}
+	$sourceFolder = str_replace('.txt', '.f', $data['txtFileName']);
 
-    if (count($pj['pjSerializeName'])>0) {
-        foreach ($pj['pjSerializeName'] as $file) {
-            $patient = new msObjet();
-            $patient->setFromID($p['user']['id']);
-            $patient->setToID($_POST['patientID']);
+	if (count($pj['pjSerializeName']) > 0) {
+		foreach ($pj['pjSerializeName'] as $file) {
+			$patient = new msObjet();
+			$patient->setFromID($p['user']['id']);
+			$patient->setToID($_POST['patientID']);
 
-            //source
-            $source=$p['config']['apicryptCheminInbox'].$sourceFolder.'/'.$file;
+			//source
+			$source = $p['config']['apicryptCheminInbox'] . $sourceFolder . '/' . $file;
 
-            if (is_file($source)) {
+			if (is_file($source)) {
 
-                //support
-                $supportID=$patient->createNewObjetByTypeName('docPorteur', $corps);
+				//support
+				$supportID = $patient->createNewObjetByTypeName('docPorteur', $corps);
 
-                //ajout d'un titre
-                if (!empty($_POST['titre'])) {
-                    msObjet::setTitleObjet($supportID, $_POST['titre']);
-                } elseif (isset($data['hprimExpediteur'])) {
-                    msObjet::setTitleObjet($supportID, $data['hprimExpediteur']);
-                }
+				//ajout d'un titre
+				if (!empty($_POST['titre'])) {
+					msObjet::setTitleObjet($supportID, $_POST['titre']);
+				} elseif (isset($data['hprimExpediteur'])) {
+					msObjet::setTitleObjet($supportID, $data['hprimExpediteur']);
+				}
 
-                //extension
-                $mimetype=msTools::getmimetype($source);
-                if ($mimetype=='application/pdf') {
-                    $ext='pdf';
-                } elseif ($mimetype=='text/plain') {
-                    $ext='txt';
-                } elseif ($mimetype=='image/jpeg') {
-                    $ext='jpg';
-                } else {
-                    $ext= pathinfo($source,PATHINFO_EXTENSION);
-                }
+				//extension
+				$mimetype = msTools::getmimetype($source);
+				if ($mimetype == 'application/pdf') {
+					$ext = 'pdf';
+				} elseif ($mimetype == 'text/plain') {
+					$ext = 'txt';
+				} elseif ($mimetype == 'image/jpeg') {
+					$ext = 'jpg';
+				} else {
+					$ext = pathinfo($source, PATHINFO_EXTENSION);
+				}
 
-                //nom original
-                $patient->createNewObjetByTypeName('docOriginalName', $file, $supportID);
-                //type
-                $patient->createNewObjetByTypeName('docType', $ext, $supportID);
+				//nom original
+				$patient->createNewObjetByTypeName('docOriginalName', $file, $supportID);
+				//type
+				$patient->createNewObjetByTypeName('docType', $ext, $supportID);
 
-                ////////////////////////////
-                // stockage actif
-                //folder
-                $folder=msStockage::getFolder($supportID);
+				////////////////////////////
+				// stockage actif
+				//folder
+				$folder = msStockage::getFolder($supportID);
 
-                //creation folder si besoin
-                msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
+				//creation folder si besoin
+				msTools::checkAndBuildTargetDir($p['config']['stockageLocation'] . $folder . '/');
 
-                $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
-                if($ext=='txt') {
-                  msTools::convertPlainTextFileToUtf8($source, $destination);
-                } else {
-                  copy($source, $destination);
-                }
+				$destination = $p['config']['stockageLocation'] . $folder . '/' . $supportID . '.' . $ext;
+				if ($ext == 'txt') {
+					msTools::convertPlainTextFileToUtf8($source, $destination);
+				} else {
+					copy($source, $destination);
+				}
 
-                ////////////////////////////
-                // stockage archives
-                $finaldir=$p['config']['apicryptCheminArchivesInbox'].$p['user']['id'].'/'.date('Y').'/'.date('m').'/'.date('d').'/'.$sourceFolder.'/';
-                msTools::checkAndBuildTargetDir($finaldir);
-                copy($source, $finaldir.$file);
+				////////////////////////////
+				// stockage archives
+				$finaldir = $p['config']['apicryptCheminArchivesInbox'] . $p['user']['id'] . '/' . date('Y') . '/' . date('m') . '/' . date('d') . '/' . $sourceFolder . '/';
+				msTools::checkAndBuildTargetDir($finaldir);
+				copy($source, $finaldir . $file);
 
-                //unlink($source);
-            }
-        }
+				//unlink($source);
+			}
+		}
 
-        //rmdir($p['config']['apicryptCheminInbox'].$sourceFolder.'/');
-    } else {
+		//rmdir($p['config']['apicryptCheminInbox'].$sourceFolder.'/');
+	} else {
 
-      //source
-      $source=$p['config']['apicryptCheminInbox'].$data['txtFileName'];
+		//source
+		$source = $p['config']['apicryptCheminInbox'] . $data['txtFileName'];
 
-        if (is_file($source)) {
-            $patient = new msObjet();
-            $patient->setFromID($p['user']['id']);
-            $patient->setToID($_POST['patientID']);
+		if (is_file($source)) {
+			$patient = new msObjet();
+			$patient->setFromID($p['user']['id']);
+			$patient->setToID($_POST['patientID']);
 
-            //support
-            $supportID=$patient->createNewObjetByTypeName('docPorteur', $corps);
+			//support
+			$supportID = $patient->createNewObjetByTypeName('docPorteur', $corps);
 
-            //ajout d'un titre
-            if (!empty($_POST['titre'])) {
-                msObjet::setTitleObjet($supportID, $_POST['titre']);
-            } elseif (isset($data['hprimExpediteur'])) {
-                msObjet::setTitleObjet($supportID, $data['hprimExpediteur']);
-            }
+			//ajout d'un titre
+			if (!empty($_POST['titre'])) {
+				msObjet::setTitleObjet($supportID, $_POST['titre']);
+			} elseif (isset($data['hprimExpediteur'])) {
+				msObjet::setTitleObjet($supportID, $data['hprimExpediteur']);
+			}
 
-            //nom original
-            $patient->createNewObjetByTypeName('docOriginalName', $data['txtFileName'], $supportID);
+			//nom original
+			$patient->createNewObjetByTypeName('docOriginalName', $data['txtFileName'], $supportID);
 
-            //extension
-            $mimetype=msTools::getmimetype($source);
-            if ($mimetype=='application/pdf') {
-                $ext='pdf';
-            } elseif ($mimetype=='text/plain') {
-                $ext='txt';
-            } else {
-                $ext='txt';
-            }
+			//extension
+			$mimetype = msTools::getmimetype($source);
+			if ($mimetype == 'application/pdf') {
+				$ext = 'pdf';
+			} elseif ($mimetype == 'text/plain') {
+				$ext = 'txt';
+			} else {
+				$ext = 'txt';
+			}
 
-            //type
-            $patient->createNewObjetByTypeName('docType', $ext, $supportID);
+			//type
+			$patient->createNewObjetByTypeName('docType', $ext, $supportID);
 
-            ////////////////////////////
-            // stockage actif
-            //folder
-            $folder=msStockage::getFolder($supportID);
-            //creation folder si besoin
-            msTools::checkAndBuildTargetDir($p['config']['stockageLocation']. $folder.'/');
+			////////////////////////////
+			// stockage actif
+			//folder
+			$folder = msStockage::getFolder($supportID);
+			//creation folder si besoin
+			msTools::checkAndBuildTargetDir($p['config']['stockageLocation'] . $folder . '/');
 
-            $destination = $p['config']['stockageLocation']. $folder.'/'.$supportID.'.'.$ext;
-            if($ext=='txt') {
-              msTools::convertPlainTextFileToUtf8($source, $destination);
-            } else {
-              copy($source, $destination);
-            }
-        }
-    }
+			$destination = $p['config']['stockageLocation'] . $folder . '/' . $supportID . '.' . $ext;
+			if ($ext == 'txt') {
+				msTools::convertPlainTextFileToUtf8($source, $destination);
+			} else {
+				copy($source, $destination);
+			}
+		}
+	}
 
-    ////////////////////////////
-    // stockage des résultats HPRIM
-    if ($bio=msHprim::parseSourceHprim($corps)) {
-        $hprimHeader=msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'].$data['txtFileName']);
-        $hprimHeader['dateDossier']= trim($hprimHeader['dateDossier']);
-        if (strlen($hprimHeader['dateDossier']) == 10) {
-            if($date = DateTime::createFromFormat('d/m/Y', $hprimHeader['dateDossier'])) {
-              $date = $date->format('Y-m-d');
-            } else {
-              $date=date("Y-m-d");
-            }
-        } else {
-            $date=date("Y-m-d");
-        }
-        msHprim::saveHprim2bdd($bio, $p['user']['id'], $_POST['patientID'], $date, $supportID);
-    }
-
-
-    ////////////////////////////
-    // stockage archives du txt
-    $ddir=$p['config']['apicryptCheminArchivesInbox'].$p['user']['id'].'/'.date('Y').'/'.date('m').'/'.date('d').'/';
-    msTools::checkAndBuildTargetDir($ddir);
-    copy($p['config']['apicryptCheminInbox'].$data['txtFileName'], $ddir.$data['txtFileName']);
+	////////////////////////////
+	// stockage des résultats HPRIM
+	if ($bio = msHprim::parseSourceHprim($corps)) {
+		$hprimHeader = msHprim::getHprimHeaderData($p['config']['apicryptCheminInbox'] . $data['txtFileName']);
+		$hprimHeader['dateDossier'] = trim($hprimHeader['dateDossier']);
+		if (strlen($hprimHeader['dateDossier']) == 10) {
+			if ($date = DateTime::createFromFormat('d/m/Y', $hprimHeader['dateDossier'])) {
+				$date = $date->format('Y-m-d');
+			} else {
+				$date = date("Y-m-d");
+			}
+		} else {
+			$date = date("Y-m-d");
+		}
+		msHprim::saveHprim2bdd($bio, $p['user']['id'], $_POST['patientID'], $date, $supportID);
+	}
 
 
-    //unlink($p['config']['apicryptCheminInbox'].$data['txtFileName']);
-    msSQL::sqlQuery("update inbox set archived='c', assoToID='".$_POST['patientID']."' where id='".$_POST['mailID']."' limit 1");
+	////////////////////////////
+	// stockage archives du txt
+	$ddir = $p['config']['apicryptCheminArchivesInbox'] . $p['user']['id'] . '/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
+	msTools::checkAndBuildTargetDir($ddir);
+	copy($p['config']['apicryptCheminInbox'] . $data['txtFileName'], $ddir . $data['txtFileName']);
+
+
+	//unlink($p['config']['apicryptCheminInbox'].$data['txtFileName']);
+	msSQL::sqlQuery("UPDATE inbox set archived = 'c', assoToID = :assoToID where id = :id limit 1", ['assoToID' => $_POST['patientID'], 'id' => _POST['mailID']]);
 }
 
-msTools::redirection('/patient/'.$_POST['patientID'].'/');
+msTools::redirection('/patient/' . $_POST['patientID'] . '/');

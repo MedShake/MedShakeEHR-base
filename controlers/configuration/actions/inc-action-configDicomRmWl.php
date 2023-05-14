@@ -26,8 +26,10 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-array_map('unlink', glob(msTools::setDirectoryLastSlash($p['config']['dicomWorkListDirectory'])."workList*.wl"));
+array_map('unlink', glob(msTools::setDirectoryLastSlash($p['config']['dicomWorkListDirectory']) . "workList*.wl"));
 
 msTools::redirection('/configuration/orthancInfos/');

@@ -28,24 +28,24 @@
  */
 
 
-$preparams=array();
+$preparams = array();
 
-foreach ($_POST as $k=>$v) {
-    preg_match('/(desc|back|border|duree|key|utilisable)_(.*)/', $k, $matches);
-    if (isset($matches[2])) {
-        $preparams[$matches[2]][$matches[1]]=$v;
-    }
+foreach ($_POST as $k => $v) {
+	preg_match('/(desc|back|border|duree|key|utilisable)_(.*)/', $k, $matches);
+	if (isset($matches[2])) {
+		$preparams[$matches[2]][$matches[1]] = $v;
+	}
 }
-foreach ($preparams as $k=>$v) {
-    if ($v['key']) {
-        $params["'[".$v['key']."]'"]=array('descriptif'=>$v['desc'], 'backgroundColor'=>$v['back'], 'borderColor'=>$v['border'], 'duree'=>$v['duree'], 'utilisable'=>$v['utilisable']);
-    }
+foreach ($preparams as $k => $v) {
+	if ($v['key']) {
+		$params["[" . $v['key'] . "]"] = array('descriptif' => $v['desc'], 'backgroundColor' => $v['back'], 'borderColor' => $v['border'], 'duree' => $v['duree'], 'utilisable' => $v['utilisable']);
+	}
 }
 
-if(file_put_contents($p['homepath'].'config/agendas/typesRdv'.$p['user']['id'].'.yml', Spyc::YAMLDump($params, false, 0, true))) {
-  header('Content-Type: application/json');
-  exit(json_encode(array('status'=>'success')));
+if (msYAML::yamlFileWrite($p['homepath'] . 'config/agendas/typesRdv' . $p['user']['id'] . '.yml', $params)) {
+	header('Content-Type: application/json');
+	exit(json_encode(array('status' => 'success')));
 } else {
-  header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-  exit();
+	header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+	exit();
 }

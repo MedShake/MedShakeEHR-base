@@ -27,31 +27,31 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configUsersList";
-     $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$template = "configUsersList";
+	$debug = '';
 
-     $p['page']['modules']=msModules::getInstalledModulesNames();
-     $p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
-     $p['page']['userid']=$p['user']['id'];
-     $p['page']['users']=msPeopleSearch::getUsersList();
+	$p['page']['modules'] = msModules::getInstalledModulesNames();
+	$p['page']['userTemplates'] = msConfiguration::getUserTemplatesList();
+	$p['page']['userid'] = $p['user']['id'];
+	$p['page']['users'] = msPeopleSearch::getUsersList();
 
-     $formModal = new msForm;
-     $formModal->setFormIDbyName($p['page']['formIN']='baseNewUser');
-     $formModal->setOptionsForSelect(array(
-       'template'=>[''=>'aucun'] + $p['page']['userTemplates'],
-       'module'=>$p['page']['modules'],
-     ));
-     $formModal->setPrevalues(['template'=> $p['config']['optionGeLoginCreationDefaultTemplate'], 'module'=> $p['config']['optionGeLoginCreationDefaultModule']]);
-     $p['page']['formModal']=$formModal->getForm();
+	$formModal = new msForm;
+	$formModal->setFormIDbyName($p['page']['formIN'] = 'baseNewUser');
+	$formModal->setOptionsForSelect(array(
+		'template' => ['' => 'aucun'] + $p['page']['userTemplates'],
+		'module' => $p['page']['modules'],
+	));
+	$formModal->setPrevalues(['template' => $p['config']['optionGeLoginCreationDefaultTemplate'], 'module' => $p['config']['optionGeLoginCreationDefaultModule']]);
+	$p['page']['formModal'] = $formModal->getForm();
 
-     if($p['config']['optionGeLoginPassAttribution'] == 'random') {
-       $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder'=>'aléatoire envoyé par mail', 'readonly'=>'readonly']);
-       $formModal->removeFieldAttrAfterwards($p['page']['formModal'], 'password', ['tabindex']);
-     } else {
-       $formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required'=>'required']);
-     }
- }
+	if ($p['config']['optionGeLoginPassAttribution'] == 'random') {
+		$formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['placeholder' => 'aléatoire envoyé par mail', 'readonly' => 'readonly']);
+		$formModal->removeFieldAttrAfterwards($p['page']['formModal'], 'password', ['tabindex']);
+	} else {
+		$formModal->setFieldAttrAfterwards($p['page']['formModal'], 'password', ['required' => 'required']);
+	}
+}

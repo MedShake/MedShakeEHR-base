@@ -27,50 +27,49 @@
  *
  */
 
- //admin uniquement
+//admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-    $template="forbidden";
-    return;
+	$template = "forbidden";
+	return;
 }
 
-$template="configUserTemplates";
-$debug='';
+$template = "configUserTemplates";
+$debug = '';
 
-$p['page']['repertoireUserTemplates'] = $homepath.'config/userTemplates/';
+$p['page']['repertoireUserTemplates'] = $homepath . 'config/userTemplates/';
 msTools::checkAndBuildTargetDir($p['page']['repertoireUserTemplates']);
 
 //test autorisation de lecture du dossier template
 if (is_readable($p['page']['repertoireUserTemplates'])) {
-    $p['page']['templatesDirAutorisationLecture'] = true;
+	$p['page']['templatesDirAutorisationLecture'] = true;
 } else {
-    $p['page']['templatesDirAutorisationLecture'] = false;
+	$p['page']['templatesDirAutorisationLecture'] = false;
 }
 
 //test autorisation d'écriture du dossier template
 if (is_writable($p['page']['repertoireUserTemplates'])) {
-    $p['page']['templatesDirAutorisationEcriture'] = true;
+	$p['page']['templatesDirAutorisationEcriture'] = true;
 } else {
-    $p['page']['templatesDirAutorisationEcriture'] = false;
+	$p['page']['templatesDirAutorisationEcriture'] = false;
 }
 
 //templates si lecture répertoire ok
 if ($p['page']['templatesDirAutorisationLecture']) {
 
-     //scan du répertoire
-    if ($listeTemplates=array_diff(scandir($p['page']['repertoireUserTemplates']), array('..', '.'))) {
-        foreach ($listeTemplates as $k=>$tptes) {
-            $p['page']['listeTemplates'][$tptes]['file']=$tptes;
-            if (is_readable($p['page']['repertoireUserTemplates'].$tptes)) {
-                $p['page']['listeTemplates'][$tptes]['autorisationLecture'] = true;
-            } else {
-                $p['page']['listeTemplates'][$tptes]['autorisationLecture'] = false;
-            }
-            if (is_writable($p['page']['repertoireUserTemplates'].$tptes)) {
-                $p['page']['listeTemplates'][$tptes]['autorisationEcriture'] = true;
-            } else {
-                $p['page']['listeTemplates'][$tptes]['autorisationEcriture'] = false;
-            }
-        }
-
-    }
+	//scan du répertoire
+	if ($listeTemplates = array_diff(scandir($p['page']['repertoireUserTemplates']), array('..', '.'))) {
+		foreach ($listeTemplates as $k => $tptes) {
+			$p['page']['listeTemplates'][$tptes]['file'] = $tptes;
+			if (is_readable($p['page']['repertoireUserTemplates'] . $tptes)) {
+				$p['page']['listeTemplates'][$tptes]['autorisationLecture'] = true;
+			} else {
+				$p['page']['listeTemplates'][$tptes]['autorisationLecture'] = false;
+			}
+			if (is_writable($p['page']['repertoireUserTemplates'] . $tptes)) {
+				$p['page']['listeTemplates'][$tptes]['autorisationEcriture'] = true;
+			} else {
+				$p['page']['listeTemplates'][$tptes]['autorisationEcriture'] = false;
+			}
+		}
+	}
 }

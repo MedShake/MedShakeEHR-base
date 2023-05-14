@@ -26,7 +26,9 @@
  * @author fr33z00 <https://github.com/fr33z00
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");} 
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-msConfiguration::setUserParameterValue($_POST['paramNameInCat'.$_POST['paramCat']], $_POST['paramValue'], $_POST['userID']);
+msConfiguration::setUserParameterValue($_POST['paramNameInCat' . $_POST['paramCat']], $_POST['paramValue'], $_POST['userID']);
 echo json_encode("ok");

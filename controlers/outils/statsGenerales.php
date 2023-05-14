@@ -24,33 +24,36 @@
  * Outils : statistiques
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 //vérification droits
 if ($p['config']['droitStatsPeutVoirStatsGenerales'] != 'true') {
-  $template="forbidden";
+	$template = "forbidden";
 } else {
 
-  $template="statsGenerales";
-  $debug='';
+	$template = "statsGenerales";
+	$debug = '';
 
-  $statsExclusionPatients=msSQL::cleanArray(explode(',',$p['config']['statsExclusionPatients']));
-  $statsExclusionCats=msSQL::cleanArray(explode(',', $p['config']['statsExclusionCats']));
+	$marqueurs['statsExclusionPatients'] = $p['config']['statsExclusionPatients'];
+	$marqueurs['statsExclusionCats'] = $p['config']['statsExclusionCats'];
 
-  // consultations
-  if ($tabTypes=msSQL::sql2tab("select t.id, t.name, t.label, c.name as catName, c.label as catLabel,
-      (select count(id) from objets_data as d where d.typeID=t.id and d.toID not in ('".implode("', '", $statsExclusionPatients)."') and d.outdated='' and d.deleted='') as actifs, (select count(id) from objets_data as d where d.typeID=t.id and d.toID not in ('".implode("', '", $statsExclusionPatients)."') and (d.outdated='y' or d.deleted='y')) as deleted
+	// consultations
+	if ($tabTypes = msSQL::sql2tab("SELECT t.id, t.name, t.label, c.name as catName, c.label as catLabel,
+      (select count(id) from objets_data as d where d.typeID=t.id and d.toID not in ( :statsExclusionPatients ) and d.outdated='' and d.deleted='') as actifs, (select count(id) from objets_data as d where d.typeID=t.id and d.toID not in ( :statsExclusionPatients ) and (d.outdated='y' or d.deleted='y')) as deleted
       from data_types as t
       left join data_cat as c on c.id=t.cat
-      where t.id > 0 and t.groupe='typecs' and c.name not in ('".implode("', '", $statsExclusionCats)."')
+      where t.id > 0 and t.groupe='typecs' and c.name not in ( :statsExclusionCats )
       group by t.id
-      order by t.module, c.label asc, t.label asc, t.name")) {
+      order by t.module, c.label asc, t.label asc, t.name", $marqueurs)) {
 
-      foreach ($tabTypes as $v) {
-          $p['page']['forms'][$v['catName']][]=$v;
-      }
-  }
+		foreach ($tabTypes as $v) {
+			$p['page']['forms'][$v['catName']][] = $v;
+		}
+	}
 
-  // patients
-  $p['page']['dossiers']=msSQL::sql2tabKey("SELECT count(id) as nb, `type` FROM `people` where `id` not in ('".implode("', '", $statsExclusionPatients)."') group by `type`", 'type', 'nb');
+	unset($marqueurs['statsExclusionCats']);
+	// patients
+	$p['page']['dossiers'] = msSQL::sql2tabKey("SELECT count(id) as nb, `type` FROM `people` where `id` not in ( :statsExclusionPatients ) group by `type`", 'type', 'nb', $marqueurs);
 }

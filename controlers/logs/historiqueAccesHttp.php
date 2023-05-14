@@ -26,14 +26,14 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-   $template="forbidden";
- } else {
-   $debug='';
-   $template='historiqueAccesHttp';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$debug = '';
+	$template = 'historiqueAccesHttp';
 
-   if (($p['page']['MEDSHAKEEHRLOGFILE']=getenv("MEDSHAKEEHRLOGFILE"))===false) {
-     $p['page']['MEDSHAKEEHRLOGFILE']=false;
-   }
+	if (($p['page']['MEDSHAKEEHRLOGFILE'] = getenv("MEDSHAKEEHRLOGFILE")) === false) {
+		$p['page']['MEDSHAKEEHRLOGFILE'] = false;
+	}
 }

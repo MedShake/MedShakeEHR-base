@@ -30,11 +30,12 @@
 
 // pour le configurateur de cron
 if (isset($p)) {
-    $p['page']['availableCrons']['bdpm']=array(
-        'task' => 'BDPM',
-        'defaults' => array('m'=>'0','h'=>'02','M'=>'*','dom'=>'*','dow'=>'*'),
-        'description' => 'Met à jour les data de la Base de données publique des médicaments');
-    return;
+	$p['page']['availableCrons']['bdpm'] = array(
+		'task' => 'BDPM',
+		'defaults' => array('m' => '0', 'h' => '02', 'M' => '*', 'dom' => '*', 'dow' => '*'),
+		'description' => 'Met à jour les data de la Base de données publique des médicaments'
+	);
+	return;
 }
 
 
@@ -42,41 +43,46 @@ ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
-else $homepath=preg_replace("#cron$#", '', __DIR__);
+if (!empty($homepath = getenv("MEDSHAKEEHRPATH"))) $homepath = getenv("MEDSHAKEEHRPATH");
+else $homepath = preg_replace("#cron$#", '', __DIR__);
 
 /////////// Composer class auto-upload
-require $homepath.'vendor/autoload.php';
+require $homepath . 'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    global $homepath;
-    include $homepath.'class/' . $class . '.php';
+	global $homepath;
+	include $homepath . 'class/' . $class . '.php';
 });
 
 /////////// Config loader
-$p['configDefault']=$p['config']=yaml_parse_file($homepath.'config/config.yml');
-$p['homepath']=$homepath;
+$p['configDefault'] = $p['config'] = msYAML::yamlFileRead($homepath . 'config/config.yml');
+$p['homepath'] = $homepath;
 
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo = msSQL::sqlConnect();
 
 ///// Data à récupérer
-$bdpm=yaml_parse_file($homepath.'config/bdpm/configBdpm.yml');
+$bdpm = msYAML::yamlFileRead($homepath . 'config/bdpm/configBdpm.yml');
 
-$destiRessource = $homepath.'ressources/bdpm/';
+$destiRessource = $homepath . 'ressources/bdpm/';
 msTools::checkAndBuildTargetDir($destiRessource, 0755);
 
-foreach($bdpm['dataBdpm'] as $table=>$v) {
-	$file = '/tmp/'.$v['file'];
+foreach ($bdpm['dataBdpm'] as $table => $v) {
+	$file = '/tmp/' . $v['file'];
 	@unlink($file);
-	exec("wget ".$v['url']." -O ".$file);
-	if(msSQL::sqlQuery("LOAD DATA INFILE '".msSQL::cleanVar($file)."' REPLACE INTO TABLE `".msSQL::cleanVar($table)."` CHARACTER SET LATIN1 FIELDS TERMINATED BY \"\t\" LINES TERMINATED BY \"".$v['finligne']."\";")) {
-		$copyDest=$homepath.'ressources/bdpm/'.$v['file'];
+	exec("wget " . escapeshellarg($v['url']) . " -O " . escapeshellarg($file));
+	if (!msSQL::sqlVerifyTableExist($table)) {
+		throw new Exception("La table n'existe pas en base");
+	}
+	if (trim($v['finligne']) != null) {
+		throw new Exception("Fin de ligne invalide");
+	}
+	if (msSQL::sqlQuery("LOAD DATA INFILE :file REPLACE INTO TABLE `" . $table . "` CHARACTER SET LATIN1 FIELDS TERMINATED BY \"\t\" LINES TERMINATED BY \"" . $v['finligne'] . "\";", ['file' => $file])) {
+		$copyDest = $homepath . 'ressources/bdpm/' . $v['file'];
 		@unlink($copyDest);
-		copy($file,$copyDest);
-		msSQL::sqlInsert('bdpm_updates', ['fileName'=>$v['file'], 'fileLastParse'=>date("Y-m-d H:i:s")]);
+		copy($file, $copyDest);
+		msSQL::sqlInsert('bdpm_updates', ['fileName' => $v['file'], 'fileLastParse' => date("Y-m-d H:i:s")]);
 	}
 }
-

@@ -26,14 +26,14 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- //admin uniquement
+//admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-  $template="forbidden";
+	$template = "forbidden";
 } else {
-  $template="configActesBaseMaj";
-  $debug='';
+	$template = "configActesBaseMaj";
+	$debug = '';
 
-  $actes = new msCcamNgapApi;
-  $p['page']['rapport']=$actes->getAllAndUpdate();
-  msTools::array_unatsort_by('statut', $p['page']['rapport']);
+	$actes = new msCcamNgapApi;
+	$p['page']['rapport'] = $actes->getAllAndUpdate();
+	msTools::array_unatsort_by('statut', $p['page']['rapport']);
 }

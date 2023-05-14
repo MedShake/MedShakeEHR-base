@@ -24,39 +24,42 @@
  * Public > ajax : traiter l'email de recouvrement de password
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if($p['config']['optionGeLoginPassOnlineRecovery'] != "true") {
- die();
+if ($p['config']['optionGeLoginPassOnlineRecovery'] != "true") {
+	die();
 }
 
-if(!isset($_POST['email']) or empty($_POST['email']) or !is_string($_POST['email'])) die();
+if (!isset($_POST['email']) or empty($_POST['email']) or !is_string($_POST['email'])) die();
 
 $email = $_POST['email'];
 
 // recherche de l'email et de l'utilisateur correspondant.
 $name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['profesionnalEmail', 'personalEmail']);
+$marqueurs = $name2typeID->getTypeIDsFromName(['profesionnalEmail', 'personalEmail']);
+$marqueurs['email'] = $email;
 
-if($people = (array)msSQL::sql2tabSimple("select toID from objets_data where value = '".msSQL::cleanVar($email)."' and typeID in ('".implode("', '", $name2typeID)."') and outdated ='' and deleted ='' ")) {
+if ($people = (array)msSQL::sql2tabSimple("SELECT toID from objets_data where value = :email and typeID in (:profesionnalEmail , :personalEmail) and outdated ='' and deleted ='' ", $marqueurs)) {
 
-  // on trie pour ne garder que les utilisateur actifs
-  foreach ($people as $k=>$userID) {
-    $droits = new msPeopleDroits($userID);
-    if(!$droits->checkIsUser() or $droits->checkIsDestroyed()) unset($people[$k]);
-  }
+	// on trie pour ne garder que les utilisateur actifs
+	foreach ($people as $k => $userID) {
+		$droits = new msPeopleDroits($userID);
+		if (!$droits->checkIsUser() or $droits->checkIsDestroyed()) unset($people[$k]);
+	}
 
-  // on évite le cas où l'email est attribuée à plusieurs users
-  if(count($people) == 1) {
-    sort($people);
-    $userID = $people[0];
-    $user = new msUser;
-    $user->setUserID($userID);
-    if($user->setUserAccountToNewPasswordRecoveryProcess()) {
-      $user->mailUserPasswordRecoveryProcess($email);
-    }
-    //echo "ok";
-  }
+	// on évite le cas où l'email est attribuée à plusieurs users
+	if (count($people) == 1) {
+		sort($people);
+		$userID = $people[0];
+		$user = new msUser;
+		$user->setUserID($userID);
+		if ($user->setUserAccountToNewPasswordRecoveryProcess()) {
+			$user->mailUserPasswordRecoveryProcess($email);
+		}
+		//echo "ok";
+	}
 
-  die();
+	die();
 }

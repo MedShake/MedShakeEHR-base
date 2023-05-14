@@ -26,19 +26,19 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$template="inc-lapPatientLateralData";
+$template = "inc-lapPatientLateralData";
 
-$patient=new msPeople();
+$patient = new msPeople();
 $patient->setToID($_POST['patientID']);
 
-$lap=new msLapPatient;
+$lap = new msLapPatient;
 $lap->setToID($_POST['patientID']);
-$p['page']['patientAdminData']=$lap->getPatientAdminData();
-$p['page']['patientBasicPhysio']=$lap->getPatientBasicPhysioDataControle();
-$p['page']['patientAllergies']=$patient->getAllergies($p['config']['lapAllergiesStrucPersoPourAnalyse']);
-$p['page']['patientALD']=$patient->getALD();
-if(!empty(trim($p['config']['lapAtcdStrucPersoPourAnalyse']))) {
- foreach(explode(',', $p['config']['lapAtcdStrucPersoPourAnalyse']) as $v) {
-   $p['page']['patientATCD'][$v]=$patient->getAtcdStruc($v);
- }
+$p['page']['patientAdminData'] = $lap->getPatientAdminData();
+$p['page']['patientBasicPhysio'] = $lap->getPatientBasicPhysioDataControle();
+$p['page']['patientAllergies'] = $patient->getAllergies($p['config']['lapAllergiesStrucPersoPourAnalyse']);
+$p['page']['patientALD'] = $patient->getALD();
+if (!empty(trim($p['config']['lapAtcdStrucPersoPourAnalyse']))) {
+	foreach (explode(',', $p['config']['lapAtcdStrucPersoPourAnalyse']) as $v) {
+		$p['page']['patientATCD'][$v] = $patient->getAtcdStruc($v);
+	}
 }

@@ -26,18 +26,18 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if($p['config']['optionGeActiverRegistres'] != 'true') {
- die();
+if ($p['config']['optionGeActiverRegistres'] != 'true') {
+	die();
 }
 
-if($p['config']['optionGeActiverGroupes'] != 'true') {
-die();
+if ($p['config']['optionGeActiverGroupes'] != 'true') {
+	die();
 }
 
-if(isset($_POST['groupeID'])) {
-  $groupeID=$_POST['groupeID'];
-} elseif(isset($_GET['groupeID'])) {
-  $groupeID=$_GET['groupeID'];
+if (isset($_POST['groupeID'])) {
+	$groupeID = $_POST['groupeID'];
+} elseif (isset($_GET['groupeID'])) {
+	$groupeID = $_GET['groupeID'];
 }
 $liensPrat = new msPeopleRelations();
 $liensPrat->setToID($groupeID);

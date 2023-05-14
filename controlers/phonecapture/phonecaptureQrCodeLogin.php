@@ -55,7 +55,7 @@ if (isset($match['params']['key'])) {
 		$userPass = msUser::getUserPassByUserID($params[0]);
 
 		//recherche de fingeprint specifique utilisateur
-		$p['config']['phonecaptureFingerprint'] = msConfiguration::getUserParameterValue('phonecaptureFingerprint', msSQL::cleanVar($params[0]));
+		$p['config']['phonecaptureFingerprint'] = msConfiguration::getUserParameterValue('phonecaptureFingerprint', $params[0]);
 
 		$userPass = password_hash($userPass . $p['config']['phonecaptureFingerprint'], PASSWORD_DEFAULT);
 

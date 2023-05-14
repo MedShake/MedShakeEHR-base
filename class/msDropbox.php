@@ -82,7 +82,7 @@ class msDropbox
 	public function getAllBoxesParametersCurrentUser()
 	{
 		global $p;
-		return $this->_allBoxesParameters = Spyc::YAMLLoad($p['config']['dropboxOptions']);
+		return $this->_allBoxesParameters = msYAML::yamlYamlToArray($p['config']['dropboxOptions']);
 	}
 
 	/**

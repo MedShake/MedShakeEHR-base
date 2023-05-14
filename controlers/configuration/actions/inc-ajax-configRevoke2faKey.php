@@ -26,11 +26,13 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
 $utilisateur = new msUser;
-if($utilisateur->set2faUserKeyRevoked($_POST['uid'])) {
-  exit(json_encode(['status'=>'ok']));
+if ($utilisateur->set2faUserKeyRevoked($_POST['uid'])) {
+	exit(json_encode(['status' => 'ok']));
 } else {
-  die();
+	die();
 }

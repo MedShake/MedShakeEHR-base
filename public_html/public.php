@@ -52,7 +52,7 @@ spl_autoload_register(function ($class) {
 require $homepath.'fonctions/compatibilite.php';
 
 /////////// Config loader
-$p['config']=yaml_parse_file($homepath.'config/config.yml');
+$p['config']=msYAML::yamlFileRead($homepath.'config/config.yml');
 
 /////////// correction pour host non présent (IP qui change)
 if ($p['config']['host']=='') {
@@ -62,7 +62,7 @@ if ($p['config']['host']=='') {
 $p['homepath']=$homepath;
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo=msSQL::sqlConnect();
 
 
 /////////// Sortie des versions des modules

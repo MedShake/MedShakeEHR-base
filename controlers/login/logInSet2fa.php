@@ -26,11 +26,11 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template="logInSet2fa";
+$debug = '';
+$template = "logInSet2fa";
 
-if($p['user']['secret2fa'] == NULL) {
-  $p['user']['secret2fa']=$iUser->set2fa()['uri'];
+if ($p['user']['secret2fa'] == NULL) {
+	$p['user']['secret2fa'] = $iUser->set2fa()['uri'];
 } else {
-  $p['user']['secret2fa']=$iUser->get2faUri();
+	$p['user']['secret2fa'] = $iUser->get2faUri();
 }

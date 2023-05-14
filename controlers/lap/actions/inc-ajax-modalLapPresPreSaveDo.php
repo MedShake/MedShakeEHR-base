@@ -24,17 +24,20 @@
  * LAP : ajax > enregistrer la prescription préétablie
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
-$debug='';
 
-$data=array(
-  'cat'=>$_POST['cat'],
-  'label'=>$_POST['label'],
-  'description'=>json_encode($_POST['ordo']),
-  'fromID'=>$p['user']['id'],
-  'toID'=>$p['user']['id'],
+$debug = '';
+
+$data = array(
+	'cat' => $_POST['cat'],
+	'label' => $_POST['label'],
+	'description' => json_encode($_POST['ordo']),
+	'fromID' => $p['user']['id'],
+	'toID' => $p['user']['id'],
 );
 
-if(msSQL::sqlInsert('prescriptions', $data)) {
-  echo json_encode(['statut'=>'ok']);
+if (msSQL::sqlInsert('prescriptions', $data)) {
+	echo json_encode(['statut' => 'ok']);
 }

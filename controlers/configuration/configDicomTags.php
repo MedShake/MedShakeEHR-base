@@ -24,26 +24,25 @@
  * Config : liste des tags DICOM rencontrés et associés à une data
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configDicomTags";
-     $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$template = "configDicomTags";
+	$debug = '';
 
-     if($tags = msSQL::sql2tab("select dt.*, d.label, dc.label as labelCat
+	if ($tags = msSQL::sql2tab("SELECT dt.*, d.label, dc.label as labelCat
      from dicomTags dt
       left join data_types as d on d.name=dt.typeName
       left join data_cat as dc on dc.id=d.cat
       where dt.dicomTag !='' order by dt.dicomCodeMeaning")) {
 
-       foreach($tags as $v) {
-         $p['page']['tags'][$v['dicomTag']][]=$v;
-       }
-
-     }
-
-
- }
+		foreach ($tags as $v) {
+			$p['page']['tags'][$v['dicomTag']][] = $v;
+		}
+	}
+}

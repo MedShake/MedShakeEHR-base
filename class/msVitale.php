@@ -24,64 +24,66 @@
  * Carte Vitale et CPS
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 class msVitale
 {
 
-  private $_jsonCpsVitaleDataFromExternalMod;
+	private $_jsonCpsVitaleDataFromExternalMod;
 
-/**
- * Obtenir du module tiers les data CPS et Vital au format JSON sans les rapprocher des dossiers patients potentiellement concordants
- * @return string data au format JSON
- */
-  public function getJsonCpsVitaleDataFromExternalMod() {
-    global $p;
-    $file=$p['config']['protocol'].$p['config']['host'].$p['config']['urlHostSuffixe'].'/modulesExternes/'.$p['config']['vitaleService'].'/lireCpsEtVitale.php?hoteLecteurIp='.$p['config']['vitaleHoteLecteurIP'].'&nomRessourcePS='.$p['config']['vitaleNomRessourcePS'].'&nomRessourceLecteur='.$p['config']['vitaleNomRessourceLecteur'];
+	/**
+	 * Obtenir du module tiers les data CPS et Vital au format JSON sans les rapprocher des dossiers patients potentiellement concordants
+	 * @return string data au format JSON
+	 */
+	public function getJsonCpsVitaleDataFromExternalMod()
+	{
+		global $p;
+		$file = $p['config']['protocol'] . $p['config']['host'] . $p['config']['urlHostSuffixe'] . '/modulesExternes/' . $p['config']['vitaleService'] . '/lireCpsEtVitale.php?hoteLecteurIp=' . $p['config']['vitaleHoteLecteurIP'] . '&nomRessourcePS=' . $p['config']['vitaleNomRessourcePS'] . '&nomRessourceLecteur=' . $p['config']['vitaleNomRessourceLecteur'];
 
-    if($p['config']['protocol'] == "https://") {
-      $arrContextOptions=array(
-        "ssl"=>array(
-            "verify_peer"=>false,
-            "verify_peer_name"=>false,
-        ),
-      );
+		if ($p['config']['protocol'] == "https://") {
+			$arrContextOptions = array(
+				"ssl" => array(
+					"verify_peer" => false,
+					"verify_peer_name" => false,
+				),
+			);
 
-      return $this->_jsonCpsVitaleDataFromExternalMod=file_get_contents($file, false, stream_context_create($arrContextOptions));
-    } else {
-      return $this->_jsonCpsVitaleDataFromExternalMod=file_get_contents($file);
-    }
+			return $this->_jsonCpsVitaleDataFromExternalMod = file_get_contents($file, false, stream_context_create($arrContextOptions));
+		} else {
+			return $this->_jsonCpsVitaleDataFromExternalMod = file_get_contents($file);
+		}
+	}
 
-  }
+	/**
+	 * Obtenir du module tiers les data CPS et Vital au format JSON en les rapprochant des dossiers patients potentiellement concordants
+	 * @return string data au format JSON
+	 */
+	public function getJsonCpsVitalDataWithPeopleID()
+	{
+		if (empty($this->_jsonCpsVitaleDataFromExternalMod)) $this->getJsonCpsVitaleDataFromExternalMod();
 
-/**
- * Obtenir du module tiers les data CPS et Vital au format JSON en les rapprochant des dossiers patients potentiellement concordants
- * @return string data au format JSON
- */
-  public function getJsonCpsVitalDataWithPeopleID() {
-    if(empty($this->_jsonCpsVitaleDataFromExternalMod)) $this->getJsonCpsVitaleDataFromExternalMod();
+		$data = json_decode($this->_jsonCpsVitaleDataFromExternalMod, true);
 
-    $data=json_decode($this->_jsonCpsVitaleDataFromExternalMod, true);
+		$name2typeID = new msData();
+		$name2typeID = $name2typeID->getTypeIDsFromName(['nss']);
+		if (!empty($data['vitale']['data'][104])) {
+			foreach ($data['vitale']['data'][104] as $index => $dat) {
 
-    $name2typeID = new msData();
-    $name2typeID = $name2typeID->getTypeIDsFromName(['nss']);
-    if(!empty($data['vitale']['data'][104])) {
-      foreach($data['vitale']['data'][104] as $index=>$dat) {
+				if (empty($dat[9]) and !empty($data['vitale']['data'][101][0][8]) and $dat[14] == '0') {
+					$dat[9] = $data['vitale']['data'][104][$index][9] = $data['vitale']['data'][101][0][8];
+					$dat[10] = $data['vitale']['data'][104][$index][10] = $data['vitale']['data'][101][0][9];
+				}
 
-        if(empty($dat[9]) and !empty($data['vitale']['data'][101][0][8]) and $dat[14] == '0') {
-          $dat[9] = $data['vitale']['data'][104][$index][9] = $data['vitale']['data'][101][0][8];
-          $dat[10] = $data['vitale']['data'][104][$index][10] = $data['vitale']['data'][101][0][9];
-        }
+				if ($toID = msSQL::sql2tabSimple("select toID from objets_data where typeID = :typeID and value = :val and deleted = '' and outdate = '' group by toID ", ['typeID' => $name2typeID['nss'], 'val' => $dat[9] . $dat[10]])) {
+					$data['vitale']['correspondances'][$index] = $toID;
+				} else {
+					$data['vitale']['correspondances'][$index] = '';
+				}
+			}
+		}
 
-        if($toID = msSQL::sql2tabSimple("select toID from objets_data where typeID='".$name2typeID['nss']."' and value = '".$dat[9].$dat[10]."' and deleted = '' and outdate = '' group by toID ")) {
-          $data['vitale']['correspondances'][$index]=$toID;
-        } else {
-          $data['vitale']['correspondances'][$index]='';
-        }
-      }
-    }
-
-    return json_encode($data);
-  }
-
+		return json_encode($data);
+	}
 }

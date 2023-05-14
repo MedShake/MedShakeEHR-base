@@ -25,61 +25,64 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-    $template="configDataType";
-    $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$template = "configDataType";
+	$debug = '';
 
-    $p['page']['groupe']=$match['params']['groupe'];
-    if(!in_array($p['page']['groupe'], msSQL::sqlEnumList('data_types', 'groupe'))) die();
+	$p['page']['groupe'] = $match['params']['groupe'];
+	if (!in_array($p['page']['groupe'], msSQL::sqlEnumList('data_types', 'groupe'))) die();
 
-    //restriction à une cat
-    if (isset($match['params']['cat']) and is_numeric($match['params']['cat'])) {
-        $catRestriction= ' and t.cat = '.$match['params']['cat'];
-    } else {
-        $catRestriction=null;
-    }
+	//restriction à une cat
+	if (isset($match['params']['cat']) and is_numeric($match['params']['cat'])) {
+		$catRestriction = ' and t.cat = :cat ';
+		$marqueurs['cat'] = $match['params']['cat'];
+	} else {
+		$catRestriction = null;
+	}
 
+	$marqueurs['groupe'] = $p['page']['groupe'];
 
-    if ($tabTypes=msSQL::sql2tab("select t.*, c.name as catName, c.label as catLabel,
+	if ($tabTypes = msSQL::sql2tab("SELECT t.*, c.name as catName, c.label as catLabel,
         (select count(id) from objets_data as d where d.typeID=t.id ) as enfants
         from data_types as t
         left join data_cat as c on c.id=t.cat
-        where t.id > 0 and t.groupe='".msSQL::cleanVar($p['page']['groupe'])."' ".$catRestriction."
+        where t.id > 0 and t.groupe= :groupe " . $catRestriction . "
         group by t.id
-        order by t.module, t.displayOrder, c.label asc, t.label asc, t.name")) {
+        order by t.module, t.displayOrder, c.label asc, t.label asc, t.name", $marqueurs)) {
 
 
-        foreach ($tabTypes as $v) {
-            $p['page']['tabTypes'][$v['catName']][]=$v;
-        }
-    }
+		foreach ($tabTypes as $v) {
+			$p['page']['tabTypes'][$v['catName']][] = $v;
+		}
+	}
 
-    // liste des catégories
-    $p['page']['catList']=msSQL::sql2tabKey("select id, label from data_cat where groupe='".$p['page']['groupe']."' order by label", 'id', 'label');
+	// liste des catégories
+	unset($marqueurs['cat']);
+	$p['page']['catList'] = msSQL::sql2tabKey("SELECT id, label from data_cat where groupe= :groupe order by label", 'id', 'label', $marqueurs);
 
-    // liste des modules
-    $p['page']['modules']=msModules::getInstalledModulesNames();
+	// liste des modules
+	$p['page']['modules'] = msModules::getInstalledModulesNames();
 
-    // liste des types possibles
-    $p['page']['typesPossibles']=msSQL::sqlEnumList('data_types', 'formType');
-    sort($p['page']['typesPossibles']);
-    $p['page']['typesPossibles']=array_combine($p['page']['typesPossibles'],$p['page']['typesPossibles']);
+	// liste des types possibles
+	$p['page']['typesPossibles'] = msSQL::sqlEnumList('data_types', 'formType');
+	sort($p['page']['typesPossibles']);
+	$p['page']['typesPossibles'] = array_combine($p['page']['typesPossibles'], $p['page']['typesPossibles']);
 
-    // Liste des registres
-    if($p['config']['optionGeActiverRegistres'] == 'true') {
-      $registres = new msPeopleSearch;
-      $registres->setPeopleType(['registre']);
-      $registres->setCriteresRecherche(['registryname'=>'%']);
-      $registres->setColonnesRetour(['registryname']);
-      if(!empty($regs = $registres->getSimpleSearchPeople())) {
-        $p['page']['registresPossibles']=array_column($regs, 'registryname', 'id');
-      }
-
-    }
-
- }
+	// Liste des registres
+	if ($p['config']['optionGeActiverRegistres'] == 'true') {
+		$registres = new msPeopleSearch;
+		$registres->setPeopleType(['registre']);
+		$registres->setCriteresRecherche(['registryname' => '%']);
+		$registres->setColonnesRetour(['registryname']);
+		if (!empty($regs = $registres->getSimpleSearchPeople())) {
+			$p['page']['registresPossibles'] = array_column($regs, 'registryname', 'id');
+		}
+	}
+}

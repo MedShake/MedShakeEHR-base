@@ -27,10 +27,10 @@
  */
 
 
-if($_POST['externID']<1) die;
-if($_POST['patientID']<1) die;
+if ($_POST['externID'] < 1) die;
+if ($_POST['patientID'] < 1) die;
 
-$obj=new msObjet();
+$obj = new msObjet();
 $obj->setToID($_POST['externID']);
 $obj->setFromID($p['user']['id']);
 $obj->createNewObjetByTypeName('relationExternePatient', $_POST['patientID']);

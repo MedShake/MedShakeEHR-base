@@ -26,22 +26,22 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
-$template='registreView';
+$debug = '';
+$template = 'registreView';
 
-if(!is_numeric($match['params']['registreID'])) die;
-$p['page']['registreDataID']=$match['params']['registreID'];
+if (!is_numeric($match['params']['registreID'])) die;
+$p['page']['registreDataID'] = $match['params']['registreID'];
 
 $registre = new msPeopleRelations;
 $registre->setToID($p['page']['registreDataID']);
-$p['page']['registreData']['dossierType']=$registre->getType();
+$p['page']['registreData']['dossierType'] = $registre->getType();
 
-if($p['page']['registreData']['dossierType'] != 'registre' or $p['config']['optionGeActiverRegistres'] != 'true') {
-  $template = "404";
-  return;
+if ($p['page']['registreData']['dossierType'] != 'registre' or $p['config']['optionGeActiverRegistres'] != 'true') {
+	$template = "404";
+	return;
 }
 
-$p['page']['registreData']=$registre->getLabelForSimpleAdminDatas($registre->getSimpleAdminDatasByName());
+$p['page']['registreData'] = $registre->getLabelForSimpleAdminDatas($registre->getSimpleAdminDatasByName());
 unset($p['page']['registreData']['registryPrefixTech']);
 unset($p['page']['registreData']['peopleExportID']);
 
@@ -54,14 +54,14 @@ $p['page']['registreDataLabel'] = $labels->getLabelFromTypeName(array_keys($p['p
 $data = new msData();
 $typeID = $data->getTypeIDFromName('relationRegistrePraticien');
 $options = $data->getSelectOptionValue(array($typeID));
-foreach($options[$typeID] as $k=>$v) {
-  $p['page']['preRelationRegistrePraticien']['formValues'][$k]=$v;
+foreach ($options[$typeID] as $k => $v) {
+	$p['page']['preRelationRegistrePraticien']['formValues'][$k] = $v;
 }
 
 //sortir les choix de relations groupe <-> registre
 $data = new msData();
 $typeID = $data->getTypeIDFromName('relationGroupeRegistre');
 $options = $data->getSelectOptionValue(array($typeID));
-foreach($options[$typeID] as $k=>$v) {
-  $p['page']['preRelationRegistreGroupe']['formValues'][$k]=$v;
+foreach ($options[$typeID] as $k => $v) {
+	$p['page']['preRelationRegistreGroupe']['formValues'][$k] = $v;
 }

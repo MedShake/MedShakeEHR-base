@@ -29,24 +29,24 @@
 
 header('Content-Type: application/json');
 
-if(!is_numeric($_POST['acteID'])) die();
+if (!is_numeric($_POST['acteID'])) die();
 
 $reglement = new msReglement();
 
-if($_POST['regleSecteurHonoraires']) {
-  $reglement->setSecteurTarifaire($_POST['regleSecteurHonoraires']);
+if ($_POST['regleSecteurHonoraires']) {
+	$reglement->setSecteurTarifaire($_POST['regleSecteurHonoraires']);
 } else {
-  $reglement->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
+	$reglement->setSecteurTarifaire($p['config']['administratifSecteurHonorairesCcam']);
 }
-if($_POST['regleSecteurHonorairesNgap']) {
-  $reglement->setSecteurTarifaireNgap($_POST['regleSecteurHonorairesNgap']);
+if ($_POST['regleSecteurHonorairesNgap']) {
+	$reglement->setSecteurTarifaireNgap($_POST['regleSecteurHonorairesNgap']);
 } else {
-  $reglement->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
+	$reglement->setSecteurTarifaireNgap($p['config']['administratifSecteurHonorairesNgap']);
 }
-if($_POST['regleSecteurGeoTarifaire']) {
-  $reglement->setSecteurTarifaireGeo($_POST['regleSecteurGeoTarifaire']);
+if ($_POST['regleSecteurGeoTarifaire']) {
+	$reglement->setSecteurTarifaireGeo($_POST['regleSecteurGeoTarifaire']);
 } else {
-  $reglement->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
+	$reglement->setSecteurTarifaireGeo($p['config']['administratifSecteurGeoTarifaire']);
 }
 
 $reglement->setFactureTypeID($_POST['acteID']);

@@ -27,31 +27,31 @@
  * @contrib fr33z00 <https://github.com/fr33z00>
  */
 
-if(!is_numeric($_POST['patientID'])) die;
+if (!is_numeric($_POST['patientID'])) die;
 
-$template="dicomWL";
+$template = "dicomWL";
 
 $prat = new msPeople();
 $prat->setToID($p['user']['id']);
-$p['page']['prat']=$prat->getSimpleAdminDatasByName();
-$p['page']['prat']['pratID']=$p['user']['id'];
+$p['page']['prat'] = $prat->getSimpleAdminDatasByName();
+$p['page']['prat']['pratID'] = $p['user']['id'];
 
 $patient = new msPeople();
 $patient->setToID($_POST['patientID']);
-$p['page']['patient']=$patient->getSimpleAdminDatasByName();
-$p['page']['patient']['id']=$_POST['patientID'];
-$p['page']['patient']['dicomPatientID']=$p['config']['dicomPrefixIdPatient'].$_POST['patientID'];
-if(isset($p['page']['patient']['birthdate'])) $p['page']['patient']['dicomBirthdate']=msTools::readableDate2Reverse($p['page']['patient']['birthdate']);
+$p['page']['patient'] = $patient->getSimpleAdminDatasByName();
+$p['page']['patient']['id'] = $_POST['patientID'];
+$p['page']['patient']['dicomPatientID'] = $p['config']['dicomPrefixIdPatient'] . $_POST['patientID'];
+if (isset($p['page']['patient']['birthdate'])) $p['page']['patient']['dicomBirthdate'] = msTools::readableDate2Reverse($p['page']['patient']['birthdate']);
 
 //poids taille
 $objetPatient = new msObjet;
 $objetPatient->setToID($_POST['patientID']);
 $p['page']['patient']['poids'] = $objetPatient->getLastObjetValueByTypeName('poids');
-$p['page']['patient']['taillePatient'] = number_format ($objetPatient->getLastObjetValueByTypeName('taillePatient')/100, 2, '.','');
+$p['page']['patient']['taillePatient'] = number_format($objetPatient->getLastObjetValueByTypeName('taillePatient') / 100, 2, '.', '');
 
 //inclusion si présence dans module installé du fichier sépcifique
-if (is_file($p['homepath'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareEcho.php')) {
-    include($p['homepath'].'controlers/module/'.$p['user']['module'].'/patient/actions/inc-ajax-prepareEcho.php');
+if (is_file($p['homepath'] . 'controlers/module/' . $p['user']['module'] . '/patient/actions/inc-ajax-prepareEcho.php')) {
+	include($p['homepath'] . 'controlers/module/' . $p['user']['module'] . '/patient/actions/inc-ajax-prepareEcho.php');
 }
 
 //générer et sortir html
@@ -61,14 +61,14 @@ $fichierDicomTXT = $getHtml->genererHtml();
 $fichierDicomTXT = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fichierDicomTXT);
 
 // Vérification répertoire de travail
-msTools::checkAndBuildTargetDir($p['config']['workingDirectory'].$p['user']['id'].'/');
+msTools::checkAndBuildTargetDir($p['config']['workingDirectory'] . $p['user']['id'] . '/');
 
 //data patient pour phonecapture
-$jsondata=json_encode(array('prat'=>$p['page']['prat'], 'patient'=>$p['page']['patient'], 'saveAs'=>'dicom'));
-file_put_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList.json', $jsondata);
+$jsondata = json_encode(array('prat' => $p['page']['prat'], 'patient' => $p['page']['patient'], 'saveAs' => 'dicom'));
+file_put_contents($p['config']['workingDirectory'] . $p['user']['id'] . '/workList.json', $jsondata);
 
 //wl dicom
-file_put_contents($p['config']['workingDirectory'].$p['user']['id'].'/workList'.$p['user']['id'].'.txt', $fichierDicomTXT);
-exec("dump2dcm ".$p['config']['workingDirectory'].$p['user']['id']."/workList".$p['user']['id'].".txt ".$p['config']['dicomWorkListDirectory']."workList".$p['user']['id'].".wl");
-unlink($p['config']['workingDirectory'].$p['user']['id'].'/workList'.$p['user']['id'].'.txt');
+file_put_contents($p['config']['workingDirectory'] . $p['user']['id'] . '/workList' . $p['user']['id'] . '.txt', $fichierDicomTXT);
+exec("dump2dcm " . $p['config']['workingDirectory'] . $p['user']['id'] . "/workList" . $p['user']['id'] . ".txt " . $p['config']['dicomWorkListDirectory'] . "workList" . $p['user']['id'] . ".wl");
+unlink($p['config']['workingDirectory'] . $p['user']['id'] . '/workList' . $p['user']['id'] . '.txt');
 die();

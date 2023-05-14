@@ -29,8 +29,8 @@
 
 //admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-   $template="forbidden";
-   return;
+	$template = "forbidden";
+	return;
 }
 
 $people = new msPeople;
@@ -38,7 +38,7 @@ $people->setToID($p['user']['id']);
 $peopleData = $people->getSimpleAdminDatasByName(['personalEmail', 'profesionnalEmail']);
 
 
-if(empty($peopleData)) die("Aucune adresse email connue sur votre compte utilisateur, envoi de mail impossible.");
+if (empty($peopleData)) die("Aucune adresse email connue sur votre compte utilisateur, envoi de mail impossible.");
 
 $mail = new PHPMailer\PHPMailer\PHPMailer;
 $mail->CharSet = 'UTF-8';
@@ -48,33 +48,33 @@ $mail->Host = $p['config']['smtpHost'];
 $mail->SMTPAuth = true;
 $mail->Username = $p['config']['smtpUsername'];
 $mail->Password = $p['config']['smtpPassword'];
-if($p['config']['smtpOptions'] == 'on') {
-  $mail->SMTPOptions = array(
-    'ssl' => array(
-      'verify_peer' => false,
-      'verify_peer_name' => false,
-      'allow_self_signed' => true
-    )
-  );
+if ($p['config']['smtpOptions'] == 'on') {
+	$mail->SMTPOptions = array(
+		'ssl' => array(
+			'verify_peer' => false,
+			'verify_peer_name' => false,
+			'allow_self_signed' => true
+		)
+	);
 }
-if(!empty($p['config']['smtpSecureType'])) $mail->SMTPSecure = $p['config']['smtpSecureType'];
+if (!empty($p['config']['smtpSecureType'])) $mail->SMTPSecure = $p['config']['smtpSecureType'];
 $mail->Port = $p['config']['smtpPort'];
 
 
 $mail->isHTML(false);
-$mail->Subject = 'Test serveur SMPT de '.$p['config']['designAppName'];
+$mail->Subject = 'Test serveur SMPT de ' . $p['config']['designAppName'];
 
 $mail->setFrom($p['config']['smtpFrom'], $p['config']['smtpFromName']);
-if(isset($peopleData['personalEmail'])) $mail->addAddress($peopleData['personalEmail']);
-if(isset($peopleData['profesionnalEmail'])) $mail->addAddress($peopleData['profesionnalEmail']);
+if (isset($peopleData['personalEmail'])) $mail->addAddress($peopleData['personalEmail']);
+if (isset($peopleData['profesionnalEmail'])) $mail->addAddress($peopleData['profesionnalEmail']);
 
 $mail->Body    =  nl2br("Test du serveur SMTP concluant !");
 $mail->AltBody = $mail->Body;
 
 
 if (!$mail->send()) {
-    echo 'Le message n\'a pu être envoyé.';
-    echo 'Mailer Error: ' . $mail->ErrorInfo;
+	echo 'Le message n\'a pu être envoyé.';
+	echo 'Mailer Error: ' . $mail->ErrorInfo;
 } else {
-    echo 'envoyé !';
-  }
+	echo 'envoyé !';
+}

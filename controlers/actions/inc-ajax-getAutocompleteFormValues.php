@@ -24,16 +24,25 @@
  * Requêtes AJAX > autocomplete des forms, version simple
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-$type=$match['params']['type'];
+$type = $match['params']['type'];
 
 if (isset($match['params']['setTypes'])) {
-   $searchTypes=explode(':', $match['params']['setTypes']);
+	$searchTypes = explode(':', $match['params']['setTypes']);
 } else {
-   $searchTypes[]=$type;
+	$searchTypes[] = $type;
 }
+if (!empty($searchTypes)) {
+	$sqlImplode = msSQL::sqlGetTagsForWhereIn($searchTypes, 'typeID');
+	$marqueurs = $sqlImplode['execute'];
+	$marqueurs['term'] = $_GET['term'] . '%';
 
-$data=msSQL::sql2tab("select distinct(value) from objets_data where typeID in ('".implode("','", msSQL::cleanArray($searchTypes))."') and value like '".msSQL::cleanVar($_GET['term'])."%' ");
+	$data = msSQL::sql2tab("SELECT distinct(value) from objets_data where typeID in (" . $sqlImplode['in'] . ") and value like :term ", $marqueurs);
+} else {
+	$data = null;
+}
 
 echo json_encode($data);

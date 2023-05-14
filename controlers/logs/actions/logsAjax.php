@@ -28,17 +28,17 @@
 
 
 
-$debug='';
-$m=$match['params']['m'];
+$debug = '';
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'searchAccessLog', // faire une recherche dans les access logs 
+$acceptedModes = array(
+	'searchAccessLog', // faire une recherche dans les access logs
 );
 
 //inclusion
-$fileToInclude=$p['homepath'].'controlers/logs/actions/inc-ajax-'.$m.'.php';
-if(in_array($m, $acceptedModes) and is_file($fileToInclude)) {
-    include($fileToInclude);
+$fileToInclude = $p['homepath'] . 'controlers/logs/actions/inc-ajax-' . $m . '.php';
+if (in_array($m, $acceptedModes) and is_file($fileToInclude)) {
+	include($fileToInclude);
 } else {
-    die();
+	die();
 }

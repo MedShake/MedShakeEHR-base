@@ -28,18 +28,18 @@
 
 
 //$debug='';
-$m=$match['params']['m'];
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'majAcks' // mise à jour des données accusés de réception 
+$acceptedModes = array(
+	'majAcks' // mise à jour des données accusés de réception
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 }
 
 
 // mise à jour des données accusés de réception
-if ($m=='majAcks') {
-    include('inc-action-majAcks.php');
+if ($m == 'majAcks') {
+	include('inc-action-majAcks.php');
 }

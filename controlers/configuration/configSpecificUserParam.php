@@ -25,48 +25,50 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
 //admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-    $template="forbidden";
-    return;
+	$template = "forbidden";
+	return;
 }
-$debug='';
-$template='configSpecificUserParam';
+$debug = '';
+$template = 'configSpecificUserParam';
 
-$p['page']['userID']=$match['params']['userID'];
-$prat=new msPeople();
+$p['page']['userID'] = $match['params']['userID'];
+$prat = new msPeople();
 $prat->setToID($p['page']['userID']);
-$p['page']['userData']=$prat->getSimpleAdminDatasByName();
-$module=$prat->getModule();
+$p['page']['userData'] = $prat->getSimpleAdminDatasByName();
+$module = $prat->getModule();
 
-$p['page']['userParams']=[];
-if($data=msConfiguration::getUserParamaters($p['page']['userID'])) {
-    foreach($data as $k=>$v) {
-        if ($k =='agendaNumberForPatientsOfTheDay' or $k=='administratifComptaPeutVoirRecettesDe') {
-            $v['formValues']=msSQL::sql2tabKey("SELECT `id`, `name` FROM `people` WHERE `name`!='' and `type`='pro'", "id", "name");
-            unset($v['formValues'][$p['page']['userID']]);
-            if ($v['name'] == 'agendaNumberForPatientsOfTheDay') {
-                $v['formValues']['0']='';
-                ksort($v['formValues']);
-            }
-                if ($v['name'] == 'administratifComptaPeutVoirRecettesDe') {
-                $v['value']=explode(',', $v['value']);
-            }
-        } elseif ($v['type']=='password') {
-            $v['value']=str_repeat('*',strlen($v['value']));
-        }
-        $p['page']['userParams'][$v['cat']][]=$v;
-    }
+$p['page']['userParams'] = [];
+if ($data = msConfiguration::getUserParamaters($p['page']['userID'])) {
+	foreach ($data as $k => $v) {
+		if ($k == 'agendaNumberForPatientsOfTheDay' or $k == 'administratifComptaPeutVoirRecettesDe') {
+			$v['formValues'] = msSQL::sql2tabKey("SELECT `id`, `name` FROM `people` WHERE `name`!='' and `type`='pro'", "id", "name");
+			unset($v['formValues'][$p['page']['userID']]);
+			if ($v['name'] == 'agendaNumberForPatientsOfTheDay') {
+				$v['formValues']['0'] = '';
+				ksort($v['formValues']);
+			}
+			if ($v['name'] == 'administratifComptaPeutVoirRecettesDe') {
+				$v['value'] = explode(',', $v['value']);
+			}
+		} elseif ($v['type'] == 'password') {
+			$v['value'] = str_repeat('*', strlen($v['value']));
+		}
+		$p['page']['userParams'][$v['cat']][] = $v;
+	}
 }
 ksort($p['page']['userParams']);
 
-$p['page']['availableParams']=msConfiguration::listAvailableParameters(array('id'=>$p['page']['userID'],'module'=>$module));
-foreach($p['page']['availableParams'] as $k=>$v) {
-  $p['page']['availableParams'][$k]['saniCat']=msTools::sanitizeFilename($v['cat']);
+$p['page']['availableParams'] = msConfiguration::listAvailableParameters(array('id' => $p['page']['userID'], 'module' => $module));
+foreach ($p['page']['availableParams'] as $k => $v) {
+	$p['page']['availableParams'][$k]['saniCat'] = msTools::sanitizeFilename($v['cat']);
 }
-$p['page']['availableCats']=msConfiguration::getListOfParametersCat();
+$p['page']['availableCats'] = msConfiguration::getListOfParametersCat();
 
 // templates user
-$p['page']['userTemplates']=msConfiguration::getUserTemplatesList();
+$p['page']['userTemplates'] = msConfiguration::getUserTemplatesList();

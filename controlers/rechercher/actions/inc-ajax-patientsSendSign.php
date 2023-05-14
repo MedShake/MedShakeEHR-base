@@ -28,33 +28,33 @@
  */
 
 $data = new msData;
-$data = $data->getDataType($_POST['typeID'], $col=['id','label', 'formValues as template'] );
+$data = $data->getDataType($_POST['typeID'], $col = ['id', 'label', 'formValues as template']);
 
 // petite prévention
-$data['template']=str_replace('.html.twig','',$data['template']);
-if($_POST['signPeriphName']) {
-  $signPeriphName=$_POST['signPeriphName'];
+$data['template'] = str_replace('.html.twig', '', $data['template']);
+if ($_POST['signPeriphName']) {
+	$signPeriphName = $_POST['signPeriphName'];
 } else {
-  $signPeriphName=$p['config']['signPeriphName'];
+	$signPeriphName = $p['config']['signPeriphName'];
 }
 
-$tab=array(
-  'patientID'=>(int)$_POST['patientID'],
-  'fromID'=>(int)$p['user']['id'],
-  'typeID'=>(int)$data['id'],
-  'template'=>(string)$data['template'],
-  'label'=>(string)$data['label'],
-  'signPeriphName'=>(string)$signPeriphName,
+$tab = array(
+	'patientID' => (int)$_POST['patientID'],
+	'fromID' => (int)$p['user']['id'],
+	'typeID' => (int)$data['id'],
+	'template' => (string)$data['template'],
+	'label' => (string)$data['label'],
+	'signPeriphName' => (string)$signPeriphName,
 );
 
-if(isset($_POST['fromID']) and is_numeric($_POST['fromID'])) {
-  $tab['fromID']=$_POST['fromID'];
+if (isset($_POST['fromID']) and is_numeric($_POST['fromID'])) {
+	$tab['fromID'] = $_POST['fromID'];
 }
 
-if(isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
-  $tab['objetID']=(int)$_POST['objetID'];
-  $cour= new msCourrier;
-  $tab['template']=$cour->getPrintModel($data['template']);
+if (isset($_POST['objetID']) and is_numeric($_POST['objetID'])) {
+	$tab['objetID'] = (int)$_POST['objetID'];
+	$cour = new msCourrier;
+	$tab['template'] = $cour->getPrintModel($data['template']);
 }
 
-file_put_contents($p['config']['workingDirectory'].'signData-'.$signPeriphName.'.txt', Spyc::YAMLDump($tab, false, 0, true));
+msYAML::yamlFileWrite($p['config']['workingDirectory'] . 'signData-' . $signPeriphName . '.txt', $tab);

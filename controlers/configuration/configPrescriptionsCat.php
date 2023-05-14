@@ -24,21 +24,23 @@
  * Config : gérer les catégories de prescriptions types
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 
 
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-     $template="configPrescriptionsCat";
-     $debug='';
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	$template = "configPrescriptionsCat";
+	$debug = '';
 
-     $p['page']['tabCat']=msSQL::sql2tabKey("select c.*, count(p.id) as enfants
+	$p['page']['tabCat'] = msSQL::sql2tabKey("select c.*, count(p.id) as enfants
 			from prescriptions_cat as c
 			left join prescriptions as p on c.id=p.cat
-      where c.type='nonlap'
+      		where c.type='nonlap'
 			group by c.id
 			order by c.label asc", 'id');
- }
+}

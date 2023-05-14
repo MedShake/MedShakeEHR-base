@@ -26,22 +26,22 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- $debug='';
- $tab=$match['params']['tab'];
+$debug = '';
+$tab = $match['params']['tab'];
 
- $acceptedModes=array(
-     'tabDicomStudiesList', // liste des studies dicom du patient
-     'tabDicomStudyView', // voir une étude dicom
-     'tabLiensPatient', // relation patient / patient et praticien
-     'tabLAP', // lap
-     'tabBio', // bio hprim
- );
+$acceptedModes = array(
+	'tabDicomStudiesList', // liste des studies dicom du patient
+	'tabDicomStudyView', // voir une étude dicom
+	'tabLiensPatient', // relation patient / patient et praticien
+	'tabLAP', // lap
+	'tabBio', // bio hprim
+);
 
- if (!in_array($tab, $acceptedModes)) {
-     die;
- }
+if (!in_array($tab, $acceptedModes)) {
+	die;
+}
 
- //inclusion
- if(is_file($p['homepath'].'controlers/patient/tabs/'.$tab.'.php')) {
-    include($p['homepath'].'controlers/patient/tabs/'.$tab.'.php');
- }
+//inclusion
+if (is_file($p['homepath'] . 'controlers/patient/tabs/' . $tab . '.php')) {
+	include($p['homepath'] . 'controlers/patient/tabs/' . $tab . '.php');
+}

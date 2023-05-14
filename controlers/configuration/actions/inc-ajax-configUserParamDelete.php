@@ -24,12 +24,20 @@
  * Config : supprimer un paramètre pour un utilisateur
  *
  * @author fr33z00 <https://github.com/fr33z00
+ * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if (!msUser::checkUserIsAdmin()) {die("Erreur: vous n'êtes pas administrateur");}
+if (!msUser::checkUserIsAdmin()) {
+	die("Erreur: vous n'êtes pas administrateur");
+}
 
-if(is_numeric($_POST['userID']) and is_string($_POST['paramName'])) {
-  msSQL::sqlQuery("DELETE FROM configuration WHERE name='".msSQL::cleanVar($_POST['paramName'])."' AND level='user' AND toID='".$_POST['userID']."' limit 1");
+if (is_numeric($_POST['userID']) and is_string($_POST['paramName'])) {
+	msSQL::sqlQuery(
+		"DELETE FROM configuration WHERE name = :paramName AND level = 'user' AND toID = :userID limit 1",
+		['paramName' => $_POST['paramName'], 'userID' => $_POST['userID']]
+	);
 }
 
 echo json_encode("ok");

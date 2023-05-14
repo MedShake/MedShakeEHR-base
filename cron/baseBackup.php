@@ -28,55 +28,57 @@
 
 // pour le configurateur de cron
 if (isset($p)) {
-    $p['page']['availableCrons']['baseBackup']=array(
-        'task' => 'baseBackup',
-        'defaults' => array('m'=>'0','h'=>'22','M'=>'*','dom'=>'*','dow'=>'*'),
-        'description' => 'Sauvegarde de la base de données. Sont conservées les sauvegardes des 7 derniers jours, la première des 12 derniers mois, la première de chaque année');
-    return;
+	$p['page']['availableCrons']['baseBackup'] = array(
+		'task' => 'baseBackup',
+		'defaults' => array('m' => '0', 'h' => '22', 'M' => '*', 'dom' => '*', 'dow' => '*'),
+		'description' => 'Sauvegarde de la base de données. Sont conservées les sauvegardes des 7 derniers jours, la première des 12 derniers mois, la première de chaque année'
+	);
+	return;
 }
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
-else $homepath=preg_replace("#cron$#", '', __DIR__);
+if (!empty($homepath = getenv("MEDSHAKEEHRPATH"))) $homepath = getenv("MEDSHAKEEHRPATH");
+else $homepath = preg_replace("#cron$#", '', __DIR__);
 
 /////////// Composer class auto-upload
-require $homepath.'vendor/autoload.php';
+require $homepath . 'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    global $homepath;
-    include $homepath.'class/' . $class . '.php';
+	global $homepath;
+	include $homepath . 'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['config']=yaml_parse_file($homepath.'config/config.yml');
-$p['homepath']=$homepath;
+$p['config'] = msYAML::yamlFileRead($homepath . 'config/config.yml');
+$p['homepath'] = $homepath;
 
-$today=date('Y-m-d');
-exec('mysqldump -u '.escapeshellarg($p['config']['sqlUser']).' -p'.escapeshellarg($p['config']['sqlPass']).' '.escapeshellarg($p['config']['sqlBase']).' > '.escapeshellarg($p['config']['backupLocation'].$p['config']['sqlBase'].'_'.$today.'.sql'));
+$today = date('Y-m-d');
+exec('mysqldump -u ' . escapeshellarg($p['config']['sqlUser']) . ' -p' . escapeshellarg($p['config']['sqlPass']) . ' ' . escapeshellarg($p['config']['sqlBase']) . ' > ' . escapeshellarg($p['config']['backupLocation'] . $p['config']['sqlBase'] . '_' . $today . '.sql'));
 
-$dumpsList=scandir($p['config']['backupLocation']);
+$dumpsList = scandir($p['config']['backupLocation']);
 
-$firstDayExists=false;
-$firstDayOfMonth=date('Y-m-01');
-$lastWeek=date('Y-m-d', strtotime("-1 week"));
-$firstOfLastYear=date('Y-m-01', strtotime("-1 year"));
+$firstDayExists = false;
+$firstDayOfMonth = date('Y-m-01');
+$lastWeek = date('Y-m-d', strtotime("-1 week"));
+$firstOfLastYear = date('Y-m-01', strtotime("-1 year"));
 foreach ($dumpsList as $dump) {
-    if (!preg_match('/'.$p['config']['sqlBase'].'_([0-9]+)-([0-9]+)-([0-9]+)\.sql/', $dump, $matches)) {
-        continue;
-    }
-    if (($matches[1].'-'.$matches[2].'-'.$matches[3])==$firstDayOfMonth) {
-        $firstDayExists=true;
-    }
-    if ((($matches[1].'-'.$matches[2].'-'.$matches[3])<$lastWeek and $matches[3]!='01') or
-    (($matches[1].'-'.$matches[2].'-'.$matches[3])<$firstOfLastYear and $matches[2]!='01')) {
-        unlink($p['config']['backupLocation'].$dump);
-    }
+	if (!preg_match('/' . $p['config']['sqlBase'] . '_([0-9]+)-([0-9]+)-([0-9]+)\.sql/', $dump, $matches)) {
+		continue;
+	}
+	if (($matches[1] . '-' . $matches[2] . '-' . $matches[3]) == $firstDayOfMonth) {
+		$firstDayExists = true;
+	}
+	if ((($matches[1] . '-' . $matches[2] . '-' . $matches[3]) < $lastWeek and $matches[3] != '01') or
+		(($matches[1] . '-' . $matches[2] . '-' . $matches[3]) < $firstOfLastYear and $matches[2] != '01')
+	) {
+		unlink($p['config']['backupLocation'] . $dump);
+	}
 }
 if (!$firstDayExists) {
-    copy($p['config']['backupLocation'].$p['config']['sqlBase'].'_'.$today.'.sql', $p['config']['backupLocation'].$p['config']['sqlBase'].'_'.$firstDayOfMonth.'.sql');
+	copy($p['config']['backupLocation'] . $p['config']['sqlBase'] . '_' . $today . '.sql', $p['config']['backupLocation'] . $p['config']['sqlBase'] . '_' . $firstDayOfMonth . '.sql');
 }

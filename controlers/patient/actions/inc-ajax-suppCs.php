@@ -27,13 +27,13 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-if(!is_numeric($_POST['objetID'])) die;
+if (!is_numeric($_POST['objetID'])) die;
 
 $patient = new msObjet();
 $patient->setFromID($p['user']['id']);
 $patient->setObjetID($_POST['objetID']);
 if ($patient->setDeletedObjetAndSons()) {
-    echo json_encode(array("statut"=>'ok'));
+	echo json_encode(array("statut" => 'ok'));
 } else {
-    echo json_encode(array("statut"=>'error'));
+	echo json_encode(array("statut" => 'error'));
 }

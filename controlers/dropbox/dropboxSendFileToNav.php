@@ -26,33 +26,33 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
+$debug = '';
 
-if($p['config']['optionGeActiverDropbox'] != 'true') {
-  die();
+if ($p['config']['optionGeActiverDropbox'] != 'true') {
+	die();
 }
 
 $dropbox = new msDropbox;
 
-if($p['config']['optionGeActiverDropbox'] != 'true') die;
-if(!isset($match['params']['box']) or !isset($match['params']['filename'])) die;
+if ($p['config']['optionGeActiverDropbox'] != 'true') die;
+if (!isset($match['params']['box']) or !isset($match['params']['filename'])) die;
 
 $dropbox = new msDropbox;
 $dropbox->setCurrentBoxId($match['params']['box']);
 $dropbox->getAllBoxesParametersCurrentUser()[$match['params']['box']];
 $dropbox->setCurrentFilename($match['params']['filename']);
-if($dropbox->checkFileIsInCurrentBox($match['params']['filename'])) {
-  $fileData = $dropbox->getCurrentFileData();
-  $mimetype=msTools::getmimetype($fileData['fullpath']);
-  header("Content-type: ".$mimetype);
-  if($mimetype == 'text/plain') {
-    $content=file_get_contents($fileData['fullpath']);
-    if (!mb_detect_encoding($content, 'utf-8', true)) {
-      header('Content-Type: '.$mimetype.'; charset=iso-8859-1');
-    }
-  }
+if ($dropbox->checkFileIsInCurrentBox($match['params']['filename'])) {
+	$fileData = $dropbox->getCurrentFileData();
+	$mimetype = msTools::getmimetype($fileData['fullpath']);
+	header("Content-type: " . $mimetype);
+	if ($mimetype == 'text/plain') {
+		$content = file_get_contents($fileData['fullpath']);
+		if (!mb_detect_encoding($content, 'utf-8', true)) {
+			header('Content-Type: ' . $mimetype . '; charset=iso-8859-1');
+		}
+	}
 
-  readfile($fileData['fullpath']);
+	readfile($fileData['fullpath']);
 } else {
-  die;
+	die;
 }

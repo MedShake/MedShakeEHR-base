@@ -24,48 +24,73 @@
  * Requêtes AJAX > autocomplete des forms, version complexe
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
+$valeurs = array(
+	'type' => $match['params']['type'],
+	'term' => $_GET['term'],
+	'setTypes' => $match['params']['setTypes']
+);
+
+$is_valid = GUMP::is_valid($valeurs, [
+	'type' => 'required|alpha_numeric',
+	'term' => 'required|sqlSearch',
+	'setTypes' => 'alpha_numeric_colon'
+]);
+if ($is_valid !== true) {
+	return;
+}
+
 $data = new msData();
-$name2typeId=$data->getTypeIDsFromName([$match['params']['type']]);
-$type=$name2typeId[$match['params']['type']];
+$name2typeId = $data->getTypeIDsFromName([$match['params']['type']]);
+$type = $name2typeId[$match['params']['type']];
+
+if (!is_numeric($type)) {
+	return;
+}
 
 if (isset($match['params']['setTypes'])) {
-   $searchTypes=$data->getTypeIDsFromName(explode(':', $match['params']['setTypes']));
-   foreach ($searchTypes as $v) {
-      if(is_numeric($v)) $concatValue[]= " COALESCE(d".$v.".value, '')";
-   }
+	$searchTypes = $data->getTypeIDsFromName(explode(':', $match['params']['setTypes']));
+	foreach ($searchTypes as $v) {
+		if (is_numeric($v)) $concatValue[] = " COALESCE(d" . $v . ".value, '')";
+	}
 } else {
-   if(is_numeric($type)) $searchTypes[]=$type;
+	$searchTypes[] = $type;
 }
 
-$joinleft=[];
-$concat=[];
-$groupby=array('label');
+$joinleft = [];
+$concat = [];
+$groupby = array('label');
 if (isset($match['params']['linkedTypes'])) {
-   $originalOrderLabel=explode(':', $match['params']['linkedTypes']);
-   $linkedTypes=$data->getTypeIDsFromName($originalOrderLabel);
+	$originalOrderLabel = explode(':', $match['params']['linkedTypes']);
+	$linkedTypes = $data->getTypeIDsFromName($originalOrderLabel);
 
-   foreach ($linkedTypes as $k=>$v) {
-     if(is_numeric($v)) {
-       $sel[]= " d".$v.".value as ".$k;
-       $concatLabel[$k]= " COALESCE(d".$v.".value, '')";
-       $joinleft[]=" left join objets_data as d".$v." on do.toID = d".$v.".toID and d".$v.".typeID='".$v."' and d".$v.".outdated='' and d".$v.".deleted='' ";
-       $groupby[]='d'.$v.'.value';
-     }
-   }
+	foreach ($linkedTypes as $k => $v) {
+		if (is_numeric($v)) {
+			$sel[] = " d" . $v . ".value as " . $k;
+			$concatLabel[$k] = " COALESCE(d" . $v . ".value, '')";
+			$joinleft[] = " left join objets_data as d" . $v . " on do.toID = d" . $v . ".toID and d" . $v . ".typeID='" . $v . "' and d" . $v . ".outdated='' and d" . $v . ".deleted='' ";
+			$groupby[] = 'd' . $v . '.value';
+		}
+	}
 }
 // remettre dans l'ordre original de l'url
-if(!empty($concatLabel)) {
-  $concatLabel=array_replace(array_flip($originalOrderLabel), $concatLabel);
+if (!empty($concatLabel)) {
+	$concatLabel = array_replace(array_flip($originalOrderLabel), $concatLabel);
 }
 
-$data=msSQL::sql2tab("select trim(concat(".implode(', " ",', $concatValue).")) as value, trim(concat(".implode(', " ",', $concatLabel).")) as label, ".implode(",", $sel)."
-from objets_data as do
-".implode(" ", $joinleft)."
-where do.typeID in ('".implode("','", msSQL::cleanArray($searchTypes))."') and trim(concat(".implode(', " ",', $concatLabel).")) like '%".msSQL::cleanVar($_GET['term'])."%'
-and d".msSQL::cleanVar($type).".value is not null
-group by ".implode(",", $groupby)." limit 25");
+$sqlImplode = msSQL::sqlGetTagsForWhereIn($searchTypes, 'st');
+$marqueurs = array_merge($sqlImplode['execute'], ['term' => '%' . $_GET['term'] . '%']);
 
+$sql = "SELECT trim(concat(" . implode(', " ",', $concatValue) . ")) as value, trim(concat(" . implode(', " ",', $concatLabel) . ")) as label, " . implode(",", $sel) . "
+from objets_data as do
+" . implode(" ", $joinleft) . "
+where do.typeID in (" . $sqlImplode['in'] . ") and trim(concat(" . implode(', " ",', $concatLabel) . ")) like :term
+and d" . $type . ".value is not null
+group by " . implode(",", $groupby) . " limit 25";
+
+$data = msSQL::sql2tab($sql, $marqueurs);
 
 echo json_encode($data);

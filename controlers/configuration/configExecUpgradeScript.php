@@ -25,21 +25,20 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
- ini_set('display_errors', 1);
- //admin uniquement
- if (!msUser::checkUserIsAdmin()) {
-     $template="forbidden";
- } else {
-   if(isset($match['params']['module'], $match['params']['script'])) {
-     $filepath= $homepath.'upgrade/'.$match['params']['module'].'/'.$match['params']['script'].'.php';
+ini_set('display_errors', 1);
+//admin uniquement
+if (!msUser::checkUserIsAdmin()) {
+	$template = "forbidden";
+} else {
+	if (isset($match['params']['module'], $match['params']['script'])) {
+		$filepath = $homepath . 'upgrade/' . $match['params']['module'] . '/' . $match['params']['script'] . '.php';
 
-     if(is_file($filepath)) {
-       echo 'Inclusion de : '.$filepath.'<br>';
-       include($filepath);
-       echo '<br>Terminé';
-     } else {
-       echo 'Ce fichier n\'existe pas';
-     }
-
-   }
- }
+		if (is_file($filepath)) {
+			echo 'Inclusion de : ' . $filepath . '<br>';
+			include($filepath);
+			echo '<br>Terminé';
+		} else {
+			echo 'Ce fichier n\'existe pas';
+		}
+	}
+}

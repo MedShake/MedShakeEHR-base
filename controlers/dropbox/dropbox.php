@@ -26,19 +26,18 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
-$debug='';
+$debug = '';
 
-if($p['config']['optionGeActiverDropbox'] != 'true') {
-  $template="forbidden";
-  return;
+if ($p['config']['optionGeActiverDropbox'] != 'true') {
+	$template = "forbidden";
+	return;
 }
-$template="dropbox";
+$template = "dropbox";
 
 $dropbox = new msDropbox;
 
 $p['page']['dropBoxesParams'] = $dropbox->getAllBoxesParametersCurrentUser();
-foreach($p['page']['dropBoxesParams'] as $box=>$params) {
-  $dropbox->setCurrentBoxId($box);
-  $p['page']['dropBoxesContent'] = $dropbox->getAllAllowedFilesInBoxes();
-
+foreach ($p['page']['dropBoxesParams'] as $box => $params) {
+	$dropbox->setCurrentBoxId($box);
+	$p['page']['dropBoxesContent'] = $dropbox->getAllAllowedFilesInBoxes();
 }

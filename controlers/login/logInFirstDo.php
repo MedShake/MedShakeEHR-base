@@ -25,12 +25,14 @@
  *
  * @author fr33z00 <https://github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 unset($_SESSION['form'][$_POST['formIN']]);
 
 if (msSQL::sqlUniqueChamp("SELECT COUNT(*) FROM `people` WHERE `type`='pro'") != "0") {
-  msTools::redirRoute('userLogIn');
+	msTools::redirRoute('userLogIn');
 }
 
 //construc validation rules
@@ -38,10 +40,10 @@ $form = new msFormValidation();
 $form->setformIDbyName($_POST['formIN']);
 $form->setPostdatas($_POST);
 $form->setContextualValidationErrorsMsg(false);
-$form->setContextualValidationRule('username',['alpha_dash','max_len,25']);
-$form->setContextualValidationRule('password',['checkPasswordLength']);
-$form->setContextualValidationRule('verifPassword',['equalsfield,p_password']);
-$validation=$form->getValidation();
+$form->setContextualValidationRule('username', ['alpha_dash', 'max_len,25']);
+$form->setContextualValidationRule('password', ['checkPasswordLength']);
+$form->setContextualValidationRule('verifPassword', ['equalsfield,p_password']);
+$validation = $form->getValidation();
 
 if ($validation === false) {
 	msTools::redirRoute('userLogInFirst');
@@ -49,44 +51,44 @@ if ($validation === false) {
 	// compléter la config par défaut
 	$p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
-	if(isset($p['config']['optionGeLoginCreationDefaultModule']) and !empty($p['config']['optionGeLoginCreationDefaultModule'])) {
+	if (isset($p['config']['optionGeLoginCreationDefaultModule']) and !empty($p['config']['optionGeLoginCreationDefaultModule'])) {
 		$defaultModule = $p['config']['optionGeLoginCreationDefaultModule'];
 	} else {
 		$defaultModule = 'base';
 	}
 
-    $data=array(
-        'name' => $_POST['p_username'],
-        'type' => 'pro',
-        'rank' => 'admin',
-        'module' => $defaultModule,
-        'registerDate' => date("Y/m/d H:i:s"),
-        'fromID' => 1
-    );
-    if($id=msSQL::sqlInsert('people', $data)) {
-      msUser::setUserNewPassword($id, $_POST['p_password']);
-      $obj= new msObjet();
-      $obj->setToID($id);
-      $obj->setFromID(1);
-      $obj->createNewObjetByTypeName('firstname', $_POST['p_username']);
-      $obj->createNewObjetByTypeName('birthname', 'ADMIN');
-    }
-    $user = new msUser();
-    if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
-        unset($_SESSION['form'][$_POST['formIN']]);
-        $message='Un problème est survenu lors de la création de l\'utilisateur.';
-        if (!in_array($message, $_SESSION['form'][$_POST['formIN']]['validationErrorsMsg'])) {
-            $_SESSION['form'][$_POST['formIN']]['validationErrorsMsg'][]=$message;
-        }
-        $validation = false;
-    }
+	$data = array(
+		'name' => $_POST['p_username'],
+		'type' => 'pro',
+		'rank' => 'admin',
+		'module' => $defaultModule,
+		'registerDate' => date("Y/m/d H:i:s"),
+		'fromID' => 1
+	);
+	if ($id = msSQL::sqlInsert('people', $data)) {
+		msUser::setUserNewPassword($id, $_POST['p_password']);
+		$obj = new msObjet();
+		$obj->setToID($id);
+		$obj->setFromID(1);
+		$obj->createNewObjetByTypeName('firstname', $_POST['p_username']);
+		$obj->createNewObjetByTypeName('birthname', 'ADMIN');
+	}
+	$user = new msUser();
+	if (!$user->checkLogin($_POST['p_username'], $_POST['p_password'])) {
+		unset($_SESSION['form'][$_POST['formIN']]);
+		$message = 'Un problème est survenu lors de la création de l\'utilisateur.';
+		if (!in_array($message, $_SESSION['form'][$_POST['formIN']]['validationErrorsMsg'])) {
+			$_SESSION['form'][$_POST['formIN']]['validationErrorsMsg'][] = $message;
+		}
+		$validation = false;
+	}
 
-    //do login
-    if ($validation != false) {
-        $user-> doLogin();
-        unset($_SESSION['form'][$_POST['formIN']]);
-        msTools::redirRoute('configDefaultParams');
-    } else {
-        msTools::redirRoute('userLogIn');
-    }
+	//do login
+	if ($validation != false) {
+		$user->doLogin();
+		unset($_SESSION['form'][$_POST['formIN']]);
+		msTools::redirRoute('configDefaultParams');
+	} else {
+		msTools::redirRoute('userLogIn');
+	}
 }

@@ -25,110 +25,112 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ *
+ * SQLPREPOK
  */
 
- //admin uniquement
+//admin uniquement
 if (!msUser::checkUserIsAdmin()) {
-    $template="forbidden";
-    return;
+	$template = "forbidden";
+	return;
 }
 
-$template="configTemplatesPDF";
-$debug='';
+$template = "configTemplatesPDF";
+$debug = '';
 
 //utilisateurs ayant un repertoire de templates spécifique
-$p['page']['templatesDirUsers']=msPeople::getUsersWithSpecificParam('templatesPdfFolder');
+$p['page']['templatesDirUsers'] = msPeople::getUsersWithSpecificParam('templatesPdfFolder');
 
 // si user
 if (isset($match['params']['userID'])) {
-    $user=array('id'=>$match['params']['userID'], 'module'=>'');
-    $p['page']['repertoireTemplatesPDF']=msConfiguration::getParameterValue('templatesPdfFolder', $user);
-    $p['page']['selectUser']=$match['params']['userID'];
+	$user = array('id' => $match['params']['userID'], 'module' => '');
+	$p['page']['repertoireTemplatesPDF'] = msConfiguration::getParameterValue('templatesPdfFolder', $user);
+	$p['page']['selectUser'] = $match['params']['userID'];
 } else {
-    $p['page']['repertoireTemplatesPDF']=msConfiguration::getParameterValue('templatesPdfFolder');
+	$p['page']['repertoireTemplatesPDF'] = msConfiguration::getParameterValue('templatesPdfFolder');
 }
 
 //test autorisation de lecture du dossier template
 if (is_readable($p['page']['repertoireTemplatesPDF'])) {
-    $p['page']['templatesDirAutorisationLecture'] = true;
+	$p['page']['templatesDirAutorisationLecture'] = true;
 } else {
-    $p['page']['templatesDirAutorisationLecture'] = false;
+	$p['page']['templatesDirAutorisationLecture'] = false;
 }
 
 //test autorisation d'écriture du dossier template
 if (is_writable($p['page']['repertoireTemplatesPDF'])) {
-    $p['page']['templatesDirAutorisationEcriture'] = true;
+	$p['page']['templatesDirAutorisationEcriture'] = true;
 } else {
-    $p['page']['templatesDirAutorisationEcriture'] = false;
+	$p['page']['templatesDirAutorisationEcriture'] = false;
 }
 
 //templates si lecture répertoire ok
 if ($p['page']['templatesDirAutorisationLecture']) {
 
-     //scan du répertoire
-    if ($listeTemplates=array_diff(scandir($p['page']['repertoireTemplatesPDF']), array('..', '.'))) {
-        foreach ($listeTemplates as $k=>$tptes) {
-            if(pathinfo($tptes)['extension'] == "twig") {
-              $typeFichier = 'listeTemplates';
-            } else {
-              $typeFichier = 'listeAutres';
-            }
+	//scan du répertoire
+	if ($listeTemplates = array_diff(scandir($p['page']['repertoireTemplatesPDF']), array('..', '.'))) {
+		foreach ($listeTemplates as $k => $tptes) {
+			if (pathinfo($tptes)['extension'] == "twig") {
+				$typeFichier = 'listeTemplates';
+			} else {
+				$typeFichier = 'listeAutres';
+			}
 
-            $p['page'][$typeFichier][$tptes]['file']=$tptes;
-            if (is_readable($p['page']['repertoireTemplatesPDF'].$tptes)) {
-                $p['page'][$typeFichier][$tptes]['autorisationLecture'] = true;
-            } else {
-                $p['page'][$typeFichier][$tptes]['autorisationLecture'] = false;
-            }
-            if (is_writable($p['page']['repertoireTemplatesPDF'].$tptes)) {
-                $p['page'][$typeFichier][$tptes]['autorisationEcriture'] = true;
-            } else {
-                $p['page'][$typeFichier][$tptes]['autorisationEcriture'] = false;
-            }
-        }
+			$p['page'][$typeFichier][$tptes]['file'] = $tptes;
+			if (is_readable($p['page']['repertoireTemplatesPDF'] . $tptes)) {
+				$p['page'][$typeFichier][$tptes]['autorisationLecture'] = true;
+			} else {
+				$p['page'][$typeFichier][$tptes]['autorisationLecture'] = false;
+			}
+			if (is_writable($p['page']['repertoireTemplatesPDF'] . $tptes)) {
+				$p['page'][$typeFichier][$tptes]['autorisationEcriture'] = true;
+			} else {
+				$p['page'][$typeFichier][$tptes]['autorisationEcriture'] = false;
+			}
+		}
 
-        //extraction des forms liés à un templates
-        if ($formsWithTemplates=msSQL::sql2tabKey("select concat(printModel, '.html.twig') as fichier, name, id from forms where printModel!='' ", 'fichier')) {
-            foreach ($formsWithTemplates as $k=>$v) {
-                if (isset($p['page']['listeTemplates'][$k])) {
-                  $v['type']='Formulaire';
-                  $p['page']['listeTemplates'][$k]['linkedTo'][]=$v;
-                }
-            }
-        }
+		//extraction des forms liés à un templates
+		if ($formsWithTemplates = msSQL::sql2tabKey("select concat(printModel, '.html.twig') as fichier, name, id from forms where printModel!='' ", 'fichier')) {
+			foreach ($formsWithTemplates as $k => $v) {
+				if (isset($p['page']['listeTemplates'][$k])) {
+					$v['type'] = 'Formulaire';
+					$p['page']['listeTemplates'][$k]['linkedTo'][] = $v;
+				}
+			}
+		}
 
-        //recherche de template lié à un paramètre de config (niveau config par défaut)
-        foreach ($p['config'] as $k=>$v) {
-          if(is_string($v)) {
-            if (isset($p['page']['listeTemplates'][$v])) {
-                $p['page']['listeTemplates'][$v]['linkedTo'][]=array('type'=>'Paramètre de la configuration de base', 'name'=>$k);
-            }
-          }
-        }
-        // templates liés aux certificats
-        $certificats=new msData();
-        if ($modelesCertif=$certificats->getDataTypesFromCatName('catModelesCertificats', ['formValues','label'])) {
-            foreach ($modelesCertif as $v) {
-                if (isset($p['page']['listeTemplates'][$v['formValues'].'.html.twig'])) {
-                    $p['page']['listeTemplates'][$v['formValues'].'.html.twig']['linkedTo'][]=array('type'=>'Certificat', 'name'=>$v['label']);
-                }
-            }
-        }
-        // templates liés aux courriers
-        if ($modelesCourrier=$certificats->getDataTypesFromCatName('catModelesCourriers', ['formValues','label'])) {
-            foreach ($modelesCourrier as $v) {
-                if (isset($p['page']['listeTemplates'][$v['formValues'].'.html.twig'])) {
-                    $p['page']['listeTemplates'][$v['formValues'].'.html.twig']['linkedTo'][]=array('type'=>'Certificat', 'name'=>$v['label']);
-                }
-            }
-        }
-        // templates liés aux documents à signer
-        if ($modelesDocASigner=$certificats->getDataTypesFromCatName('catModelesDocASigner', ['formValues','label'])) {
-            foreach ($modelesDocASigner as $v) {
-                if (isset($p['page']['listeTemplates'][$v['formValues'].'.html.twig'])) {
-                    $p['page']['listeTemplates'][$v['formValues'].'.html.twig']['linkedTo'][]=array('type'=>'Document à signer', 'name'=>$v['label']);
-                }
-            }
-        }
-    }
+		//recherche de template lié à un paramètre de config (niveau config par défaut)
+		foreach ($p['config'] as $k => $v) {
+			if (is_string($v)) {
+				if (isset($p['page']['listeTemplates'][$v])) {
+					$p['page']['listeTemplates'][$v]['linkedTo'][] = array('type' => 'Paramètre de la configuration de base', 'name' => $k);
+				}
+			}
+		}
+		// templates liés aux certificats
+		$certificats = new msData();
+		if ($modelesCertif = $certificats->getDataTypesFromCatName('catModelesCertificats', ['formValues', 'label'])) {
+			foreach ($modelesCertif as $v) {
+				if (isset($p['page']['listeTemplates'][$v['formValues'] . '.html.twig'])) {
+					$p['page']['listeTemplates'][$v['formValues'] . '.html.twig']['linkedTo'][] = array('type' => 'Certificat', 'name' => $v['label']);
+				}
+			}
+		}
+		// templates liés aux courriers
+		if ($modelesCourrier = $certificats->getDataTypesFromCatName('catModelesCourriers', ['formValues', 'label'])) {
+			foreach ($modelesCourrier as $v) {
+				if (isset($p['page']['listeTemplates'][$v['formValues'] . '.html.twig'])) {
+					$p['page']['listeTemplates'][$v['formValues'] . '.html.twig']['linkedTo'][] = array('type' => 'Certificat', 'name' => $v['label']);
+				}
+			}
+		}
+		// templates liés aux documents à signer
+		if ($modelesDocASigner = $certificats->getDataTypesFromCatName('catModelesDocASigner', ['formValues', 'label'])) {
+			foreach ($modelesDocASigner as $v) {
+				if (isset($p['page']['listeTemplates'][$v['formValues'] . '.html.twig'])) {
+					$p['page']['listeTemplates'][$v['formValues'] . '.html.twig']['linkedTo'][] = array('type' => 'Document à signer', 'name' => $v['label']);
+				}
+			}
+		}
+	}
 }

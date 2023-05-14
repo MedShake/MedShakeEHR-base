@@ -26,30 +26,37 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  */
 
- if($p['config']['optionGeActiverRegistres'] != 'true') {
-   die();
- }
+if ($p['config']['optionGeActiverRegistres'] != 'true') {
+	die();
+}
 
-$term = msSQL::cleanVar($_GET['term']);
 $a_json = array();
 
-$mss=new msPeopleSearch;
+$mss = new msPeopleSearch;
 $mss->setNameSearchMode('BnFnOrLnFn');
 $mss->setPeopleType(['registre']);
 $criteres = array(
-  'registryname'=>$term,
+	'registryname' => $_GET['term']
 );
+
+$is_valid = GUMP::is_valid($criteres, [
+	'registryname' => 'sqlIdentiteSearch|max_len,255',
+]);
+if ($is_valid !== true) {
+	return;
+}
+
 $mss->setCriteresRecherche($criteres);
 $mss->setColonnesRetour(['registryname']);
 $mss->setLimitNumber(20);
-if ($data=msSQL::sql2tab($mss->getSql())) {
+if ($data = msSQL::sql2tab($mss->getSql(), $mss->getSqlMarqueurs())) {
 
-	foreach ($data as $k=>$v) {
-    $label = $v['registryname'];
-		$a_json[]=array(
-			'label'=>trim($label),
-			'value'=>trim($label),
-			'id'=>$v['peopleID'],
+	foreach ($data as $k => $v) {
+		$label = $v['registryname'];
+		$a_json[] = array(
+			'label' => trim($label),
+			'value' => trim($label),
+			'id' => $v['peopleID'],
 		);
 	}
 }

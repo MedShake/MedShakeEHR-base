@@ -27,7 +27,7 @@
  */
 
 // on ne ferme pas à l'admin stricte car c'est un bienfait général de supprimer ces fichiers :D
-@unlink($homepath.'public_html/install.php');
-@unlink($homepath.'public_html/self-installer.php');
+@unlink($homepath . 'public_html/install.php');
+@unlink($homepath . 'public_html/self-installer.php');
 
 msTools::redirection('/configuration/');

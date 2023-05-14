@@ -25,10 +25,13 @@
  * lors de la dernière prescription à l’aide du LAP
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
 $name2typeID = new msData();
-$name2typeID = $name2typeID->getTypeIDsFromName(['lapOrdonnance', 'firstname', 'lastname', 'birthname']);
+$marqueurs = $name2typeID->getTypeIDsFromName(['lapOrdonnance', 'firstname', 'lastname', 'birthname']);
+$marqueurs['samID'] = "%" . $_POST['samID'] . "%";
 
 $patientsList = msSQL::sql2tab("SELECT w.fromID, w.toID, w.titre, w.registerDate, s.id,
 CASE
@@ -37,13 +40,13 @@ CASE
   ELSE concat(bn1.value, ' ', o2.value)
   END as identiteDossier
 FROM objets_data as w
-left join objets_data as o on o.toID=w.toID and o.typeID='".$name2typeID['lastname']."' and o.outdated='' and o.deleted=''
-left join objets_data as o2 on o2.toID=w.toID and o2.typeID='".$name2typeID['firstname']."' and o2.outdated='' and o2.deleted=''
-left join objets_data as bn1 on bn1.toID=w.toID and bn1.typeID='".$name2typeID['birthname']."' and bn1.outdated='' and bn1.deleted=''
+left join objets_data as o on o.toID=w.toID and o.typeID= :lastname and o.outdated='' and o.deleted=''
+left join objets_data as o2 on o2.toID=w.toID and o2.typeID= :firstname and o2.outdated='' and o2.deleted=''
+left join objets_data as bn1 on bn1.toID=w.toID and bn1.typeID= :birthname and bn1.outdated='' and bn1.deleted=''
 left join objets_data as s on s.registerDate > w.registerDate and s.toID = w.toID and s.outdated ='' and s.deleted=''
-where w.outdated ='' and w.deleted=''and w.typeID = '".$name2typeID['lapOrdonnance']."' and w.value like '%".msSQL::cleanVar($_POST['samID'])."%' and s.id is null
+where w.outdated ='' and w.deleted=''and w.typeID = :lapOrdonnance and w.value like :samID and s.id is null
 order by w.registerDate desc
-");
+", $marqueurs);
 
 header('Content-Type: application/json');
-echo json_encode(array('patientsList'=>$patientsList));
+echo json_encode(array('patientsList' => $patientsList));

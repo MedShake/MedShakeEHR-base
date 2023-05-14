@@ -28,15 +28,15 @@
 
 
 //$debug='';
-$m=$match['params']['m'];
+$m = $match['params']['m'];
 
-$acceptedModes=array(
-    'exportDataDownload', // export data download
-    'outilsFaxSend', // envoyer le fax
+$acceptedModes = array(
+	'exportDataDownload', // export data download
+	'outilsFaxSend', // envoyer le fax
 );
 
 if (!in_array($m, $acceptedModes)) {
-    die;
+	die;
 } else {
-    include('inc-action-'.$m.'.php');
+	include('inc-action-' . $m . '.php');
 }

@@ -26,15 +26,15 @@
  * @author fr33z00 <https://github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
  */
-$debug='';
-$template='configModules';
+$debug = '';
+$template = 'configModules';
 
-$p['page']['modules']=msModules::getInstalledModulesNamesAndVersions();
+$p['page']['modules'] = msModules::getInstalledModulesNamesAndVersions();
 
 $config = new msConfiguration;
-foreach($p['page']['modules'] as $k=>$v) {
-  // paramètres spécifiques
-  $p['page']['modulesConfig'][$v['name']]=$config->getModuleDefaultParameters($v['name']);
-  // infos génériques
-  $p['page']['modulesInfosGen'][$v['name']]=msModules::getModuleInfosGen($v['name']);
+foreach ($p['page']['modules'] as $k => $v) {
+	// paramètres spécifiques
+	$p['page']['modulesConfig'][$v['name']] = $config->getModuleDefaultParameters($v['name']);
+	// infos génériques
+	$p['page']['modulesInfosGen'][$v['name']] = msModules::getModuleInfosGen($v['name']);
 }

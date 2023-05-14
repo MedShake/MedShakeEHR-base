@@ -30,53 +30,54 @@
 
 // pour le configurateur de cron
 if (isset($p)) {
-    $p['page']['availableCrons']['cleanWorkingDir']=array(
-        'task' => 'Nettoyage',
-        'defaults' => array('m'=>'0','h'=>'20','M'=>'*','dom'=>'*','dow'=>'*'),
-        'description' => 'Nettoyage du répertoire de travail');
-    return;
+	$p['page']['availableCrons']['cleanWorkingDir'] = array(
+		'task' => 'Nettoyage',
+		'defaults' => array('m' => '0', 'h' => '20', 'M' => '*', 'dom' => '*', 'dow' => '*'),
+		'description' => 'Nettoyage du répertoire de travail'
+	);
+	return;
 }
 
 ini_set('display_errors', 1);
 setlocale(LC_ALL, "fr_FR.UTF-8");
 session_start();
 
-if (!empty($homepath=getenv("MEDSHAKEEHRPATH"))) $homepath=getenv("MEDSHAKEEHRPATH");
-else $homepath=preg_replace("#cron$#", '', __DIR__);
+if (!empty($homepath = getenv("MEDSHAKEEHRPATH"))) $homepath = getenv("MEDSHAKEEHRPATH");
+else $homepath = preg_replace("#cron$#", '', __DIR__);
 
 /////////// Composer class auto-upload
-require $homepath.'vendor/autoload.php';
+require $homepath . 'vendor/autoload.php';
 
 /////////// Class medshakeEHR auto-upload
 spl_autoload_register(function ($class) {
-    global $homepath;
-    include $homepath.'class/' . $class . '.php';
+	global $homepath;
+	include $homepath . 'class/' . $class . '.php';
 });
 
 
 /////////// Config loader
-$p['config']=yaml_parse_file($homepath.'config/config.yml');
-$p['homepath']=$homepath;
+$p['config'] = msYAML::yamlFileRead($homepath . 'config/config.yml');
+$p['homepath'] = $homepath;
 
 /////////// SQL connexion
-$mysqli=msSQL::sqlConnect();
+$pdo = msSQL::sqlConnect();
 
-$p['config']=array_merge($p['config'], msConfiguration::getAllParametersForUser());
+$p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser());
 
 /////////// utilisateurs potentiels et leur répertoire
-if ($usersTab= msSQL::sql2tabSimple("select p.id from people as p where p.pass!='' order by p.id")) {
-    foreach ($usersTab as $userID) {
-        if (is_numeric($userID)) {
-            // repertoire de travail
-            msTools::rmdir_recursive($p['config']['workingDirectory'].$userID);
-            /////////// repertoire de travail apicrypt
-            msTools::rmdir_recursive($p['config']['apicryptCheminFichierNC'].$userID);
-            msTools::rmdir_recursive($p['config']['apicryptCheminFichierC'].$userID);
-            // fichier worklist dicom
-            @unlink($p['config']['dicomWorkListDirectory']."workList".$userID.".wl");
-        }
-    }
+if ($usersTab = msSQL::sql2tabSimple("select p.id from people as p where p.pass!='' order by p.id")) {
+	foreach ($usersTab as $userID) {
+		if (is_numeric($userID)) {
+			// repertoire de travail
+			msTools::rmdir_recursive($p['config']['workingDirectory'] . $userID);
+			/////////// repertoire de travail apicrypt
+			msTools::rmdir_recursive($p['config']['apicryptCheminFichierNC'] . $userID);
+			msTools::rmdir_recursive($p['config']['apicryptCheminFichierC'] . $userID);
+			// fichier worklist dicom
+			@unlink($p['config']['dicomWorkListDirectory'] . "workList" . $userID . ".wl");
+		}
+	}
 }
 
 ///////// fichier patientsOfTheDay
-unlink($p['config']['workingDirectory'].$p['config']['agendaLocalPatientsOfTheDay']);
+unlink($p['config']['workingDirectory'] . $p['config']['agendaLocalPatientsOfTheDay']);

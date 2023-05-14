@@ -24,28 +24,30 @@
  * Public : procédure lost password, entrer un nouveau password
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ *
+ * SQLPREPOK
  */
 
-if($p['config']['optionGeLoginPassOnlineRecovery'] != "true") {
-$template="forbidden";
-return;
+if ($p['config']['optionGeLoginPassOnlineRecovery'] != "true") {
+	$template = "forbidden";
+	return;
 }
 
-$randStringControl=$match['params']['str'];
+$randStringControl = $match['params']['str'];
 
-$userID = msSQL::sqlUniqueChamp("select id from people where lastLostPassRandStr = '".msSQL::cleanVar($randStringControl)."' and lastLostPassDate >= DATE_SUB(NOW(),INTERVAL 10 MINUTE) limit 1");
+$userID = msSQL::sqlUniqueChamp("SELECT id from people where lastLostPassRandStr = :randStringControl and lastLostPassDate >= DATE_SUB(NOW(),INTERVAL 10 MINUTE) limit 1", ['randStringControl' => $randStringControl]);
 
-if(!is_numeric($userID) or $userID < 1) {
-  $template="404";
-  return;
+if (!is_numeric($userID) or $userID < 1) {
+	$template = "404";
+	return;
 }
 
-$template="lostPasswordNewSet";
+$template = "lostPasswordNewSet";
 
 $form = new msForm;
 $form->setFormIDbyName('baseUserPasswordRecovery');
-$p['page']['baseUserPasswordRecovery']=$form->getForm();
-$p['page']['baseUserPasswordRecoveryJS']=$form->getFormJavascript();
-$form->setFieldAttrAfterwards($p['page']['baseUserPasswordRecovery'],'password',['placeholder'=>'nouveau mot de passe']);
-$form->setFieldAttrAfterwards($p['page']['baseUserPasswordRecovery'],'verifPassword',['placeholder'=>'confirmation du nouveau mot de passe']);
-$form->addHiddenInput($p['page']['baseUserPasswordRecovery'], ['randStringControl'=>$randStringControl]);
+$p['page']['baseUserPasswordRecovery'] = $form->getForm();
+$p['page']['baseUserPasswordRecoveryJS'] = $form->getFormJavascript();
+$form->setFieldAttrAfterwards($p['page']['baseUserPasswordRecovery'], 'password', ['placeholder' => 'nouveau mot de passe']);
+$form->setFieldAttrAfterwards($p['page']['baseUserPasswordRecovery'], 'verifPassword', ['placeholder' => 'confirmation du nouveau mot de passe']);
+$form->addHiddenInput($p['page']['baseUserPasswordRecovery'], ['randStringControl' => $randStringControl]);

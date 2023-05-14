@@ -31,47 +31,47 @@ class msSignatureNumerique
 {
 
 
-  private $_patientID;
-  private $_fromID;
+	private $_patientID;
+	private $_fromID;
 
-/**
- * Définir le patient concerné
- * @param int $patientID ID de l'individu
- * @return int toID
- */
-    public function setPatientID($patientID)
-    {
-        if (msPeople::checkPeopleExist($patientID)) {
-            return $this->_patientID = $patientID;
-        } else {
-            throw new Exception('PatientID does not exist');
-        }
-    }
+	/**
+	 * Définir le patient concerné
+	 * @param int $patientID ID de l'individu
+	 * @return int toID
+	 */
+	public function setPatientID($patientID)
+	{
+		if (msPeople::checkPeopleExist($patientID)) {
+			return $this->_patientID = $patientID;
+		} else {
+			throw new Exception('PatientID does not exist');
+		}
+	}
 
-/**
- * Définir l'auteur
- * @param int $fromID ID de l'auteur
- * @return int fromID
- */
-    public function setFromID($fromID)
-    {
-        if (msPeople::checkPeopleExist($fromID)) {
-            return $this->_fromID = $fromID;
-        } else {
-            throw new Exception('FromID does not exist');
-        }
-    }
+	/**
+	 * Définir l'auteur
+	 * @param int $fromID ID de l'auteur
+	 * @return int fromID
+	 */
+	public function setFromID($fromID)
+	{
+		if (msPeople::checkPeopleExist($fromID)) {
+			return $this->_fromID = $fromID;
+		} else {
+			throw new Exception('FromID does not exist');
+		}
+	}
 
-/**
- * Obtenir la liste des documents signables
- * @return array liste des docs
- */
-    public function getPossibleDocToSign() {
-      $docASigner = new msData;
-      if($tab=$docASigner->getDataTypesFromCatName('catModelesDocASigner', ['id','name','label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
-        $docASigner->applyRulesOnlyforNotforOnArray($tab, $this->_fromID);
-      }
-      return $tab;
-    }
-
+	/**
+	 * Obtenir la liste des documents signables
+	 * @return array liste des docs
+	 */
+	public function getPossibleDocToSign()
+	{
+		$docASigner = new msData;
+		if ($tab = $docASigner->getDataTypesFromCatName('catModelesDocASigner', ['id', 'name', 'label', 'validationRules as onlyfor', 'validationErrorMsg as notfor'])) {
+			$docASigner->applyRulesOnlyforNotforOnArray($tab, $this->_fromID);
+		}
+		return $tab;
+	}
 }
