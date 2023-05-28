@@ -248,7 +248,7 @@ function check_and_create_base_config() {
       }
   }
 
-  if (file_put_contents($homepath.'config/config.yml', Spyc::YAMLDump($conf, false, 0, true))===false) {
+  if (file_put_contents($homepath.'config/config.yml', msYAML::yamlArrayToYaml($conf))===false) {
     echo("Echec lors de l'écriture du fichier de configuration.\n Vérifiez que ".get_current_user()." a les droits d'écriture sur le dossier ".$homepath."config/\n");
     return false;
   }
@@ -420,7 +420,7 @@ if (is_file($homepath.'config/config.yml')) {
   } elseif ($iscli || ($_SERVER['REQUEST_METHOD']=='POST' and isset($_POST['baseInstall']))) {
 
       /////////// Config loader
-      $p['config']=Spyc::YAMLLoad($homepath.'config/config.yml');
+      $p['config']=msYAML::yamlFileRead($homepath.'config/config.yml');
 
       /////////// SQL connexion
       $pdo=msSQL::sqlConnect();
@@ -432,7 +432,7 @@ if (is_file($homepath.'config/config.yml')) {
       /////////// Router
       if (!$iscli) {
         $router = new AltoRouter();
-        $routes=Spyc::YAMLLoad($homepath.'config/routes/routes-base.yml') + Spyc::YAMLLoad($homepath.'config/routes/routes-login.yml');
+        $routes=msYAML::yamlFileRead($homepath.'config/routes/routes-base.yml') + msYAML::yamlFileRead($homepath.'config/routes/routes-login.yml');
         $router->addRoutes($routes);
         $router->setBasePath($p['config']['urlHostSuffixe']);
         $match = $router->match();
