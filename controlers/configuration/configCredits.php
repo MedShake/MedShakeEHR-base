@@ -37,10 +37,6 @@ $p['page']['thanks']['AltoRouteur'] = array(
 	'description' => 'Routing class for PHP',
 	'url' => 'http://altorouter.com/'
 );
-$p['page']['thanks']['Spyc'] = array(
-	'description' => 'A YAML loader/dumper written in PHP',
-	'url' => 'http://altorouter.com/'
-);
 $p['page']['thanks']['GUMP'] = array(
 	'description' => 'A standalone PHP data validation and filtering class',
 	'url' => 'https://github.com/Wixel/GUMP'
