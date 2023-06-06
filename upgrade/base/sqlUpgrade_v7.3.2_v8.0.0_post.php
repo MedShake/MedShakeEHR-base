@@ -135,12 +135,14 @@ if (!empty($agendaUsers)) {
 }
 
 // Users templates
-if ($listeTemplates = array_diff(scandir($homepath . 'config/userTemplates/'), array('..', '.'))) {
-	foreach ($listeTemplates as $k => $tptes) {
-		if (is_file($homepath . 'config/userTemplates/' . $tptes)) {
-			$value = file_get_contents($homepath . 'config/userTemplates/' . $tptes);
-			$value = Spyc::YAMLLoad($value);
-			msYAML::yamlFileWrite($homepath . 'config/userTemplates/' . $tptes, $value);
+if (is_dir($homepath . 'config/userTemplates/')) {
+	if ($listeTemplates = array_diff(scandir($homepath . 'config/userTemplates/'), array('..', '.'))) {
+		foreach ($listeTemplates as $k => $tptes) {
+			if (is_file($homepath . 'config/userTemplates/' . $tptes)) {
+				$value = file_get_contents($homepath . 'config/userTemplates/' . $tptes);
+				$value = Spyc::YAMLLoad($value);
+				msYAML::yamlFileWrite($homepath . 'config/userTemplates/' . $tptes, $value);
+			}
 		}
 	}
 }
@@ -154,13 +156,13 @@ if (is_file($homepath . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrange
 
 
 // composer
-$initialDir=getcwd();
+$initialDir = getcwd();
 
-$pathToComposer='php '.$p['homepath'].'composer.phar';
-file_put_contents($p['homepath'].'composer.phar', fopen("https://getcomposer.org/download/latest-stable/composer.phar", 'r'));
+$pathToComposer = 'php ' . $p['homepath'] . 'composer.phar';
+file_put_contents($p['homepath'] . 'composer.phar', fopen("https://getcomposer.org/download/latest-stable/composer.phar", 'r'));
 
 chdir($p['config']['webDirectory']);
-exec('COMPOSER_HOME="/tmp/" '.$pathToComposer.' update 2>&1', $output);
+exec('COMPOSER_HOME="/tmp/" ' . $pathToComposer . ' update 2>&1', $output);
 chdir($p['homepath']);
-exec('COMPOSER_HOME="/tmp/" '.$pathToComposer.' update 2>&1', $output);
+exec('COMPOSER_HOME="/tmp/" ' . $pathToComposer . ' update 2>&1', $output);
 chdir($initialDir);
