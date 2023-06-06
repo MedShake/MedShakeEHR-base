@@ -135,23 +135,23 @@ if (!empty($agendaUsers)) {
 }
 
 // Users templates
-if (is_dir($homepath . 'config/userTemplates/')) {
-	if ($listeTemplates = array_diff(scandir($homepath . 'config/userTemplates/'), array('..', '.'))) {
+if (is_dir($p['homepath'] . 'config/userTemplates/')) {
+	if ($listeTemplates = array_diff(scandir($p['homepath'] . 'config/userTemplates/'), array('..', '.'))) {
 		foreach ($listeTemplates as $k => $tptes) {
-			if (is_file($homepath . 'config/userTemplates/' . $tptes)) {
-				$value = file_get_contents($homepath . 'config/userTemplates/' . $tptes);
+			if (is_file($p['homepath'] . 'config/userTemplates/' . $tptes)) {
+				$value = file_get_contents($p['homepath'] . 'config/userTemplates/' . $tptes);
 				$value = Spyc::YAMLLoad($value);
-				msYAML::yamlFileWrite($homepath . 'config/userTemplates/' . $tptes, $value);
+				msYAML::yamlFileWrite($p['homepath'] . 'config/userTemplates/' . $tptes, $value);
 			}
 		}
 	}
 }
 
 // Traitement fichiers particuliers
-if (is_file($homepath . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrangeProPlugin.yml')) {
-	$value = file_get_contents($homepath . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrangeProPlugin.yml');
+if (is_file($p['homepath'] . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrangeProPlugin.yml')) {
+	$value = file_get_contents($p['homepath'] . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrangeProPlugin.yml');
 	$value = Spyc::YAMLLoad($value);
-	msYAML::yamlFileWrite($homepath . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrangeProPlugin.yml', $value);
+	msYAML::yamlFileWrite($p['homepath'] . '/config/plugins/faxOrangeProPlugin/aboutPluginFaxOrangeProPlugin.yml', $value);
 }
 
 
