@@ -1,0 +1,27 @@
+# Let's start from a mariadb config
+FROM mariadb:latest
+
+ARG MYSQL_DATABASE=medshakeehr
+
+LABEL description="MedShake EHR dockerized DB image"
+LABEL maintainer="bugeaud@gmail.com"
+
+# Set some environement variables required
+ENV APP_PATH /app
+ENV MEDSHAKEEHRPATH $APP_PATH/MedShakeEHR-base/
+
+# Create the APP directory and move to it
+ADD --chown=mysql:mysql . $MEDSHAKEEHRPATH
+WORKDIR $MEDSHAKEEHRPATH
+
+# Add any .cnf file to MariaDB configuration
+#ADD --chown=mysql:mysql config/*.cnf /etc/mysql/mariadb.conf.d/
+
+# Create the database
+RUN echo "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE CHARACTER SET utf8 COLLATE utf8_bin" > /docker-entrypoint-initdb.d/00-create.sql
+
+# Create the schema
+ADD --chown=mysql:mysql upgrade/base/sqlInstall.sql /docker-entrypoint-initdb.d/01-init.sql
+
+# Add some more init for basic env configuration
+ADD --chown=mysql:mysql config/configuration.sql /docker-entrypoint-initdb.d/02-env.sql

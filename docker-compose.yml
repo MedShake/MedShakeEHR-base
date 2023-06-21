@@ -1,0 +1,51 @@
+version: '2'
+
+services:
+    web:
+        image: medshake-ehr-web:latest
+        build:
+            context: .
+            dockerfile: Dockerfile-web
+        ports:
+            - "80:80"
+        volumes:
+            - ~/ehr/log:/var/log
+            - ~/ehr/work:/app/MedShakeEHR-base/work
+            - ~/ehr/backup:/app/MedShakeEHR-base/backup
+        links:
+            - db:db
+        environment:
+            # EHR_* Env Variable passthru
+            - EHR_SERVER_NAME=${EHR_SERVER_NAME}
+            - EHR_SERVER_ALIAS=${EHR_SERVER_ALIAS}
+            - EHR_DBMS_NAME=${EHR_DBMS_NAME}
+            - EHR_DBMS_ROOT_PASSWORD=${EHR_DBMS_ROOT_PASSWORD}
+            - EHR_DBMS_USER_NAME=${EHR_DBMS_USER_NAME}
+            - EHR_DBMS_USER_PASSWORD=${EHR_DBMS_USER_PASSWORD}
+            - EHR_DBMS_VAR=${EHR_DBMS_VAR}
+            - EHR_FINGERPRINT=${EHR_FINGERPRINT}
+    db:
+        image: medshake-ehr-db:latest
+        build:
+            context: .
+            dockerfile: Dockerfile-db
+        volumes:
+            - ~/ehr/data:/var/lib/mysql
+#        ports:
+#            - "3306:3306"
+        command:
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --skip-character-set-client-handshake
+        environment:
+            - MYSQL_ROOT_PASSWORD=${EHR_DBMS_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${EHR_DBMS_NAME}
+            - MYSQL_USER=${EHR_DBMS_USER_NAME}
+            - MYSQL_PASSWORD=${EHR_DBMS_USER_PASSWORD}
+
+#    myadmin:
+#        image: phpmyadmin/phpmyadmin
+#        ports:
+#            - "8080:80"
+#        links:
+#            - db:db
