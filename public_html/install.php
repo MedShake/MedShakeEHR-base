@@ -211,32 +211,47 @@ function check_and_create_base_config()
   global $conf, $homepath;
   // Ne pas créer la base de donnée s'il est précisé qu'on l'a créée en amont
   if (empty($conf['sqlNotCreatDb'])) {
-    $mysqli = new mysqli($conf['sqlServeur'], $conf['sqlRootId'], $conf['sqlRootPwd']);
-    $mysqli->set_charset("utf8");
-    if (mysqli_connect_errno()) {
-      echo ("Echec de connexion à la base de données.\nVérifiez l'utilisateur et le mot de passe root.\n" . $mysqli->connect_errno . " : " . $mysqli->connect_error) . "\n";
+
+    if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $conf['sqlBase'])) {
+      echo "Le nom de base de données n'est pas valide.";
       return false;
     }
-    if ($mysqli->query("CREATE USER IF NOT EXISTS '" . $conf['sqlUser'] . "'@'localhost' IDENTIFIED BY '" . $conf['sqlPass'] . "'") === false) {
-      echo ("Echec lors de la création de l'utilisateur MySQL\n");
-      return false;
-    }
-    if ($mysqli->query("CREATE DATABASE IF NOT EXISTS " . $conf['sqlBase'] . " CHARACTER SET = 'utf8'") === false) {
-      echo ('Echec lors de la création de la base de données MySQL' . "\n");
-      return false;
-    }
-    if ($mysqli->query("GRANT ALL PRIVILEGES ON " . $conf['sqlBase'] . ".* TO '" . $conf['sqlUser'] . "'@'localhost'") === false) {
-      echo ("Echec lors de l'attribution des droits sur la base de données MySQL\n");
+
+    try {
+      $pdo = new PDO("mysql:host=" . $conf['sqlServeur'], $conf['sqlRootId'], $conf['sqlRootPwd']);
+
+      $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $pdo->exec("SET NAMES utf8");
+
+      $stmt = $pdo->prepare("CREATE USER IF NOT EXISTS :user@:serveur IDENTIFIED BY :pass");
+      $stmt->bindParam(':user', $conf['sqlUser']);
+      $stmt->bindParam(':pass', $conf['sqlPass']);
+      $stmt->bindParam(':serveur', $conf['sqlServeur']);
+      $stmt->execute();
+
+      $stmt = $pdo->prepare("CREATE DATABASE IF NOT EXISTS " . $conf['sqlBase'] . " CHARACTER SET = 'utf8mb4'");
+      $stmt->execute();
+
+      $stmt = $pdo->prepare("GRANT ALL PRIVILEGES ON " . $conf['sqlBase'] . ".* TO :user@:serveur");
+      $stmt->bindParam(':user', $conf['sqlUser']);
+      $stmt->bindParam(':serveur', $conf['sqlServeur']);
+      $stmt->execute();
+
+      $pdo = null;
+    } catch (PDOException $e) {
+      echo "Echec de connexion à la base de données.\nVérifiez l'utilisateur et le mot de passe root.\n" . $e->getMessage() . "\n";
       return false;
     }
   } else { // Verifier si la base et l'utilisateur medshake existent
-    $mysqli = new mysqli($conf['sqlServeur'], $conf['sqlUser'], $conf['sqlPass'], $conf['sqlBase']);
-    if (mysqli_connect_errno()) {
-      echo ("Echec de connexion à la base de données.\nVérifiez vos paramètres de connexion.\n" . $mysqli->connect_errno . " : " . $mysqli->connect_error . "\n");
+    try {
+      $pdo = new PDO("mysql:host=" . $conf['sqlServeur'] . ";dbname=" . $conf['sqlBase'], $conf['sqlUser'], $conf['sqlPass']);
+      $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $pdo = null;
+    } catch (PDOException $e) {
+      echo "Echec de connexion à la base de données.\nVérifiez vos paramètres de connexion.\n" . $e->getMessage() . "\n";
       return false;
     }
   }
-  $mysqli->close();
 
   if (!is_dir($conf['backupLocation'])) {
     if (mkdir($conf['backupLocation'], 0770, true) === false) {
