@@ -42,9 +42,9 @@ Script d'installation en mode ligne de commande pour MedShakeEHR
 
   Utilisation:
   php ./install.php -R <rootuser> -P <rootpass> -s <sqlhost> -d <database>
-                    -u <sqluser> -p <sqlpass> -r <protocol> -D <domain>
-                    [ -f <urlsuffix> ] [ -S <storpath> ] [ -B <backpath> ]
-                    [ -n <numport> ]
+                    -u <sqluser> -o <sqluserhost> -p <sqlpass> -r <protocol>
+                    -D <domain> [ -f <urlsuffix> ] [ -S <storpath> ]
+                    [ -B <backpath> ] [ -n <numport> ]
   php ./install.php -N -u <sqluser> -p <sqlpass> -r <protocol> -D <domain>
                     [ -f <urlsuffix> ] [ -S <storpath> ] [ -B <backpath> ]
                     [ -n <numport> ]
@@ -59,6 +59,8 @@ Script d'installation en mode ligne de commande pour MedShakeEHR
   -u|--sqluser      <sqluser>         Nom d'utilisateur MySQL pour
                                       MedShakeEHR
                                       (seulement si créé à l'avance)
+  -o|--sqluserhost  <sqluserhost>     Hôte(s) autorisé(s) pour l'utilisateur
+                                      MySQL MedShakeEHR
   -p|--sqlpass      <sqlpass>         Mot de passe utilisateur MySQL
                                       pour MedshakeEHR
                                       (seulement si crée à l'avance)
@@ -123,6 +125,12 @@ function read_args()
       case '--sqluser':
         array_shift($argv);
         $arrParam['sqlUser'] = array_shift($argv);
+        break;
+
+      case '-o':
+      case '--sqluserhost':
+        array_shift($argv);
+        $arrParam['sqlUserHost'] = array_shift($argv);
         break;
 
       case '-p':
@@ -223,18 +231,18 @@ function check_and_create_base_config()
       $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       $pdo->exec("SET NAMES utf8");
 
-      $stmt = $pdo->prepare("CREATE USER IF NOT EXISTS :user@:serveur IDENTIFIED BY :pass");
+      $stmt = $pdo->prepare("CREATE USER IF NOT EXISTS :user@:host IDENTIFIED BY :pass");
       $stmt->bindParam(':user', $conf['sqlUser']);
       $stmt->bindParam(':pass', $conf['sqlPass']);
-      $stmt->bindParam(':serveur', $conf['sqlServeur']);
+      $stmt->bindParam(':host', $conf['sqlUserHost']);
       $stmt->execute();
 
       $stmt = $pdo->prepare("CREATE DATABASE IF NOT EXISTS " . $conf['sqlBase'] . " CHARACTER SET = 'utf8mb4'");
       $stmt->execute();
 
-      $stmt = $pdo->prepare("GRANT ALL PRIVILEGES ON " . $conf['sqlBase'] . ".* TO :user@:serveur");
+      $stmt = $pdo->prepare("GRANT ALL PRIVILEGES ON " . $conf['sqlBase'] . ".* TO :user@:host");
       $stmt->bindParam(':user', $conf['sqlUser']);
-      $stmt->bindParam(':serveur', $conf['sqlServeur']);
+      $stmt->bindParam(':host', $conf['sqlUserHost']);
       $stmt->execute();
 
       $pdo = null;
@@ -299,6 +307,7 @@ function check_config_param($params)
 
   if (empty($params['sqlBase'])) $errMsgs['sqlBase'] = "Nom de base de donnée SQL absent";
   if (empty($params['sqlUser'])) $errMsgs['sqlUser'] = "Nom d'utilisateur SQL absent";
+  if (empty($params['sqlUserHost'])) $errMsgs['sqlUserHost'] = "Hote du nom d'utilisateur SQL absent";
   if (empty($params['sqlPass'])) $errMsgs['sqlPass'] = "Mot de passe utilisateur SQL absent";
   if (empty($params['sqlServeur'])) $errMsgs['sqlServeur'] = "Server SQL absent";
 
@@ -545,9 +554,9 @@ if (!$iscli) {
         <?php
         if ($template == 'bienvenue') :
         ?>
-          <h1>Bienvenue dans MedShakeEHR!</h1>
-          <p style="margin-top:50px">Avant de pouvoir utiliser MedShakeEHR, nous devons procéder à quelques étapes.</p>
-          <form action="<?= $_SERVER['REQUEST_URI'] ?>" method="post" style="margin-top:50px;">
+          <h1>Bienvenue dans MedShakeEHR !</h1>
+          <p class="mt-5">Avant de pouvoir utiliser MedShakeEHR, nous devons procéder à quelques étapes.</p>
+          <form action="<?= $_SERVER['REQUEST_URI'] ?>" method="post" class="mt-5">
             <input name="bienvenue" type="hidden" />
             <div class="row">
               <div class="col-md-4">
@@ -601,9 +610,21 @@ if (!$iscli) {
                   <input name="sqlBase" type="text" pattern="[a-zA-Z0-9_]{1,64}" class="form-control" autocomplete="off" required="required" value="medshakeehr" />
                   <small class="form-text text-muted">Caractères alphanumériques et underscore uniquement</small>
                 </div>
-                <div class="form-group">
-                  <label class="control-label">Nom d'utilisateur de la base à utiliser</label>
-                  <input name="sqlUser" type="text" class="form-control" autocomplete="off" required="required" value="" />
+                <div class="row">
+                  <div class="col form-group">
+                    <label class="control-label">Nom d'utilisateur de la base à utiliser</label>
+                    <input name="sqlUser" type="text" class="form-control" autocomplete="off" required="required" value="" />
+                  </div>
+                  <div class="col form-group">
+                    <label class="control-label">Hote(s) de l'utilisateur</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">@</div>
+                      </div>
+                      <input name="sqlUserHost" type="text" class="form-control" autocomplete="off" required="required" value="" />
+                    </div>
+                    <small class="form-text text-muted">localhost, %, IP ...</small>
+                  </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label">Mot de passe de l'utilisateur à utiliser</label>
