@@ -25,6 +25,7 @@
  *
  * @author fr33z00 <https://www.github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 
 ini_set('display_errors', 1);
@@ -63,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	}
 
 	$modulesPHP = get_loaded_extensions();
-	$modulesPHPrequis = ['gd', 'intl', 'curl', 'zip', 'xml', 'imagick', 'imap', 'dom', 'gnupg', 'yaml'];
+	$modulesPHPrequis = ['gd', 'intl', 'curl', 'zip', 'xml', 'imagick', 'imap', 'dom', 'gnupg', 'yaml', 'soap', 'bcmath'];
 	sort($modulesPHPrequis);
 	foreach ($modulesPHPrequis as $mod) {
 		if (!in_array($mod, $modulesPHP)) {
@@ -424,7 +425,7 @@ if ($template != '') : ?>
 			elseif ($template == 'erreur-droits') :
 			?>
 				<h1>Erreur!</h1>
-				<p style="margin-top:50px;">Le dossier <?= $dossier ?> n'est pas accéssible en écriture. Veuillez corriger le problème puis cliquer sur suivant.</p>
+				<p style="margin-top:50px;">Le dossier <?= $dossier ?> n'est pas accessible en écriture. Veuillez corriger le problème puis cliquez sur suivant.</p>
 				<a href=<?= $_SERVER['REQUEST_URI'] ?>><button class="btn btn-light">Suivant</button></a>
 			<?php
 			elseif ($template == 'erreur-inconnue') :
