@@ -20,6 +20,7 @@
 # Installateur de base
 #
 # @author Michaël Val
+# @contrib B-Yasmina
 
 selectMsehrPath() {
     read -er -i "$msehrPath" -p "Choix du dossier d'installation [défaut : /opt/ehr] : " input
@@ -284,7 +285,7 @@ msehrDom=msehr.local
 msehrDbName=medshakeehr
 selectVersion=1
 selectRemove=1
-msehrDep="apache2 composer curl ghostscript git imagemagick mariadb-server ntp pdftk php php-bcmath php-curl php-gd php-imagick php-imap php-intl php-mysql php-soap php-xml php-yaml php-zip"
+msehrDep="apache2 composer curl ghostscript git imagemagick mariadb-server ntp pdftk-java php php-bcmath php-curl php-gd php-imagick php-imap php-intl php-mysql php-soap php-xml php-yaml php-zip"
 extraDicom="orthanc"
 
 clear
