@@ -1,0 +1,77 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2023
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > page web racine pour le script install.php
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>MedShakeEHR : Installation</title>
+		<meta name="Description" content=""/>
+
+		<link type="text/css" href="{{ page.webpath }}/scss/bs_custom.min.css" rel="stylesheet"/>
+
+		<script type="text/javascript" src="{{ page.webpath }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="{{ page.webpath }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+
+		<!-- js spécifique pour l'installeur -->
+		<script>
+			$(document).ready(function () {
+                // Si nous ne voulons pas que l'installateur crée la base de
+                // données, désactive les champs adequats
+                $('input[name=sqlNotCreatDb]').on("change", function () {
+                        if (this.checked) {
+                            $('input[name=sqlRootId]').prop("disabled", true);
+                            $('input[name=sqlRootId]').prop("required", false);
+                            $('input[name=sqlRootPwd]').prop("disabled", true);
+                            $('input[name=sqlRootId]').prop("required", false);
+                        } else {
+                            $('input[name=sqlRootId]').prop("disabled", false);
+                            $('input[name=sqlRootId]').prop("required", true);
+                            $('input[name=sqlRootPwd]').prop("disabled", false);
+                            $('input[name=sqlRootPwd]').prop("required", true);
+                        };
+                    });
+                });
+		</script>
+	</head>
+
+	<body>
+
+		<nav class="navbar navbar-dark bg-dark mb-3">
+			<a class="navbar-brand" href="#">MedShakeEHR</a>
+		</nav>
+
+		<div class="container-fluid" role="main">
+            {% block body %}{% endblock %}
+		</div>
+
+	</body>
+</html>

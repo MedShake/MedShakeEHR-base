@@ -281,8 +281,8 @@ class msGetHtml
 			$this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($moduleFolder, '/'));
 		}
 
-		//templates module non connecté (public)
-		if (!isset($p['user']['module'])) {
+		//templates module non connecté (public) et contournement si base non installée (script install.php)
+		if (!isset($p['user']['module']) and isset($p['config']['sqlUser']) and !empty($p['config']['sqlUser'])) {
 			$modules = msModules::getInstalledModulesNames();
 			foreach ($modules as $module) {
 				if ($module != "base") {

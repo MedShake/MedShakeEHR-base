@@ -1,0 +1,42 @@
+{#
+ # This file is part of MedShakeEHR.
+ #
+ # Copyright (c) 2023
+ # Bertrand Boutillier <b.boutillier@gmail.com>
+ # http://www.medshake.net
+ #
+ # MedShakeEHR is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # any later version.
+ #
+ # MedShakeEHR is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with MedShakeEHR.  If not, see <http://www.gnu.org/licenses/>.
+ #/
+
+/##
+ # Template > écran pré bdd install pour install.php
+ #
+ # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ #}
+
+
+{% extends "install-base-page.html.twig" %}
+
+{% block body %}
+	<h2>Installation de la base de données</h2>
+	<p style="margin-top:50px;">Le fichier de configuration a été créé avec succès.<br>Nous allons maintenant installer la base de données.</p>
+	<form action="{{ page.request_uri }}" method="post" style="margin-top:50px;">
+		<input name="baseInstall" type="hidden"/>
+		<div class="row">
+			<div class="col-md-4">
+				<input type="submit" title="Suivant" value="Suivant" class="btn btn-primary"/>
+			</div>
+		</div>
+	</form>
+{% endblock %}
