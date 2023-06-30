@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 				$htaccess .= file_get_contents($dossierweb . "/.htaccess");
 				file_put_contents($dossierweb . "/.htaccess", $htaccess);
 				//lancement de la partie configuration
-				header('Location: ' . $dossierweb . "/install.php");
+				header('Location: ' . $_SERVER['SERVER_NAME'] . "/install.php");
 				die();
 			} else {
 				$ret = explode('<br>', $ret);
