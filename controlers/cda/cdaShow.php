@@ -32,4 +32,4 @@ $cda = new msCDA;
 $cda->setObjetID($match['params']['objetID']);
 
 header('Content-Type: application/xml; charset=utf-8');
-echo $cda->getCdaXml();
+echo trim($cda->getCdaXml());

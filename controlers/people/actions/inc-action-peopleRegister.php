@@ -52,29 +52,30 @@ $form->setPostdatas($_POST);
 $form->setContextualValidationErrorsMsg(false);
 $form->setContextualValidationRule('birthname', ['checkNoName']);
 
-if ($match['params']['porp'] == 'pro' and !$actAsAjax) {
+if ($match['params']['porp'] == 'pro') {
 
 	//si jeux de valeurs normées présents
 	if (is_file($p['homepath'] . 'ressources/JDV/JDV_J01-XdsAuthorSpecialty-CI-SIS.xml')) {
 		$codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
-		$optionsInject['PSCodeProSpe'] = ['Z' => ''] + array_column($codes, 'displayName', 'code');
+		$optionsInject['p_PSCodeProSpe'] = ['Z' => ''] + array_column($codes, 'displayName', 'code');
 	}
 
 	if (is_file($p['homepath'] . 'ressources/JDV/JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml')) {
 		$codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
-		$optionsInject['PSCodeStructureExercice'] = ['Z' => ''] + array_column($codes, 'displayName', 'code');
+		$optionsInject['p_PSCodeStructureExercice'] = ['Z' => ''] + array_column($codes, 'displayName', 'code');
 	}
 
 	//choix pour la méthode d'envoie préféré du praticien
 	if (!empty($p['config']['apicryptAdresse']) || !empty($p['config']['faxService'])) {
 
 		//récupération des choix par défaut
-		$optionsInject['preferedSendingMethod'] = msYAML::yamlYamlToArray(msData::getDataTypeByName('preferedSendingMethod')['formValues']);
+		$optionsInject['p_preferedSendingMethod'] = msYAML::yamlYamlToArray(msData::getDataTypeByName('preferedSendingMethod')['formValues']);
+		$optionsInject['p_preferedSendingMethod']['NONE'] = "Aucune méthode préférée d'envoi";
 		if (!empty($p['config']['apicryptAdresse'])) {
-			$optionsInject['preferedSendingMethod']['APICRYPT'] = 'Apicrypt';
+			$optionsInject['p_preferedSendingMethod']['APICRYPT'] = 'Apicrypt';
 		}
 		if (!empty($p['config']['faxService'])) {
-			$optionsInject['preferedSendingMethod']['FAX'] = 'Fax';
+			$optionsInject['p_preferedSendingMethod']['FAX'] = 'Fax';
 		}
 	}
 

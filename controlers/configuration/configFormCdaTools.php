@@ -42,8 +42,8 @@ function treatDataType(&$t)
 			}
 			$t['formValues'] = (array)$tab;
 		}
-		$t['formValues'] = array_filter($t['formValues']);
-		$t['keyValues'] = array_keys($t['formValues']);
+		$t['formValues'] = array_filter((array)$t['formValues']);
+		$t['keyValues'] = array_keys((array)$t['formValues']);
 	}
 }
 

@@ -90,9 +90,9 @@ class msCDA
 	{
 		//patient
 		$this->_objetTag['birthdate'] = msTools::readableDate2Reverse($this->_objetTag['birthdate']);
-		$this->_objetTag['homePhone'] = str_replace(' ', '', $this->_objetTag['homePhone']);
-		$this->_objetTag['mobilePhone'] = str_replace(' ', '', $this->_objetTag['mobilePhone']);
-		$this->_objetTag['personalEmail'] = str_replace(' ', '', $this->_objetTag['personalEmail']);
+		if (isset($this->_objetTag['homePhone'])) $this->_objetTag['homePhone'] = str_replace(' ', '', $this->_objetTag['homePhone']);
+		if (isset($this->_objetTag['mobilePhone'])) $this->_objetTag['mobilePhone'] = str_replace(' ', '', $this->_objetTag['mobilePhone']);
+		if (isset($this->_objetTag['personalEmail'])) $this->_objetTag['personalEmail'] = str_replace(' ', '', $this->_objetTag['personalEmail']);
 
 		//ps auteur
 		$aTraiter = ['AuteurInitial_telPro', 'AuteurInitial_telPro2', 'AuteurInitial_mobilePhonePro', 'AuteurInitial_faxPro', 'AuteurInitial_emailApicrypt', 'AuteurInitial_profesionnalEmail'];
@@ -112,13 +112,21 @@ class msCDA
 	{
 		if (isset($this->_objetTag['AuteurInitial_PSCodeProSpe'])) {
 			$codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
-			$this->_objetTag['AuteurInitial_PSCodeProSpe_codeSystem'] = $codes[$this->_objetTag['AuteurInitial_PSCodeProSpe']]['codeSystem'];
-			$this->_objetTag['AuteurInitial_PSCodeProSpe_displayName'] = $codes[$this->_objetTag['AuteurInitial_PSCodeProSpe']]['displayName'];
+			if (isset($codes[$this->_objetTag['AuteurInitial_PSCodeProSpe']]['codeSystem'])) {
+				$this->_objetTag['AuteurInitial_PSCodeProSpe_codeSystem'] = $codes[$this->_objetTag['AuteurInitial_PSCodeProSpe']]['codeSystem'];
+			}
+			if (isset($codes[$this->_objetTag['AuteurInitial_PSCodeProSpe']]['displayName'])) {
+				$this->_objetTag['AuteurInitial_PSCodeProSpe_displayName'] = $codes[$this->_objetTag['AuteurInitial_PSCodeProSpe']]['displayName'];
+			}
 		}
 		if (isset($this->_objetTag['AuteurInitial_PSCodeStructureExercice'])) {
 			$codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
-			$this->_objetTag['AuteurInitial_PSCodeStructureExercice_codeSystem'] = $codes[$this->_objetTag['AuteurInitial_PSCodeStructureExercice']]['codeSystem'];
-			$this->_objetTag['AuteurInitial_PSCodeStructureExercice_displayName'] = $codes[$this->_objetTag['AuteurInitial_PSCodeStructureExercice']]['displayName'];
+			if (isset($codes[$this->_objetTag['AuteurInitial_PSCodeStructureExercice']]['codeSystem'])) {
+				$this->_objetTag['AuteurInitial_PSCodeStructureExercice_codeSystem'] = $codes[$this->_objetTag['AuteurInitial_PSCodeStructureExercice']]['codeSystem'];
+			}
+			if (isset($codes[$this->_objetTag['AuteurInitial_PSCodeStructureExercice']]['displayName'])) {
+				$this->_objetTag['AuteurInitial_PSCodeStructureExercice_displayName'] = $codes[$this->_objetTag['AuteurInitial_PSCodeStructureExercice']]['displayName'];
+			}
 		}
 	}
 
@@ -129,7 +137,7 @@ class msCDA
 	private function _ajouterTagsFormulaireOrigine()
 	{
 		$ob = new msObjet();
-		$ob->setID($this->_objetID);
+		$ob->setObjetID($this->_objetID);
 		if ($formIN = $ob->getOriginFormNameFromObjetID()) {
 			if ($datYaml = msForm::getFormUniqueRawField($formIN, 'cda')) {
 				$d = msYAML::yamlYamlToArray($datYaml);
@@ -140,7 +148,7 @@ class msCDA
 				$this->_getDocumentationOfServiceEventCode($d);
 
 				// clinicalDocument/title
-				if (!isset($d['clinicalDocument']['title']) or empty($d['clinicalDocument']['title'])) {
+				if ((!isset($d['clinicalDocument']['title']) or empty($d['clinicalDocument']['title'])) and isset($this->_objetTag['cda_serviceEvent_displayName'])) {
 					$d['clinicalDocument']['title'] = $this->_objetTag['cda_serviceEvent_displayName'];
 				}
 				$this->_objetTag['cda_clinicalDocument_title'] = $d['clinicalDocument']['title'];
@@ -158,10 +166,12 @@ class msCDA
 	private function _getClinicalDocumentCode()
 	{
 		$tabVal = msExternalData::getJdvDataFromXml('JDV_J07-XdsTypeCode_CI-SIS.xml');
-		$this->_objetTag['cda_clinicalDocument_code_code'] = $tabVal[$this->_codeDocument]['code'];
-		$this->_objetTag['cda_clinicalDocument_code_displayName'] = $tabVal[$this->_codeDocument]['displayName'];
-		$this->_objetTag['cda_clinicalDocument_code_codeSystem'] = $tabVal[$this->_codeDocument]['codeSystem'];
-		$this->_objetTag['cda_clinicalDocument_code_codeSystemName'] = 'LOINC';
+		if (isset($tabVal[$this->_codeDocument])) {
+			$this->_objetTag['cda_clinicalDocument_code_code'] = $tabVal[$this->_codeDocument]['code'];
+			$this->_objetTag['cda_clinicalDocument_code_displayName'] = $tabVal[$this->_codeDocument]['displayName'];
+			$this->_objetTag['cda_clinicalDocument_code_codeSystem'] = $tabVal[$this->_codeDocument]['codeSystem'];
+			$this->_objetTag['cda_clinicalDocument_code_codeSystemName'] = 'LOINC';
+		}
 	}
 
 	/**
@@ -180,14 +190,26 @@ class msCDA
 			// param simple ou association de param
 			if (is_array($documentationOf['serviceEvent']['paramConditionServiceEvent'])) {
 				foreach ($documentationOf['serviceEvent']['paramConditionServiceEvent'] as $v) {
-					if (isset($this->_objetTag[$v])) $expectedKeyParts[] = $this->_objetTag[$v];
+					if (isset($this->_objetTag['val_'.$v])) {
+						$expectedKeyParts[] = $v.'@'.$this->_objetTag['val_'.$v];
+					} else {
+						$expectedKeyParts[] = $v.'@'.$this->_objetTag[$v];
+					}
 				}
 				$expectedKey = implode('|', $expectedKeyParts);
 			} elseif (is_string($documentationOf['serviceEvent']['paramConditionServiceEvent'])) {
 				$expectedKey = $this->_objetTag[$documentationOf['serviceEvent']['paramConditionServiceEvent']];
+				if (isset($this->_objetTag['val_'.$documentationOf['serviceEvent']['paramConditionServiceEvent']])) {
+					$expectedKey = $documentationOf['serviceEvent']['paramConditionServiceEvent'].'@'.$this->_objetTag[$documentationOf['serviceEvent']['paramConditionServiceEvent']];
+				} else {
+					$expectedKey = $documentationOf['serviceEvent']['paramConditionServiceEvent'].'@'.$this->_objetTag[$documentationOf['serviceEvent']['paramConditionServiceEvent']];
+				}
 			}
 
-			$this->_codeActe = $documentationOf['serviceEvent']['code'][$expectedKey];
+			if (isset($documentationOf['serviceEvent']['code'][$expectedKey])) {
+				$this->_codeActe = $documentationOf['serviceEvent']['code'][$expectedKey];
+			}
+
 		}
 
 		if (isset($actesPossibles[$this->_codeActe]['serviceEventCode']) and !empty($actesPossibles[$this->_codeActe]['serviceEventCode'])) {
@@ -197,7 +219,7 @@ class msCDA
 			}
 		}
 
-		$this->_codeDocument = $actesPossibles[$this->_codeActe]['clinicalDocumentCode'];
+		if (isset($actesPossibles[$this->_codeActe]['clinicalDocumentCode'])) $this->_codeDocument = $actesPossibles[$this->_codeActe]['clinicalDocumentCode'];
 	}
 
 	/**
