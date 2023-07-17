@@ -55,6 +55,11 @@ class msTools
 	{
 		global $p, $routes;
 
+		if(!is_array($routes) or empty($routes)) {
+			header('Location: ' . $p['config']['protocol'] . $p['config']['host'] . $p['config']['urlHostSuffixe']);
+			die;
+		}
+
 		if (empty($routeAbrev) or !array_key_exists($routeAbrev, $routes)) {
 			$routeAbrev = 'root';
 			$routes[$routeAbrev] = ['/', '/'];
