@@ -37,7 +37,7 @@ $name2typeID = $name2typeID->getTypeIDsFromName(['firstname', 'lastname', 'mailP
 if ($mailsListe = msSQL::sql2tabSimple("SELECT id from objets_data where instance= :instance and typeID=:typeID order by creationDate desc", ['instance' => $match['params']['objetID'], 'typeID' => $name2typeID['mailPorteur']])) {
 
 	$sqlImplode = msSQL::sqlGetTagsForWhereIn($mailsListe, 'inst');
-	$mailsElements = msSQL::sql2tab("select o.value, o.typeID, o.creationDate, o.instance, o.toID, t.name, o.fromID
+	$mailsElements = msSQL::sql2tab("SELECT o.value, o.typeID, o.creationDate, o.instance, o.toID, t.name, o.fromID
     from objets_data as o
     left join data_types as t on o.typeID=t.id
     where o.instance in (" . $sqlImplode['in'] . ") ", $sqlImplode['execute']);
@@ -50,10 +50,10 @@ if ($mailsListe = msSQL::sql2tabSimple("SELECT id from objets_data where instanc
 	}
 }
 
-$p['page']['expediteurs'] = msSQL::sql2tabKey("select m.fromID as id, concat(p.value, ' ', n.value) as identite
+$p['page']['expediteurs'] = msSQL::sql2tabKey("SELECT m.fromID as id, concat(p.value, ' ', n.value) as identite
   from objets_data as m
-  left join objets_data as n on n.toID=m.fromID and n.typeID='" . $name2typeID['lastname'] . "' and n.outdated='' and n.deleted=''
-  left join objets_data as p on p.toID=m.fromID and p.typeID='" . $name2typeID['firstname'] . "' and p.outdated='' and p.deleted=''
-  where m.typeID='" . $name2typeID['mailPorteur'] . "'
+  left join objets_data as n on n.toID=m.fromID and n.typeID = :lastname and n.outdated = '' and n.deleted =''
+  left join objets_data as p on p.toID=m.fromID and p.typeID = :firstname and p.outdated = '' and p.deleted =''
+  where m.typeID = :mailPorteur
   group by m.fromID, p.value, n.value
   order by n.value", "id", "identite", $name2typeID);
