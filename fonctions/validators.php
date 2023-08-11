@@ -40,21 +40,21 @@ GUMP::add_validator("identite", function ($field, $input, $param = NULL) {
 
 GUMP::add_validator("mobilphone", function ($field, $input, $param = NULL) {
 	if (empty($input[$field])) return TRUE;
-	$find = preg_match('/^0[6-7]{1}(([0-9]{2}){4})|((\s[0-9]{2}){4})|((-[0-9]{2}){4})$/i', $input[$field]);
+	$find = preg_match('/^0[6-7]{1}(([0-9]{2}){4})|((\s[0-9]{2}){4})|((\xc2\xa0[0-9]{2}){4})|((-[0-9]{2}){4})$/i', $input[$field]);
 	if ($find != '1') return FALSE;
 	else return TRUE;
 }, 'Le champ {field} n\'est pas un numéro de téléphone mobile valide');
 
 GUMP::add_validator("phone", function ($field, $input, $param = NULL) {
 	if (empty($input[$field])) return TRUE;
-	$find = preg_match('/^0[1-6]{1}(([0-9]{2}){4})|((\s[0-9]{2}){4})|((-[0-9]{2}){4})$/i', $input[$field]);
+	$find = preg_match('/^0[1-6]{1}(([0-9]{2}){4})|((\s[0-9]{2}){4})|((\xc2\xa0[0-9]{2}){4})|((-[0-9]{2}){4})$/i', $input[$field]);
 	if ($find != '1') return FALSE;
 	else return TRUE;
 }, 'Le champ {field} n\'est pas un numéro de téléphone valide');
 
 GUMP::add_validator("genericPhone", function ($field, $input, $param = NULL) {
 	if (empty($input[$field])) return TRUE;
-	$find = preg_match('/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/mix', $input[$field]);
+	$find = preg_match('/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.\xc2\xa0.-]*\d{2}){4}$/mix', $input[$field]);
 	if ($find != '1') return FALSE;
 	else return TRUE;
 }, 'Le champ {field} n\'est pas un numéro de téléphone international valide');
