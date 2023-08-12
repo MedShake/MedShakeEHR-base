@@ -49,6 +49,13 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0) {
 	if (!isset($_POST['regleSituationPatient'])) {
 		$_POST['regleSituationPatient'] = 'A';
 	}
+
+	if (isset($_POST['regleTarifSSCejour']) or isset($_POST['regleDepaCejour'])) {
+		$casDeReglement = 'SS';
+	} elseif (isset($_POST['regleTarifLibreCejour']) or isset($_POST['regleModulCejour'])) {
+		$casDeReglement = 'NC';
+	}
+
 	foreach (['regleTarifSSCejour', 'regleTarifLibreCejour', 'regleDepaCejour', 'regleModulCejour', 'regleCheque', 'regleCB', 'regleEspeces', 'regleTiersPayeur', 'regleFacture'] as $param) {
 		if (!isset($_POST[$param])) {
 			$_POST[$param] = 0;
@@ -73,10 +80,10 @@ if (isset($_POST['acteID']) or strlen($_POST['regleDetailsActes']) > 0) {
 	$important = array('id' => $supportID, 'important' => $paye < $apayer ? 'y' : 'n');
 	msSQL::sqlInsert('objets_data', $important);
 
-	if ($_POST['regleTarifSSCejour'] != '' or $_POST['regleDepaCejour'] != '') {
+	if ($casDeReglement == 'SS') {
 		unset($_POST['regleTarifLibreCejour']);
 		unset($_POST['regleModulCejour']);
-	} elseif ($_POST['regleTarifLibreCejour'] != '' or $_POST['regleModulCejour'] != '') {
+	} elseif ($casDeReglement == 'NC') {
 		unset($_POST['regleTarifSSCejour']);
 		unset($_POST['regleDepaCejour']);
 	}
