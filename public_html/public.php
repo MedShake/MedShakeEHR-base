@@ -78,7 +78,8 @@ define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLogi
 require $homepath.'fonctions/validators.php';
 
 /////////// Router
-$match = msSystem::getRoutes(['public']);
+$router = new msSystem();
+$match = $router->getRoutes(['public']);
 
 ///////// Maintenance
 if (msSystem::getSystemState()=='maintenance') {

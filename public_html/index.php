@@ -88,8 +88,8 @@ $p['user']['id'] = null;
 $p['user']['module'] = 'base';
 
 if (msSystem::getProUserCount() == 0) {
-
-	$match = msSystem::getRoutes(['login']);
+	$router = new msSystem();
+	$match = $router->getRoutes(['login']);
 
 	if ($match['target'] != 'login/logInFirst' and $match['target'] != 'login/logInFirstDo') {
 		msTools::redirRoute('userLogInFirst');
@@ -102,7 +102,8 @@ if (msSystem::getProUserCount() == 0) {
 		$p['config'] = array_merge($p['config'], msConfiguration::getAllParametersForUser($p['user']));
 	}
 
-	$match = msSystem::getRoutes();
+	$router = new msSystem();
+	$match = $router->getRoutes();
 
 	if ($p['user']['rank'] != 'admin' and $p['config']['systemState'] == 'maintenance') {
 		msTools::redirection('/maintenance.html');
@@ -114,9 +115,11 @@ if (msSystem::getProUserCount() == 0) {
 	}
 } else {
 	if (msConfiguration::getDefaultParameterValue('optionGeActiverApiRest') == 'true') {
-		$match = msSystem::getRoutes(['login', 'apiRest']);
+		$router = new msSystem();
+		$match = $router->getRoutes(['login', 'apiRest']);
 	} else {
-		$match = msSystem::getRoutes(['login']);
+		$router = new msSystem();
+		$match = $router->getRoutes(['login']);
 	}
 
 	if ($match === false) {

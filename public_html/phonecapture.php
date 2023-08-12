@@ -69,7 +69,8 @@ define("PASSWORDLENGTH", msConfiguration::getDefaultParameterValue('optionGeLogi
 require $homepath.'fonctions/validators.php';
 
 /////////// Router
-$match = msSystem::getRoutes(['phonecapture']);
+$router = new msSystem();
+$match = $router->getRoutes(['phonecapture']);
 
 ///////// user
 if (isset($_COOKIE['userIdPc'])) {

@@ -30,6 +30,18 @@
 class msSystem
 {
 
+	protected $_allActiveRoutes;
+
+	/**
+	 * Obtenir le tableau de toutes les routes actives
+	 *
+	 * @return array
+	 */
+	public function getAllActiveRoutes()
+	{
+		return $this->_allActiveRoutes;
+	}
+
 	/**
 	 * Obtenir le statut système en base
 	 * @return string normal / maintenance
@@ -79,7 +91,7 @@ class msSystem
 	 * @param array $preDefinedRoutes jeux prédéfinis de routes
 	 * @return array                  match routeur
 	 */
-	public static function getRoutes($preDefinedRoutes = [])
+	public function getRoutes($preDefinedRoutes = [])
 	{
 		global $p, $routes;
 		$installedModules = msModules::getInstalledModulesNames();
@@ -113,6 +125,11 @@ class msSystem
 			$file = $p['homepath'] . 'config/routes/routes-' . $route . '.yml';
 			if (is_file($file)) {
 				$routes = msYAML::yamlFileRead($file);
+				if (isset($this->_allActiveRoutes)) {
+					$this->_allActiveRoutes = array_merge($this->_allActiveRoutes, $routes);
+				} else {
+					$this->_allActiveRoutes = $this->_allActiveRoutes;
+				}
 				$router->addRoutes($routes);
 			}
 
@@ -121,6 +138,11 @@ class msSystem
 				$file = $p['homepath'] . 'config/routes/' . $module . '/routes-' . $route . '.yml';
 				if ($module != "base" and is_file($file)) {
 					$routes = msYAML::yamlFileRead($file);
+					if (isset($this->_allActiveRoutes)) {
+						$this->_allActiveRoutes = array_merge($this->_allActiveRoutes, $routes);
+					} else {
+						$this->_allActiveRoutes = $this->_allActiveRoutes;
+					}
 					$router->addRoutes($routes);
 				}
 			}

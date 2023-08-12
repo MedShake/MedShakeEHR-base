@@ -53,7 +53,8 @@ class msTools
 	 */
 	public static function redirRoute($routeAbrev = '', $type = '')
 	{
-		global $p, $routes;
+		global $p, $router;
+		$routes = $router->getAllActiveRoutes();
 
 		if(!is_array($routes) or empty($routes)) {
 			header('Location: ' . $p['config']['protocol'] . $p['config']['host'] . $p['config']['urlHostSuffixe']);
