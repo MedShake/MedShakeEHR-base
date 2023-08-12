@@ -128,7 +128,7 @@ class msSystem
 				if (isset($this->_allActiveRoutes)) {
 					$this->_allActiveRoutes = array_merge($this->_allActiveRoutes, $routes);
 				} else {
-					$this->_allActiveRoutes = $this->_allActiveRoutes;
+					$this->_allActiveRoutes = $routes;
 				}
 				$router->addRoutes($routes);
 			}
@@ -141,7 +141,7 @@ class msSystem
 					if (isset($this->_allActiveRoutes)) {
 						$this->_allActiveRoutes = array_merge($this->_allActiveRoutes, $routes);
 					} else {
-						$this->_allActiveRoutes = $this->_allActiveRoutes;
+						$this->_allActiveRoutes = $routes;
 					}
 					$router->addRoutes($routes);
 				}
