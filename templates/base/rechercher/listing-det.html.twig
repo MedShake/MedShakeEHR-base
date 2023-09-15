@@ -27,6 +27,14 @@
  # @contrib DEMAREST Maxime <maxime@indelog.fr>
  #}
 
+{% if page.porp == 'registre' %}
+  {% set porpurl = 'registre' %}
+{% elseif page.porp == 'groupe' %}
+  {% set porpurl = 'groupe' %}
+{% else %}
+  {% set porpurl = page.porp in ['patient', 'today'] ? 'patient' : 'pro' %}
+{% endif %}
+
 {% for patientID, tab in page.outputTableRow %}
   {% if page.porp == 'externe' %}
     <tr class="extAsPatient" style="cursor:pointer" data-patientid="{{ patientID }}">

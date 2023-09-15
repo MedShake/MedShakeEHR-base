@@ -27,14 +27,6 @@
  # @contrib DEMAREST Maxime <maxime@indelog.fr>
  #}
 
-{% if page.porp == 'registre' %}
-  {% set porpurl = 'registre' %}
-{% elseif page.porp == 'groupe' %}
-  {% set porpurl = 'groupe' %}
-{% else %}
-  {% set porpurl = page.porp in ['patient', 'today'] ? 'patient' : 'pro' %}
-{% endif %}
-
 <!-- Nobre max de résultat possible pour la recheche courrante -->
 <script>var totalNbOfResultsDisplayed = {{ page.totalNbOfResultsDisplayed }};</script>
 {% if page.outputTableHead %}
