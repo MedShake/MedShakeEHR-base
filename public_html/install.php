@@ -213,7 +213,10 @@ if (!is_file($homepath . 'config/config.yml')) {
         }
       }
     }
-    if (!$iscli) msTools::redirRoute('userLogInFirst');
+    if (!$iscli) {
+      $router = new msSystem();
+      msTools::redirRoute('userLogInFirst');
+    }
   }
 }
 
