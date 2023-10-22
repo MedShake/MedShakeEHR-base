@@ -130,7 +130,7 @@ foreach ($users as $userID => $value) {
 	$patientsList = $events->getPatientsForDate(date("Y-m-d", $tsJourRDV));
 
 	if (is_array($patientsList) and !empty($patientsList)) {
-		$sqlImplode = array_column($patientsList, 'id');
+		$sqlImplode = msSQL::sqlGetTagsForWhereIn(array_column($patientsList, 'id'));
 		$marqueurs = $sqlImplode['execute'];
 		$marqueurs['personalEmail'] = msData::getTypeIDFromName('personalEmail');
 

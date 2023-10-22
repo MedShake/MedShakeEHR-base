@@ -98,7 +98,7 @@ foreach ($users as $userID => $value) {
 	$campaignSMS->set_addData4log(array('patientsList' => $patientsList, 'tsJourdRDV' => $tsJourRDV));
 
 	if (is_array($patientsList)) {
-		$sqlImplode = array_column($patientsList, 'id');
+		$sqlImplode = msSQL::sqlGetTagsForWhereIn(array_column($patientsList, 'id'));
 		$marqueurs = $sqlImplode['execute'];
 		$marqueurs['mobilePhone'] = msData::getTypeIDFromName('mobilePhone');
 
