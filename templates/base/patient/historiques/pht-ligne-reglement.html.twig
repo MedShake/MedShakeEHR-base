@@ -64,6 +64,80 @@
           <i class="far fa-address-card fa-fw fa-lg text-success"></i>
         </button>
       {% endif %}
+      {# send #}
+        {% if config.smtpHost or config.apicryptSmtpHost or config.faxService %}
+          <div class="btn-group d-none d-lg-inline-flex">
+            <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Envoyer">
+              <i class="fas fa-paper-plane fa-fw"></i>
+            </button>
+            <ul class="dropdown-menu">
+              {% if config.smtpHost %}
+                <li>
+                  <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMail" data-objetID="{{ cs.id }}" data-mailtype="ns">
+                    <i class="fas fa-at fa-fw text-muted mr-1"></i> Envoyer en clair
+                  </a>
+                </li>
+              {% endif %}
+              {% if config.apicryptAdresse %}
+                <li>
+                  <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt">
+                    <i class="fas fa-lock fa-fw text-muted mr-1"></i> Envoyer en apicrypt
+                  </a>
+                </li>
+              {% endif %}
+              {% if config.faxService %}
+                <li>
+                  <a class="dropdown-item newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax">
+                    <i class="fas fa-fax fa-fw text-muted mr-1"></i> Envoyer par fax
+                  </a>
+                </li>
+              {% endif %}
+              {% if config.optionGeActiverTransmissions == 'true' and config.transmissionsPeutCreer == 'true' %}
+                <li role="separator" class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item newTransmission" href="#" data-objetID="{{ cs.id }}">
+                    <i class="far fa-comments fa-fw text-muted mr-1"></i> Créer une transmission
+                  </a>
+                </li>
+              {% endif %}
+              {% if cs.sendMail > 0 %}
+                <li role="separator" class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/">
+                    <i class="fas fa-history fa-fw text-muted mr-1"></i> Historique des envois
+                  </a>
+                </li>
+              {% endif %}
+
+              {# relations avec mode d'envoi préféré #}
+              {% if page.voirCorrespondantsAvecEnvoiPrefere %}
+                <li role="separator" class="dropdown-divider"></li>
+                <li class="dropdown-header" title="Méthode d'envoi péféré">Correspondant</li>
+                {% for correspandant in page.correspondants %}
+                  {% if correspandant.preferedSendingMethod == 'APICRYPT' and correspandant.emailApicrypt and config.apicryptAdresse %}
+                    <li>
+                      <a class="dropdown-item newMail" href="#" data-formtocall="baseSendMailApicrypt" data-objetID="{{ cs.id }}" data-mailtype="apicrypt" data-correspondantID="{{ correspandant.peopleID }}" title="{{ correspandant.typeRelationTxt }} / envoi préféré par Apicrypt">
+                        <i class="fas fa-lock fa-fw text-muted mr-1"></i><span>{{ correspandant.identiteUsuelle }}</span>
+                      </a>
+                    </li>
+                  {% elseif correspandant.preferedSendingMethod == 'FAX' and correspandant.faxPro and config.faxService %}
+                    <li>
+                      <a class="dropdown-item newMail" href="#" data-formtocall="baseFax" data-objetID="{{ cs.id }}" data-mailtype="ecofax" data-correspondantID="{{ correspandant.peopleID }}" title="{{ correspandant.typeRelationTxt }} / envoi préféré par Fax">
+                        <i class="fas fa-fax fa-fw text-muted mr-1"></i><span >{{ correspandant.identiteUsuelle }}</span>
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+            </ul>
+          </div>
+        {% endif %}
+        {% if cs.sendMail > 0 %}
+          <a class="btn btn-light btn-sm d-none d-lg-inline-block" role="button" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/logs/historiqueMailSend/{{ cs.id }}/" title="Envoyé par mail - voir historique">
+            <i class="fas fa-envelope fa-fw"></i>
+          </a>
+        {% endif %}
       {# option #}
       <div class="btn-group">
         <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
