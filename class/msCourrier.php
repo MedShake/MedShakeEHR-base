@@ -311,12 +311,11 @@ class msCourrier
 		$sqlImplode = msSQL::sqlGetTagsForWhereIn($porteursReglementIds, 'posteursReg');
 		$marqueurs = array_merge($marqueurs, $sqlImplode['execute']);
 
-        if($factureID = msSQL::sqlUniqueChamp("select count(id) from objets_data
-        where typeID in (" .$sqlImplode['in']. ") and DATE(creationDate) = DATE( :creationDate ) and id <=  :objetID and fromID = :fromID ", $marqueurs)) {
-          $factureID=str_pad($factureID, 3, "0", STR_PAD_LEFT);
-          $tabRetour['factureID']=$factureID;
+        if ($factureID = msSQL::sqlUniqueChamp("SELECT COUNT(id) FROM objets_data WHERE typeID IN (" . $sqlImplode['in'] . ") AND DATE(creationDate) = DATE(:creationDate) AND TIME(creationDate) <= TIME(:creationDate) AND fromID = :fromID AND (deleted IS NULL OR deleted = '')", $marqueurs)) {
+          $factureID = str_pad($factureID, 3, "0", STR_PAD_LEFT);
+          $tabRetour['factureID'] = $factureID;
           $dateF = DateTime::createFromFormat('Y-m-d H:i:s', $this->_objetData['creationDate']);
-          $tabRetour['factureNumero']=$dateF->format('Ymd').$factureID;
+          $tabRetour['factureNumero'] = $dateF->format('Ymd') . $factureID;
         }
 
         //règlement data
