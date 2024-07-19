@@ -14,3 +14,10 @@
 *.code-workspace
 MedShakeEHR-base.zip
 secrets.yml
+composer.lock
+vendor/
+config/config.yml
+public_html/thirdparty
+public_html/MEDSHAKEEHRPATH
+tools/docker/.env
+tools/docker/orthanc.json

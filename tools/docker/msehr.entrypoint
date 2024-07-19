@@ -1,0 +1,75 @@
+#!/bin/bash
+set -e
+
+if [ ! -e /var/www/html/public_html/index.php ]; then
+    echo "Copie de MedShakeEHR ..."
+    cp -pr /usr/src/medshakeehr/* /var/www/html/
+    cd /var/www/html
+fi
+
+if [ ! -e /var/www/html/public_html/MEDSHAKEEHRPATH ]; then
+        echo "Copie MEDSHAKEEHRPATH"
+        echo " /var/www/html
+        " > /var/www/html/public_html/MEDSHAKEEHRPATH
+fi
+
+composer install -n --no-plugins --no-scripts --no-cache --no-ansi --no-progress --no-dev -o && \
+cd public_html && \
+composer install -n --no-plugins --no-scripts --no-cache --no-ansi --no-progress --no-dev -o
+
+if [ ! -e /var/www/html/config/config.yml ]; then
+    echo "Configuration absente, création ..."
+
+    generate_random_string() {
+  openssl rand -base64 12
+    }
+
+    set_default_value() {
+    if [ -z "$1" ]; then
+        echo "$2"
+    else
+        echo "$1"
+    fi
+    }
+
+    FINGERPRINT=$(set_default_value "$FINGERPRINT" "$(generate_random_string)")
+    SQLVARPSWD=$(set_default_value "$SQLVARPSWD" "$(generate_random_string)")
+    PROTO=$(set_default_value "$PROTO" "https")
+    PORT=$(set_default_value "$PORT" "")
+    COOKIED=$(set_default_value "$COOKIED" "31104000")
+
+    echo "
+---    
+sqlRootId: ""
+sqlRootPwd: ""
+sqlNotCreatDb: true
+protocol: $PROTO://
+host: $VIRTUAL_HOST
+port: $PORT
+urlHostSuffixe: ""
+webDirectory: /var/www/html/public_html/
+stockageLocation: /var/www/html/stockage/
+backupLocation: /var/www/html/backups/
+workingDirectory: /var/www/html/public_html/workingDirectory/
+cookieDomain: $VIRTUAL_HOST
+cookieDuration: $COOKIED
+fingerprint: $FINGERPRINT
+sqlServeur: db
+sqlBase: $MYSQL_DATABASE
+sqlUser: $MYSQL_USER
+sqlPass: $MYSQL_PASSWORD
+sqlVarPassword: $SQLVARPSWD
+templatesFolder: /var/www/html/templates/
+twigEnvironnementCache: false
+twigEnvironnementAutoescape: false
+twigDebug: false
+configForm: ""
+...
+        " > /var/www/html/config/config.yml
+fi
+
+uid="$(id -u)"
+if [ "$uid" = 0 ]; then
+    chown -R www-data:www-data /var/www/html/*
+fi
+exec "$@"
