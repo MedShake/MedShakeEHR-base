@@ -1,0 +1,5 @@
+{
+    "Name" : "orthanc pour MedShakeEHR",
+    "AuthenticationEnabled": false,
+    "RemoteAccessAllowed" : true
+  }
