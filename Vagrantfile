@@ -1,5 +1,5 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "generic/debian11"
+  config.vm.box = "debian/bookworm64va"
   config.vm.define "msehr"
   config.vm.hostname = "msehr.local"
   config.vm.network "private_network", ip: "192.168.56.4"
