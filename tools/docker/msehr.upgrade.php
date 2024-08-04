@@ -93,6 +93,21 @@ try {
     $moveCommand = "cp -r -f $extractDir/* /var/www/html/";
     exec($moveCommand);
 
+    // Set www-data if script executed by root
+    if (posix_getuid() === 0) { // Check if the user is root
+        // Get the UID of the www-data user
+        $uid = posix_getpwnam('www-data')['uid'];
+        $gid = posix_getgrnam('www-data')['gid'];
+
+        // Set the correct ownership for the files and subdirectories
+        $dirIterator = new RecursiveDirectoryIterator('/var/www/html/');
+        $iterator = new RecursiveIteratorIterator($dirIterator);
+        foreach ($iterator as $fileInfo) {
+            chown($fileInfo->getPathname(), $uid);
+            chgrp($fileInfo->getPathname(), $gid);
+        }
+    }
+    
     // Print a success message
     echo "La copie c'est bien déroulée, connectez vous à votre compte administrateur pour appliquer la mise à jour.\n";
 
