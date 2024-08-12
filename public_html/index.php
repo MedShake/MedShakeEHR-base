@@ -25,6 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://www.github.com/fr33z00>
+ * @contrib Michaël Val
  */
 
 ini_set('display_errors', 0);
@@ -68,7 +69,20 @@ if ($p['config']['host'] == '') {
 $p['homepath'] = $homepath;
 
 /////////// SQL connexion
-$pdo = msSQL::sqlConnect();
+try {
+    $pdo = msSQL::sqlConnect();
+} catch (Exception $e) {
+    msTools::redirection('/install.php');
+}
+
+// Vérifier si la base de données existe et s'il y a des tables
+$sql = "SHOW TABLES";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
+if (empty($tables)) {
+    msTools::redirection('/install.php');
+}
 
 /////////// État système
 $p['config']['systemState'] = msSystem::getSystemState();
