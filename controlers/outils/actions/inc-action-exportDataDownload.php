@@ -24,10 +24,10 @@
  * Outils : export data -> retourner le csv
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * contrib Michaël Val
  */
 
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Common\Type;
+use OpenSpout\Writer\Common\Creator\WriterEntityFactory; // namespace is no longer "OpenSpout\Writer"
 
 //admin uniquement
 if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
@@ -121,10 +121,10 @@ if ($p['config']['droitExportPeutExporterPropresData'] != 'true') {
 	$corres = $formExport->getTabCorrespondances();
 
 	if ($_POST['option_file_format'] == 'xlsx') {
-		$writer = WriterFactory::create(Type::XLSX);
+		$writer = WriterEntityFactory::createXLSXWriter(); // replaces WriterFactory::create(Type::XLSX)		
 		$writer->openToBrowser('export.xlsx');
 	} else {
-		$writer = WriterFactory::create(Type::ODS);
+		$writer = WriterEntityFactory::createODSWriter();  // replaces WriterFactory::create(Type::ODS)		
 		$writer->openToBrowser('export.ods');
 	}
 	$datasheet = $writer->getCurrentSheet();
