@@ -41,7 +41,7 @@ RUN set -ex; \
 		--with-freetype \
 		--with-jpeg \
     ; \
-    docker-php-ext-install \
+    docker-php-ext-install -j$(nproc) \
     bcmath \
     gd \
     imap \
@@ -85,7 +85,7 @@ RUN set -ex; \
 
 COPY --from=docker.io/composer:2.5 /usr/bin/composer /usr/local/bin/composer
 COPY config/vhost-docker /etc/apache2/sites-available/000-default.conf
-ENV VRELEASE=v8.1.1
+ENV VRELEASE=master
 RUN curl -fsSL -o /tmp/msehr.tar.gz https://github.com/MedShake/MedShakeEHR-base/archive/"$VRELEASE".tar.gz && \
 mkdir /usr/src/medshakeehr && \
 tar -xf /tmp/msehr.tar.gz -C /usr/src/medshakeehr --strip-components=1 && \
