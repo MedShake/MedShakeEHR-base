@@ -21,3 +21,4 @@ public_html/thirdparty
 public_html/MEDSHAKEEHRPATH
 tools/docker/.env
 tools/docker/orthanc.json
+tools/vagrant/roles
