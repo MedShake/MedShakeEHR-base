@@ -22,3 +22,5 @@ public_html/MEDSHAKEEHRPATH
 tools/docker/.env
 tools/docker/orthanc.json
 tools/vagrant/roles
+stockage/
+public_html/workingDirectory
