@@ -25,6 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ * @contrib Michaël Val
  */
 
 $template = 'configCredits';
@@ -117,9 +118,9 @@ $p['page']['thanks']['Stupid jQuery Table Sort'] = array(
 	'description' => 'This is a stupid jQuery table sorting plugin',
 	'url' => 'https://github.com/joequery/Stupid-Table-Plugin'
 );
-$p['page']['thanks']['Spout'] = array(
-	'description' => 'Spout is a PHP library to read and write spreadsheet files',
-	'url' => 'https://github.com/box/spout'
+$p['page']['thanks']['OpenSpout'] = array(
+	'description' => 'OpenSpout is a PHP library to read and write spreadsheet files',
+	'url' => 'https://github.com/openspout/openspout'
 );
 $p['page']['thanks']['EvalMath'] = array(
 	'description' => 'Safely evaluate math expressions',
