@@ -27,6 +27,8 @@ services:
       # - medshakeehr:/var/www/html
       # if you use bind volume with arbitrary user create first the folder with the good permissions
       - ../../:/var/www/html
+      # # for custom php.ini
+      # - ./config/30-custom-php.ini:/usr/local/etc/php/30-custom-php.ini:ro
     networks:
       - proxy
       - db
@@ -47,6 +49,8 @@ services:
       - db-data:/var/lib/mysql
       # If you would import old database
       # - ./db-data:/docker-entrypoint-initdb.d
+      # # for custom mariadb conf file
+      # - ./config/custom-mariadb.cnf:/etc/mysql/conf.d/custom-mariadb.cnf:ro
     networks:
       - db
 
@@ -69,7 +73,7 @@ services:
 
   # https://hub.docker.com/r/osimis/orthanc
   dicom:
-    image: orthancteam/orthanc
+    image: jodogne/orthanc
     restart: unless-stopped
     command: /run/secrets/  # Path to the configuration files (stored as secrets)
     secrets:

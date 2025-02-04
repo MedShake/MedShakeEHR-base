@@ -53,10 +53,19 @@ docker exec -ti msehr php /usr/local/bin/msehr.upgrade.php base
 
 * les arguments disponibles sont : base, chiro, gyneco, general, thermal, mpr, osteo
 
+## Personnalisation des paramètres PHP et MariaDB
+* Décommettez les volumes correspondant dans le fichier `compose.yml` et passez leur vos fichiers personnalisés.
+```yaml
+# Pour PHP
+- ./config/30-custom-php.ini:/usr/local/etc/php/30-custom-php.ini:ro
+# Pour MariaDB
+- ./config/custom-mariadb.cnf:/etc/mysql/conf.d/custom-mariadb.cnf:ro
+```
 
 ## Orthanc
 * Créez le fichier de configuration `cp sample-orthanc.json orthanc.json` et éditez `nano orthanc.json`
 * Relancez la stack docker compose ainsi `docker compose --profile dicom`
+* Dans `Configuration > Paramètres globaux > DICOM > dicomHost` configurez l'utilisateur, le mot de passe et l'url sous la forme suivante : `orthanc:orthanc@dicom`
 
 ## phpMyAdmin
 * Relancez la stack docker compose ainsi `docker compose --profile debug` puis rendez-vous sur [pma.msehr.localhost/](pma.msehr.localhost/)
