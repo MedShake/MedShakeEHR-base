@@ -24,6 +24,7 @@
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @contrib fr33z00 <https://github.com/fr33z00>
+ # @contrib Michaël Val
  #}
 {% import "macroForm.html.twig" as f %}
 <!DOCTYPE html>
@@ -41,10 +42,10 @@
 
         {# css #}
         {% block cssFiles %}
-        <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fortawesome/font-awesome/css/all.min.css" rel="stylesheet">
-        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css" rel="stylesheet"/>
-        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
-        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.14.1.custom/jquery-ui.min.css" rel="stylesheet"/>
+        <link href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fortawesome/font-awesome/css/all.min.css?{{ modules.base }}" rel="stylesheet">
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css?{{ modules.base }}" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css?{{ modules.base }}" rel="stylesheet"/>
+        <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/jquery-ui-1.14.1.custom/jquery-ui.min.css?{{ modules.base }}" rel="stylesheet"/>
         {% endblock %}
 
         {# js #}

@@ -24,6 +24,7 @@
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @contrib fr33z00 <https://github.com/fr33z00>
+ # @contrib Michaël Val
  #}
 {% import "macroForm.html.twig" as f %}
 <!DOCTYPE html>
@@ -40,7 +41,7 @@
     <base href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}"/>
 
     {# css #}
-    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css" rel="stylesheet"/>
+    <link type="text/css" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/scss/bs_custom.min.css?{{ modules.base }}" rel="stylesheet"/>
 
     {# js #}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
