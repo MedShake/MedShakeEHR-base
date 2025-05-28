@@ -24,7 +24,15 @@
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @contrib fr33z00 <https://github.com/fr33z00>
+ # @Michaël Val
  #}
+
+<div class="filter-buttons mb-3">
+    <button class="btn btn-primary btn-sm filter-button" data-filter="cheque">Afficher les chèques</button>
+    <button class="btn btn-primary btn-sm filter-button" data-filter="cb">Afficher les CB</button>
+    <button class="btn btn-primary btn-sm filter-button" data-filter="especes">Afficher les espèces</button>
+    <button class="btn btn-secondary btn-sm filter-button" data-filter="all">Afficher tout</button>
+</div>
 
   <table id="recettes" class="table table-sm mb-0 table-hover table-striped" style="min-width:1105px">
       <thead>
@@ -56,7 +64,11 @@
       </thead>
       <tbody>
           {% for obj, reg in page.tabReg %}
-              <tr>
+              <tr class="
+                {% if reg.regleCheque > 0 %}cheque {% endif %}
+                {% if reg.regleCB > 0 %}cb {% endif %}
+                {% if reg.regleEspeces > 0 %}especes {% endif %}
+            ">
                   <td title="objet #{{ obj }}">#{{ loop.index }}</td>
                   <td>
                       {{ reg.creationDate|date("d/m/Y H:i") }}
