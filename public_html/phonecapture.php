@@ -25,6 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://www.github.com/fr33z00>
+ * @contrib Michaël Val
  */
 
 ini_set('display_errors', 0);
@@ -106,7 +107,7 @@ if (isset($template)) {
         $p['session']=$_SESSION;
     }
 
-    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+    header("Expires: 0");
     header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
     header("Cache-Control: private, no-store, max-age=0, no-cache, must-revalidate, post-check=0, pre-check=0");
     header("Pragma: no-cache");
