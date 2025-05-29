@@ -230,8 +230,9 @@ if (isset($template)) {
 	}
 
 
-	header("Cache-Control: no-cache, must-revalidate");
-	header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+	header("Cache-Control: private, no-store, max-age=0, no-cache, must-revalidate, post-check=0, pre-check=00");
+	header("Pragma: no-cache"); // Pour compatibilité avec les anciens navigateurs
+	header("Expires: 0");
 	if ($template == '404') {
 		http_response_code(404);
 	}

@@ -24,6 +24,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://www.github.com/fr33z00>
+ * @contrib Michaël Val
  */
 
 $(document).ready(function() {
@@ -117,6 +118,41 @@ $(document).ready(function() {
     dataInternalName = selectFils.attr('data-typeid');
     groupe.replaceWith('<input class="form-control form-control-sm" type="text" id="' + id + '" title="' + title + '" name="' + name + '" data-typeid="' + dataTypeid + '" data-internalname="' + dataInternalName + '" value="' + curVal + '"/>');
     activeWatchChange('.changeObserv');
+  });
+
+  // Fonction nettoyer les champs
+  function cleanInput(input, type) {
+    let value = input.val().trim(); // Supprime les espaces avant et après
+
+    if (type === 'tel') {
+        // Supprime les espaces normaux et insécables
+        value = value.replace(/\s+/g, '').replace(/\u00A0/g, '');
+        // Reformate les numéros de téléphone (ajoute un espace tous les 2 chiffres)
+        if (/^\d+$/.test(value)) {
+            value = value.replace(/(\d{2})(?=\d)/g, '$1 ');
+        }
+    }
+
+    input.val(value); // Met à jour la valeur nettoyée
+  } 
+
+  // Nettoyer les champs en temps réel (texte, email, textarea)
+  $('body').on('input', 'input[type="text"], textarea, input[type="email"]', function() {
+    cleanInput($(this)); // Nettoie les espaces avant et après
+  });
+
+  // Reformater les numéros de téléphone en temps réel
+  $('body').on('input', 'input[type="tel"]', function() {
+    cleanInput($(this), 'tel'); // Nettoie et reformate les champs téléphone
+  });
+
+  // Nettoyer les champs avant soumission
+  $('body').on('submit', 'form', function(e) {
+    // Nettoyer les champs texte, textarea et email
+    cleanInput($(this).find('input[type="text"], textarea, input[type="email"]'));
+
+    // Nettoyer et reformater les champs téléphone
+    cleanInput($(this).find('input[type="tel"]'), 'tel');
   });
 
 });
