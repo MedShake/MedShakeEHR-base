@@ -138,9 +138,5 @@ $p['page']['thanks']['Autosize'] = array(
 	'description' => 'A small, stand-alone script to automatically adjust textarea height',
 	'url' => 'http://www.jacklmoore.com/autosize/'
 );
-$p['page']['thanks']['php-imap'] = array(
-	'description' => 'PHP-IMAP is a wrapper for common IMAP communication without the need to have the php-imap module installed / enabled.',
-	'url' => 'https://github.com/Webklex/php-imap'
-);
 
 uksort($p['page']['thanks'], 'strcasecmp');
