@@ -22,7 +22,6 @@ RUN set -ex; \
     apt-get install -y --no-install-recommends \
     libc-client-dev \
     libgpgme11-dev \
-    libkrb5-dev \
     libmagickwand-dev \
     libyaml-dev \
     libzip-dev \
@@ -35,8 +34,6 @@ RUN set -ex; \
     && \
     docker-php-ext-enable gnupg imagick yaml \
     ; \
-    PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
-    ; \
     docker-php-ext-configure gd \
 		--with-freetype \
 		--with-jpeg \
@@ -44,7 +41,6 @@ RUN set -ex; \
     docker-php-ext-install -j$(nproc) \
     bcmath \
     gd \
-    imap \
     intl \
     pdo_mysql \
     soap \
