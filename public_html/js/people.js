@@ -136,11 +136,6 @@ $(document).ready(function() {
     input.val(value); // Met à jour la valeur nettoyée
   } 
 
-  // Nettoyer les champs en temps réel (texte, email, textarea)
-  $('body').on('input', 'input[type="text"], textarea, input[type="email"]', function() {
-    cleanInput($(this)); // Nettoie les espaces avant et après
-  });
-
   // Reformater les numéros de téléphone en temps réel
   $('body').on('input', 'input[type="tel"]', function() {
     cleanInput($(this), 'tel'); // Nettoie et reformate les champs téléphone
