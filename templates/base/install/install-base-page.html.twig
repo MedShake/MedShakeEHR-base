@@ -23,6 +23,7 @@
  # Template > page web racine pour le script install.php
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib Michaël Val
  #}
 
 <!DOCTYPE html>
@@ -36,10 +37,10 @@
 		<title>MedShakeEHR : Installation</title>
 		<meta name="Description" content=""/>
 
-		<link type="text/css" href="{{ page.webpath }}/scss/bs_custom.min.css" rel="stylesheet"/>
+		<link type="text/css" href="{{ page.webpath }}/scss/bs_custom.min.css?{{ modules.base }}" rel="stylesheet"/>
 
-		<script type="text/javascript" src="{{ page.webpath }}/thirdparty/jquery/jquery/dist/jquery.min.js"></script>
-		<script type="text/javascript" src="{{ page.webpath }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="{{ page.webpath }}/thirdparty/jquery/jquery/dist/jquery.min.js?{{ modules.base }}"></script>
+		<script type="text/javascript" src="{{ page.webpath }}/thirdparty/twbs/bootstrap/dist/js/bootstrap.min.js?{{ modules.base }}"></script>
 
 		<!-- js spécifique pour l'installeur -->
 		<script>

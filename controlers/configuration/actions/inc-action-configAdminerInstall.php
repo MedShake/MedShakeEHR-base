@@ -31,5 +31,5 @@ if (!msUser::checkUserIsAdmin()) {
 }
 
 $output = $homepath . 'public_html/bddEdit.php';
-exec('wget https://www.adminer.org/latest.php -O ' . $output);
+exec('curl -L https://www.adminer.org/latest.php -o ' . escapeshellarg($output));
 msTools::redirection('/configuration/');

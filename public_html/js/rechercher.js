@@ -24,6 +24,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://www.github.com/fr33z00>
+ * @contrib Michaël Val
  */
 
  $(document).ready(function() {
@@ -312,6 +313,29 @@
 
   });
 
+  // Formatage automatique pour les numéros de téléphone
+  $('#autreCritVal').on('input', function() {
+    const critere = $('#autreCrit').val();
+    // Adapter ici selon les valeurs exactes de tes options
+    const phoneCriteria = ['homePhone', 'mobilePhone', 'mobilePhonePro', 'telPro', 'telPro'];
+    if (phoneCriteria.includes(critere)) {
+      let value = $(this).val().replace(/\D/g, ''); // On enlève tout sauf les chiffres
+      value = value.replace(/(\d{2})(?=\d)/g, '$1 ').trim(); // Ajoute un espace tous les 2 chiffres
+      $(this).val(value);
+    }
+  });
+
+  // Formatage automatique JJ/MM/AAAA pour les dates dans le champ autre critère
+  $('#autreCritVal').on('input', function() {
+    const critere = $('#autreCrit').val();
+    const dateCriteria = ['birthdate', 'deathdate'];
+    if (dateCriteria.includes(critere)) {
+      let value = $(this).val().replace(/\D/g, ''); // On enlève tout sauf les chiffres
+      if (value.length > 2) value = value.slice(0,2) + '/' + value.slice(2);
+      if (value.length > 5) value = value.slice(0,5) + '/' + value.slice(5,9);
+      $(this).val(value);
+    }
+  });
 
 });
 

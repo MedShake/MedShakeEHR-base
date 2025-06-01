@@ -25,7 +25,7 @@
  *
  * @author 	Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib	DEMAREST Maxime <maxime@indelog.fr>
- *
+ * @contrib	Michaël Val
  * SQLPREPOK
  */
 
@@ -51,6 +51,7 @@ class msModBaseSqlGenerate extends msSqlGenerate
 		'templateOrdoHeadAndFoot' => 'base-page-headAndFoot.html.twig',
 		'templateOrdoBody' => 'ordonnanceBody.html.twig',
 		'templateOrdoALD' => 'ordonnanceALD.html.twig',
+		'templateInvoiceBody' => 'facture.html.twig',
 		'templateCrHeadAndFoot' => 'base-page-headAndNoFoot.html.twig',
 		'templateCourrierHeadAndFoot' => 'base-page-headAndNoFoot.html.twig',
 		'smtpPort' => '587',

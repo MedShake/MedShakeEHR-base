@@ -12,7 +12,6 @@
     "setasign/fpdi": "^2.6",
     "spomky-labs/otphp": "^10.0",
     "picqer/php-barcode-generator":  "v2.2.4",
-    "webklex/php-imap": "^6.2.0",
     "php": ">=8.1.0",
     "ext-curl": "*",
     "ext-dom": "*",

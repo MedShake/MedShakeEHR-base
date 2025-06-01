@@ -26,6 +26,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ * @contrib Michaël Val
  *
  * SQLPREPOK
  */
@@ -277,10 +278,11 @@ class msCourrier
         $tabRetour['objetID']=$this->_objetData['id'];
         $tabRetour['patientID']=$this->_objetData['toID'];
         $tabRetour['instance']=$this->_objetData['instance'];
-        if($printModel = $this->getPrintModel($this->_objetData['formValues'])) {
-          $tabRetour['printModel']=$printModel.'.html.twig';
+        if ($printModel = $this->getPrintModel($this->_objetData['formValues'])) {
+            $tabRetour['printModel'] = $printModel . '.html.twig';
         } else {
-          $tabRetour['printModel']='facture.html.twig';
+            global $p;
+            $tabRetour['printModel'] = $p['config']['templateInvoiceBody'] ?? 'facture.html.twig';
         }
         $tabRetour['module']=$this->_getModuleOrigine($this->_objetData['formValues']);
 
