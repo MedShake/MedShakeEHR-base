@@ -1158,6 +1158,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('templateOrdoALD', 'default', 0, '', 'Modèles de documents', 'fichier', 'template (complet) pour les ordonnances bizones ALD', 'ordonnanceALD.html.twig'),
 ('templateOrdoBody', 'default', 0, '', 'Modèles de documents', 'fichier', 'template pour le corps des ordonnances standards', 'ordonnanceBody.html.twig'),
 ('templateOrdoHeadAndFoot', 'default', 0, '', 'Modèles de documents', 'fichier', 'template pour header et footer des ordonnances standards (non ALD)', 'base-page-headAndFoot.html.twig'),
+('templateInvoiceBody', 'default', 0, '', 'Modèles de documents', 'fichier', 'template pour factures', 'facture.html.twig'),
 ('templatesCdaFolder', 'default', 0, '', 'Modèles de documents', 'dossier', 'répertoire des fichiers de template pour la génération de XML CDA', ''),
 ('templatesPdfFolder', 'default', 0, '', 'Modèles de documents', 'dossier', 'répertoire des fichiers de template pour la génération de PDF', ''),
 ('theriaqueMode', 'default', 0, '', 'LAP', 'texte', 'code d\'utilisation de Thériaque : WS (webservice) ou PG (base postgre en local)', ''),
