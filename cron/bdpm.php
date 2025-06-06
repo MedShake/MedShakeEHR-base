@@ -73,6 +73,7 @@ foreach ($bdpm['dataBdpm'] as $table => $v) {
 	$file = '/tmp/' . $v['file'];
 	@unlink($file);
 	exec("wget " . escapeshellarg($v['url']) . " -O " . escapeshellarg($file));
+	exec("sed -i '/^[[:space:]]*$/d' ".escapeshellarg($file));
 	if (!msSQL::sqlVerifyTableExist($table)) {
 		throw new Exception("La table n'existe pas en base");
 	}
