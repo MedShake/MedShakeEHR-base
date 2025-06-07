@@ -43,6 +43,9 @@
           <li class="nav-item" style="display: none;">
             <a id="prescriremedicTab" class="nav-link" href="#prescriremedic" aria-controls="prescriremedic" aria-selected="false" role="tab" data-toggle="tab">Prescrire</a>
           </li>
+          <li class="nav-item">
+            <a id="aidePrescriremedicTab" class="nav-link" href="#aideprescriremedic" aria-controls="aideprescriremedic" aria-selected="false" role="tab" data-toggle="tab">Aide</a>
+          </li>
           <li class="nav-item" style="display: none;">
             <a id="posologiesmedicTab" class="nav-link" href="#posologiesmedic" aria-controls="posologiesmedic" aria-selected="false" role="tab" data-toggle="tab">Posologies</a>
           </li>
@@ -219,6 +222,66 @@
                 </div>
               </div>
             </form>
+
+          </div>
+
+          {# Onglet Aide #}
+          <div role="tabpanel" class="tab-pane" id="aideprescriremedic">
+
+            <h2 class="h4">Règles communes aux syntaxes de prescription</h2>
+            <h3 class="h5" id="Abreviations-de-duree">Abréviations de durée</h3>
+            <p>Les abréviations de durée suivantes sont utilisées&nbsp;:
+            <br><span><b>–</b></span>&nbsp;<code>i</code>&nbsp;: minute 
+            <br><span><b>–</b></span>&nbsp;<code>h</code>&nbsp;: heure
+            <br><span><b>–</b></span>&nbsp;<code>j</code>&nbsp;: jour
+            <br><span><b>–</b></span>&nbsp;<code>s</code>&nbsp;: semaine
+            <br><span><b>–</b></span>&nbsp;<code>m</code>&nbsp;: mois (NB&nbsp;: 1 mois = 28j)</p>
+            <h3 class="h5" id="Abreviations-reconnues-pour-les-jours-de-prise">Abréviations reconnues pour les jours de prise</h3>
+            <p>Les abréviations suivantes sont reconnues pour des prescriptions alternées&nbsp;:
+            <br><span><b>–</b></span>&nbsp;<code>l</code>&nbsp;: lundi
+            <br><span><b>–</b></span>&nbsp;<code>m</code>&nbsp;: mardi
+            <br><span><b>–</b></span>&nbsp;<code>M</code>&nbsp;: mercredi
+            <br><span><b>–</b></span>&nbsp;<code>j</code>&nbsp;: jeudi
+            <br><span><b>–</b></span>&nbsp;<code>v</code>&nbsp;: vendredi 
+            <br><span><b>–</b></span>&nbsp;<code>s</code>&nbsp;: samedi 
+            <br><span><b>–</b></span>&nbsp;<code>d</code>&nbsp;: dimanche
+            <br><span><b>–</b></span>&nbsp;<code>i</code>&nbsp;: jours impairs
+            <br><span><b>–</b></span>&nbsp;<code>p</code>&nbsp;: jours pairs</p>
+            <h3 class="h5" id="Fractionnement">Fractionnement</h3>
+            <p>Les fractions d’unité de prescription sont gérées&nbsp;: vous pouvez utiliser 1/4, 1/2, 3/4 et, a priori, toute fraction cohérente avec la forme pharmaceutique de la spécialité choisie (une alerte intervient si la sécabilité demandée n’est a priori pas assurée)</p>
+            <h3 class="h5" id="Concept-des-syntaxes">Concept des syntaxes</h3>
+            <p>Le concept appliqué aux syntaxes est identique dans l’ensemble. <br class="autobr">
+            La syntaxe tient sur une ligne sans retour chariot et peut se décomposer conceptuellement en blocs&nbsp;: 
+            <br><span><b>–</b></span>&nbsp;le premier "bloc" indique les moments de prise (matin midi soir ... 2 fois par jour .. 1 fois par semaine ....)
+            <br><span><b>–</b></span>&nbsp;le second "bloc" est optionnel&nbsp;: il détaille si besoin les jours de prises, soit les jours de la semaine, soit les jours pairs / impairs. 
+            <br><span><b>–</b></span>&nbsp;le troisième "bloc" indique la durée&nbsp;: 6 heures, 1 jour, 2 semaines, 3 mois ... À noter qu’il est optionnel lui aussi, voir les paragraphes suivants pour son utilité ou non. 
+            <br><span><b>–</b></span>&nbsp;ce qui suit le troisième bloc est ajouté comme texte brut en bout de prescription et permet d’apporter des précisions.</p>
+            <h3 class="h5" id="Prefixes-aux-syntaxes">Préfixes aux syntaxes</h3>
+            <p>Une ligne peut être préfixée de 2 façons&nbsp;: par "puis" ou par "et". Ce préfixe est alors reporté comme tel sur la prescription.</p>
+            <p>"Puis" permet d’indiquer plus clairement des enchaînements, par exemple des augmentations de dose progressives dans le temps.<br class="autobr">
+            "Et"indique lui des posologies qui vont alternées dans le temps&nbsp;: 3/4 les jours pairs et 1/2 les jours impairs</p>
+            <h3 class="h5" id="Jouer-avec-les-durees">Jouer avec les durées</h3>
+            <p>Le bloc "durée" d’une syntaxe est optionnel comme nous l’avons dit. S’il est présent, sa durée vient s’ajouter aux autres durées trouvées dans la fenêtre de prescription. Ainsi dans le cadre de l’utilisation du préfixe "et" pour signifier une posologie alternée, n’indiquez la durée que sur une seule ligne.</p>
+            <h3 class="h5" id="Indiquer-une-pause">Indiquer une pause</h3>
+            <p>Pour indiquer une pause dans la chronologie du traitement, on fait une pseudo prescription de la bonne durée, mais avec un nombre d’unités de prise égal à 0.</p>
+            <p><code>puis 0 0 0 7j</code> =&gt; "puis arrêt de 7 jours"</p>
+            <h2 class="h4" id="Syntaxe-matin-midi-soir-coucher-pendant-jours-semaines-mois">Syntaxe matin midi soir coucher pendant jours/semaines/mois</h2>
+            <p>C’est la syntaxe la plus évidente. On indique à suivre les 4 unités de prise journalière&nbsp;: matin, midi, soir, coucher. La prise du coucher peut être omise. <br class="autobr">
+            Ensuite on précise si besoin les jours de la semaine concernés.<br class="autobr">
+            Enfin on indique la durée (en jours, semaines ou mois).</p>
+            <p><code>1 2 2 1/2 7j</code> =&gt; "1 comprimé le matin, 2 comprimés le midi, 2 comprimé le soir, 1/2 comprimé au coucher pendant 7 jours"</p>
+            <p><code>0 0 1/2 lMv 1m</code> =&gt; "1/2 comprimé le soir les lundis, mercredis, vendredis pendant 1mois"</p>
+            <h2 class="h4" id="Syntaxe-x-unites-z-fois-par-minute-heure-jour-semaine-mois-pendant-n-nbsp">Syntaxe x unités z fois par minute/heure/jour/semaine/mois pendant n minute/heure/jours/semaines/mois</h2>
+            <p>Syntaxe qui permet d’indiquer une seule unité de prise à répéter x fois par unité de temps pendant la durée souhaitée.<br class="autobr">
+            On peut également préciser les jours si besoin.</p>
+            <p><code>1 1xh 6h</code> =&gt; "1 goutte 1 fois par heure pendant 6 heures"</p>
+            <p><code>2 1xj 5j</code> =&gt; "2 gouttes 1 fois par jour pendant 5 jours"</p>
+            <h2 class="h4" id="Syntaxe-x-unites-toutes-les-y-minute-heure-jour-semaine-mois-pendant-nbsp">Syntaxe x unités toutes les y minute/heure/jour/semaine/mois pendant jours/semaines/mois</h2>
+            <p>Syntaxe qui permet d’indiquer une seule unité de prise à répéter par intervalle x d’unité de temps pendant la durée souhaitée.<br class="autobr">
+            On peut également préciser les jours si besoin.</p>
+            <p><code>2 6h 5j</code> =&gt; "2 mg toutes les 6 heures pendant 5 jours"</p>
+
+
 
           </div>
 
