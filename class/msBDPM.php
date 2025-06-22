@@ -676,6 +676,7 @@ class msBDPM
 			'poudre' => 'application',
 			'gel' => 'application',
 			'sirop' => 'cuillère mesure',
+			'suspension' => 'dose',
 		];
 		if (key_exists($txt, $convert)) {
 			return $convert[$txt];
