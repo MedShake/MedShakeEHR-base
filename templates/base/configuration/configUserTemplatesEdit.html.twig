@@ -23,6 +23,7 @@
  # Template > Config : edition d'un user template
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib Michaël Val
  #
  #}
 
@@ -33,7 +34,7 @@
 {% block head %}
 {{ parent() }}
 <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/configuration.js?{{ modules.base }}"></script>
-<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.css">
+<link rel="stylesheet" href="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.css?{{ modules.base }}">
 <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/lib/codemirror.js?{{ modules.base }}"></script>
 <script src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/thebingservices/codemirror/CodeMirror/mode/yaml/yaml.js?{{ modules.base }}"></script>
 

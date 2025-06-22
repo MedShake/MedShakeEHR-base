@@ -33,6 +33,8 @@ services:
       - proxy
       - db
       - dicom
+    labels:
+      - "com.centurylinklabs.watchtower.no-pull=true" # For allow update with watchtower and local image if you build the image. Comment if you use dockerhub image
   
   # https://hub.docker.com/_/mariadb
   db:

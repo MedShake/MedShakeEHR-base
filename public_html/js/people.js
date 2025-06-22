@@ -136,11 +136,6 @@ $(document).ready(function() {
     input.val(value); // Met à jour la valeur nettoyée
   } 
 
-  // Nettoyer les champs en temps réel (texte, email, textarea)
-  $('body').on('input', 'input[type="text"], textarea, input[type="email"]', function() {
-    cleanInput($(this)); // Nettoie les espaces avant et après
-  });
-
   // Reformater les numéros de téléphone en temps réel
   $('body').on('input', 'input[type="tel"]', function() {
     cleanInput($(this), 'tel'); // Nettoie et reformate les champs téléphone
@@ -148,11 +143,23 @@ $(document).ready(function() {
 
   // Nettoyer les champs avant soumission
   $('body').on('submit', 'form', function(e) {
-    // Nettoyer les champs texte, textarea et email
-    cleanInput($(this).find('input[type="text"], textarea, input[type="email"]'));
+    // Pour chaque champ texte, textarea et email
+    $(this).find('input[type="text"], textarea, input[type="email"]').each(function() {
+      cleanInput($(this));
+    });
 
-    // Nettoyer et reformater les champs téléphone
-    cleanInput($(this).find('input[type="tel"]'), 'tel');
+    // Pour chaque champ téléphone
+    $(this).find('input[type="tel"]').each(function() {
+      cleanInput($(this), 'tel');
+    });
+  });
+
+  // Ajout automatique des / pour les dates au format JJ/MM/AAAA
+  $('body').on('input', 'input[type="text"][name*="birthdate"], input[type="text"][name*="deathdate"]', function() {
+    let value = $(this).val().replace(/\D/g, ''); // On enlève tout sauf les chiffres
+    if (value.length > 2) value = value.slice(0,2) + '/' + value.slice(2);
+    if (value.length > 5) value = value.slice(0,5) + '/' + value.slice(5,9);
+    $(this).val(value);
   });
 
 });

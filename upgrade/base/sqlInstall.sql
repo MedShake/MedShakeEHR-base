@@ -1018,7 +1018,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('designInboxMailsSortOrder', 'default', 0, '', 'Ergonomie et design', 'texte', 'sens du tri des mails en colonne latérale : date ascendante (asc) ou descendante (desc) ', 'desc'),
 ('designTopMenuDropboxCountDisplay', 'default', 0, '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de fichier dans la boite de dépôt', 'true'),
 ('designTopMenuInboxCountDisplay', 'default', 0, '', 'Ergonomie et design', 'true/false', 'afficher dans le menu de navigation du haut de page le nombre de nouveaux messages dans la boite de réception', 'true'),
-('designTopMenuSections', 'default', 0, '', 'Ergonomie et design', 'textarea', 'éléments et ordre de la barre de navigation du menu supérieur (yaml : commenter avec #)', '- agenda\n- podt\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils'),
+('designTopMenuSections', 'default', 0, '', 'Ergonomie et design', 'textarea', 'éléments et ordre de la barre de navigation du menu supérieur (yaml : commenter avec #)', '- agenda\n- potd\n- patients\n- praticiens\n- groupes\n- registres\n- compta\n- inbox\n- dropbox\n- transmissions\n- outils'),
 ('designTopMenuStyle', 'default', 0, '', 'Ergonomie et design', 'icones / textes', 'aspect du menu de navigation du haut de page', 'icones'),
 ('designTopMenuTooltipDisplay', 'default', 0, '', 'Ergonomie et design', 'true/false', 'si true, affiche les infos bulles sur icones du menu supérieur', ''),
 ('designTopMenuTransmissionsColorIconeImportant', 'default', 0, '', 'Ergonomie et design', 'true/false', 'colore l\'icône transmission si transmission importante non lue', 'true'),
@@ -1158,6 +1158,7 @@ INSERT IGNORE INTO `configuration` (`name`, `level`, `toID`, `module`, `cat`, `t
 ('templateOrdoALD', 'default', 0, '', 'Modèles de documents', 'fichier', 'template (complet) pour les ordonnances bizones ALD', 'ordonnanceALD.html.twig'),
 ('templateOrdoBody', 'default', 0, '', 'Modèles de documents', 'fichier', 'template pour le corps des ordonnances standards', 'ordonnanceBody.html.twig'),
 ('templateOrdoHeadAndFoot', 'default', 0, '', 'Modèles de documents', 'fichier', 'template pour header et footer des ordonnances standards (non ALD)', 'base-page-headAndFoot.html.twig'),
+('templateInvoiceBody', 'default', 0, '', 'Modèles de documents', 'fichier', 'template pour factures', 'facture.html.twig'),
 ('templatesCdaFolder', 'default', 0, '', 'Modèles de documents', 'dossier', 'répertoire des fichiers de template pour la génération de XML CDA', ''),
 ('templatesPdfFolder', 'default', 0, '', 'Modèles de documents', 'dossier', 'répertoire des fichiers de template pour la génération de PDF', ''),
 ('theriaqueMode', 'default', 0, '', 'LAP', 'texte', 'code d\'utilisation de Thériaque : WS (webservice) ou PG (base postgre en local)', ''),
@@ -1270,7 +1271,7 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v8.2.0'),
+('base', 'module', 'v8.2.1'),
 ('state', 'system', 'normal');
 
 -- univtags_type
