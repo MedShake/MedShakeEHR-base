@@ -1,7 +1,5 @@
 default:
-	git ls-files | grep -v '^installer/' | grep -v '^tools/' | grep -v '^Makefile$$' > filelist.txt	
-	zip -@ MedShakeEHR-base.zip < filelist.txt
-	rm -f filelist.txt	
+	zip -r MedShakeEHR-base.zip . -x .git\* -x Makefile -x installer\* -x tools\*
 
 clean:
 	rm -f MedShakeEHR-base.zip
