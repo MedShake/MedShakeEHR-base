@@ -24,6 +24,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://www.github.com/fr33z00>
+ * @Michaël Val
  */
 
 $(document).ready(function() {
@@ -37,7 +38,7 @@ $(document).ready(function() {
     maxFiles: 1,
     onUploadSuccess: function(id, data) {
       $(".progress-bar").css('width', '0%');
-      $(this).closest(".toclear").html("");
+      $(".cleanNewDocImport").trigger("click");
       getHistorique();
       getHistoriqueToday();
     },

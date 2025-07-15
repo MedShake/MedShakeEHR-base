@@ -1271,7 +1271,7 @@ INSERT IGNORE INTO `prescriptions` (`cat`, `label`, `description`, `fromID`, `to
 
 -- system
 INSERT IGNORE INTO `system` (`name`, `groupe`, `value`) VALUES
-('base', 'module', 'v8.2.2'),
+('base', 'module', 'v8.2.3'),
 ('state', 'system', 'normal');
 
 -- univtags_type
