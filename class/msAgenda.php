@@ -25,6 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ * @Michaël Val
  *
  * SQLPREPOK
  */
@@ -84,12 +85,17 @@ class msAgenda
 	 * Tableau des types de rdv
 	 * @var array
 	 */
-	private $_tabTypesRdv;
+	private $_tabTypeRdv; 
 	/**
 	 * Ajouter les jours fériés aux events
 	 * @var boolean
 	 */
 	private $_addPublicHolidaysToEvents = false;
+
+  	public function __construct() {
+        $this->_tabTypeRdv = []; // Initialisation de la propriété
+    }
+
 
 	/**
 	 * set patientID
@@ -327,8 +333,8 @@ class msAgenda
 			while (!$file->eof()) {
 				$line = $file->fgets();
 				if (in_array(substr($line, 0, 4), [$startYear, $endYear])) {
-					$lineCSV = str_getcsv($line);
-					$tab[$lineCSV[0]] = $lineCSV;
+                $lineCSV = str_getcsv($line, ',', '"', '\\');
+				$tab[$lineCSV[0]] = $lineCSV;
 				}
 			}
 			unset($file);
@@ -409,23 +415,22 @@ class msAgenda
 	 * @param  array $e tableau datas rdv
 	 * @return array    rendez-vous formaté
 	 */
-	private function _formatEvent($e)
-	{
-		global $p;
-		if (!isset($this->_tabTypeRdv)) {
-			if (is_file($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml')) {
-				$this->_tabTypeRdv = msYAML::yamlFileRead($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml');
-			} else {
-				$this->_tabTypeRdv = array(
-					'[C]' => array(
-						'descriptif' => 'Consultation',
-						'backgroundColor' => '#2196f3',
-						'borderColor' => '#1e88e5',
-						'duree' => 15
-					)
-				);
-			}
-		}
+    private function _formatEvent($e) {
+        global $p;
+        if (!isset($this->_tabTypeRdv)) {
+            if (is_file($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml')) {
+                $this->_tabTypeRdv = msYAML::yamlFileRead($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml');
+            } else {
+                $this->_tabTypeRdv = array(
+                    '[C]' => array(
+                        'descriptif' => 'Consultation',
+                        'backgroundColor' => '#2196f3',
+                        'borderColor' => '#1e88e5',
+                        'duree' => 15
+                    )
+                );
+            }
+        }
 
 		if (isset($this->_tabTypeRdv[$e['type']]['textColor'])) {
 			$textColor = $this->_tabTypeRdv[$e['type']]['textColor'];
