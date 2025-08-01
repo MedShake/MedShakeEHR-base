@@ -40,13 +40,13 @@ if [ ! -e /var/www/html/config/config.yml ]; then
 
     echo "
 ---    
-sqlRootId: ""
-sqlRootPwd: ""
+sqlRootId: \"\"
+sqlRootPwd: \"\"
 sqlNotCreatDb: true
 protocol: $PROTO://
 host: $VIRTUAL_HOST
 port: $PORT
-urlHostSuffixe: ""
+urlHostSuffixe: \"\"
 webDirectory: /var/www/html/public_html/
 stockageLocation: /var/www/html/stockage/
 backupLocation: /var/www/html/backups/
@@ -63,7 +63,7 @@ templatesFolder: /var/www/html/templates/
 twigEnvironnementCache: false
 twigEnvironnementAutoescape: false
 twigDebug: false
-configForm: ""
+configForm: \"\"
 ...
         " > /var/www/html/config/config.yml
 fi
