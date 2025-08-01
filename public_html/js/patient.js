@@ -24,6 +24,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://www.github.com/fr33z00>
+ * @ Michaël Val
  */
 
 ////////////////////////////////////////////////////////////////////////
@@ -1112,6 +1113,7 @@ function sendFormToCourrierDiv(el) {
       $.getScriptOnce(urlBase + "/js/patientScripts/" + scriptsList.print);
 
       tinymce.init({
+        license_key: 'gpl',
         selector: '#editeurCourrier',
         height: "500"
       });
