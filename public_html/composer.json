@@ -170,12 +170,14 @@
         "fullcalendar/fullcalendar": "3.10.5",
         "swisnl/jquery-contextmenu": "2.5.0",
         "lrsjng/kjua": "v0.1.2",
-        "chaijs/chai": "1.9.0",
         "jquery/jquery-mousewheel": "3.1.9",
-        "mochajs/mocha": "1.17.1",
         "joequery/stupid-table-plugin": "1.1.3",
         "thebingservices/codemirror": "v5.10.0",
         "fortawesome/font-awesome": "^6.7.2",
         "fr33z00/panzoom": "v3.2.2.1+1Touch"
+    },
+    "require-dev": {
+        "chaijs/chai": "1.9.0",
+        "mochajs/mocha": "1.17.1"
     }
 }
