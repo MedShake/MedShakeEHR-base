@@ -25,6 +25,7 @@
  *
  * @author fr33z00 <https://github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 $debug = '';
 $template = 'configModules';

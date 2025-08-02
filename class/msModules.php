@@ -24,6 +24,7 @@
  * Modules
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  *
  * SQLPREPOK
  */
