@@ -76,4 +76,44 @@ class msModules
 		}
 		return [];
 	}
+
+    public static function getLatestVersionFromGitHub($name)
+    {
+        // Obtenir les infos du module
+        $moduleInfo = self::getModuleInfosGen($name);
+        if (empty($moduleInfo['sources'])) {
+            return null; // Retourne null si l'URL du dépôt n'est pas définie
+        }
+
+        // Construire l'URL de l'API GitHub
+        $repoUrlParts = explode('/', trim($moduleInfo['sources'], '/'));
+        if (count($repoUrlParts) < 2) {
+            return null; // Retourne null si l'URL n'est pas valide
+        }
+        $url = "https://api.github.com/repos/" . $repoUrlParts[3] . "/" . $repoUrlParts[4] . "/releases/latest";
+
+        // Initialiser cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0'); // Nécessaire pour l'API GitHub
+
+        // Exécuter la requête
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        // Vérifier si la réponse est valide
+        if ($response) {
+            $data = json_decode($response, true);
+            if (isset($data['tag_name'])) {
+                return $data['tag_name']; // Retourne la dernière version
+            }
+        }
+
+		 var_dump($data);
+
+        return null; // Retourne null en cas d'erreur
+    }
+
+
 }
