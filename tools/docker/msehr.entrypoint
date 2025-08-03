@@ -7,15 +7,9 @@ if [ ! -e /var/www/html/public_html/index.php ]; then
     cd /var/www/html
 fi
 
-if [ ! -e /var/www/html/public_html/MEDSHAKEEHRPATH ]; then
-        echo "Copie MEDSHAKEEHRPATH"
-        echo " /var/www/html
-        " > /var/www/html/public_html/MEDSHAKEEHRPATH
-fi
-
-composer install -n --no-plugins --no-scripts --no-cache --no-ansi --no-progress --no-dev -o && \
+composer update -n --no-plugins --no-scripts --no-cache --no-ansi --no-progress --no-dev -o && \
 cd public_html && \
-composer install -n --no-plugins --no-scripts --no-cache --no-ansi --no-progress --no-dev -o
+composer update -n --no-plugins --no-scripts --no-cache --no-ansi --no-progress --no-dev -o
 
 if [ ! -e /var/www/html/config/config.yml ]; then
     echo "Configuration absente, création ..."
