@@ -24,6 +24,7 @@
  * Config : outils pour la paramétrage CDA lié à un form
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 
 
@@ -133,5 +134,5 @@ if (!msUser::checkUserIsAdmin()) {
 	}
 
 	// jeux de valeurs
-	$p['page']['jdvClinicalDocumentCode'] = msExternalData::getJdvDataFromXml('JDV_J07-XdsTypeCode_CI-SIS.xml');
+	$p['page']['jdvClinicalDocumentCode'] = msExternalData::getJdvDataFromXml('JDV_J07-XdsTypeCode-CISIS.xml');
 }

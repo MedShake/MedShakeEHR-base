@@ -23,6 +23,7 @@
  # Template > Config : liste des utilisateurs
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
+ # @contrib Michaël Val
  #
  #}
 
@@ -49,7 +50,7 @@
 
   <h1>Jeux de valeurs normées</h1>
 
-  <p>Cette page vérifie la présence et affiche les jeux de valeurs normées fournies sous forme de XML par l'ASIP santé et installés sur votre système dans
+  <p>Cette page vérifie la présence et affiche les jeux de valeurs normées <a href="https://mos.esante.gouv.fr/NOS/" target="_blank"> fournies sous forme de XML par l'ANS</a> et installés sur votre système dans
     <code>ressources/JDV/</code>
   </p>
 
@@ -57,19 +58,19 @@
 
   <table class='table table-sm'>
     <tr>
-      <td>JDV_J01-XdsAuthorSpecialty-CI-SIS.xml</td>
+      <td>JDV_J01-XdsAuthorSpecialty-CISIS.xml</td>
       <td>Spécialité du praticien</td>
-      <td class="w-25 {% if page['filesPresence']['JDV_J01-XdsAuthorSpecialty-CI-SIS'] %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+      <td class="w-25 {% if page['filesPresence']['JDV_J01-XdsAuthorSpecialty-CISIS'] %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
     </tr>
     <tr>
-      <td>JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml</td>
+      <td>JDV_J02-XdsHealthcareFacilityTypeCode-CISIS.xml</td>
       <td>Structures d'exercice</td>
-      <td class="w-25 {% if page['filesPresence']['JDV_J02-HealthcareFacilityTypeCode_CI-SIS'] %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+      <td class="w-25 {% if page['filesPresence']['JDV_J02-XdsHealthcareFacilityTypeCode-CISIS'] %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
     </tr>
     <tr>
-      <td>JDV_J07-XdsTypeCode_CI-SIS.xml</td>
+      <td>JDV_J07-XdsTypeCode-CISIS.xml</td>
       <td>Types des documents médicaux</td>
-      <td class="w-25 {% if page['filesPresence']['JDV_J07-XdsTypeCode_CI-SIS'] %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
+      <td class="w-25 {% if page['filesPresence']['JDV_J07-XdsTypeCode-CISIS'] %}table-success{% else %}table-danger{% endif %}">&nbsp;</td>
     </tr>
   </table>
 

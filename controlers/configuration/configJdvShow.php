@@ -25,6 +25,7 @@
  * Config : montrer les fichiers de jeu de valeurs installés et leur contenu
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 
 $debug = '';
@@ -36,21 +37,21 @@ if (is_dir($p['homepath'] . 'ressources/JDV/')) {
 		$p['page']['files'][$path_parts['filename']] = msExternalData::getJdvDataFromXml($path_parts['basename']);
 	}
 
-	if (array_key_exists('JDV_J01-XdsAuthorSpecialty-CI-SIS', $p['page']['files'])) {
-		$p['page']['filesPresence']['JDV_J01-XdsAuthorSpecialty-CI-SIS'] = true;
+	if (array_key_exists('JDV_J01-XdsAuthorSpecialty-CISIS', $p['page']['files'])) {
+		$p['page']['filesPresence']['JDV_J01-XdsAuthorSpecialty-CISIS'] = true;
 	} else {
-		$p['page']['filesPresence']['JDV_J01-XdsAuthorSpecialty-CI-SIS'] = false;
+		$p['page']['filesPresence']['JDV_J01-XdsAuthorSpecialty-CISIS'] = false;
 	}
 
-	if (array_key_exists('JDV_J02-HealthcareFacilityTypeCode_CI-SIS', $p['page']['files'])) {
-		$p['page']['filesPresence']['JDV_J02-HealthcareFacilityTypeCode_CI-SIS'] = true;
+	if (array_key_exists('JDV_J02-XdsHealthcareFacilityTypeCode-CISIS', $p['page']['files'])) {
+		$p['page']['filesPresence']['JDV_J02-XdsHealthcareFacilityTypeCode-CISIS'] = true;
 	} else {
-		$p['page']['filesPresence']['JDV_J02-HealthcareFacilityTypeCode_CI-SIS'] = false;
+		$p['page']['filesPresence']['JDV_J02-XdsHealthcareFacilityTypeCode-CISIS'] = false;
 	}
 
-	if (array_key_exists('JDV_J07-XdsTypeCode_CI-SIS', $p['page']['files'])) {
-		$p['page']['filesPresence']['JDV_J07-XdsTypeCode_CI-SIS'] = true;
+	if (array_key_exists('JDV_J07-XdsTypeCode-CISIS', $p['page']['files'])) {
+		$p['page']['filesPresence']['JDV_J07-XdsTypeCode-CISIS'] = true;
 	} else {
-		$p['page']['filesPresence']['JDV_J07-XdsTypeCode_CI-SIS'] = false;
+		$p['page']['filesPresence']['JDV_J07-XdsTypeCode-CISIS'] = false;
 	}
 }
