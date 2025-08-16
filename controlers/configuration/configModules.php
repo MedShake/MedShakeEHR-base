@@ -25,6 +25,7 @@
  *
  * @author fr33z00 <https://github.com/fr33z00>
  * @contrib Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 $debug = '';
 $template = 'configModules';
@@ -37,4 +38,31 @@ foreach ($p['page']['modules'] as $k => $v) {
 	$p['page']['modulesConfig'][$v['name']] = $config->getModuleDefaultParameters($v['name']);
 	// infos génériques
 	$p['page']['modulesInfosGen'][$v['name']] = msModules::getModuleInfosGen($v['name']);
+
+ // Récupérer la dernière version depuis GitHub
+    $latestVersion = msModules::getLatestVersionFromGitHub($v['name']);
+    
+    // Comparer les versions
+    if ($latestVersion) {
+        if (version_compare(ltrim($v['version'], 'v'), ltrim($latestVersion, 'v'), '<')) {
+            $p['page']['modulesUpdates'][$v['name']] = [
+                'installed_version' => $v['version'],
+                'latest_version' => $latestVersion,
+                'update_available' => true,
+            ];
+        } else {
+            $p['page']['modulesUpdates'][$v['name']] = [
+                'installed_version' => $v['version'],
+                'latest_version' => $latestVersion,
+                'update_available' => false,
+            ];
+        }
+    } else {
+        $p['page']['modulesUpdates'][$v['name']] = [
+            'installed_version' => $v['version'],
+            'latest_version' => null,
+            'update_available' => false,
+            'error' => 'Impossible de récupérer la dernière version.',
+        ];
+    }
 }

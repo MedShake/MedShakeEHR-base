@@ -26,6 +26,7 @@
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
  * @contrib DEMAREST Maxime  <maxime@indelog.fr>
+ * @contrib Michaël Val
  *
  * SQLPREPOK
  */
@@ -263,8 +264,8 @@ if ($form = msForm::getFormUniqueRawField($formIN, 'yamlStructure')) {
 				}
 			}
 			// patient dcd
-			if (trim($v['deathdate']) !== '') {
-				$data[$v['peopleID']]['type'] = 'dcd';
+			if (isset($v['deathdate']) && trim($v['deathdate']) !== '') {
+				$data[$v['peopleID']]['type'] = 'dcd'; 
 			}
 		}
 

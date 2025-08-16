@@ -24,6 +24,7 @@
  #
  # @author Bertrand Boutillier <b.boutillier@gmail.com>
  # @author fr33z00 <https://github.com/fr33z00>
+ # @contrib Michaël Val
  #}
 
 {% extends "page.html.twig" %}
@@ -75,6 +76,7 @@
             <th>Nom</th>
             <th>Nom court</th>
             <th>Version</th>
+            <th>Status</th>
             <th class="col-auto"></th>
           </tr>
         </thead>
@@ -90,6 +92,15 @@
                 {{ m.name }}
               </td>
               <td>{{ m.version }}</td>
+              <td>
+                  {% if page.modulesUpdates[m.name].update_available %}
+                      <a href="{{ page.modulesInfosGen[m.name]['sources'] }}/releases" target="_blank">Mises à jour disponible</a>
+                  {% elseif page.modulesUpdates[m.name].latest_version is not null %}
+                      À jour
+                  {% else %}
+                      <span class="text-danger">Erreur </span>
+                  {% endif %}
+              </td>
               <td class="text-right">
                 <button class="btn btn-outline-secondary btn-sm" type="button" data-toggle="collapse" data-target="#{{ m.name }}">
                   <i class="fas fa-info fa-fw"></i>

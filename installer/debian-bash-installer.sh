@@ -117,6 +117,7 @@ apacheConfig() {
         SSLEngine On
         SSLCertificateFile /etc/ssl/$msehrDom/$msehrDom.crt
         SSLCertificateKeyFile /etc/ssl/$msehrDom/$msehrDom.key
+        SetEnv MEDSHAKEEHRPATH "$msehrPath"
         <Directory $msehrPath/public_html>
             Options FollowSymLinks
             AllowOverride all
@@ -219,8 +220,6 @@ msehrInstall() {
     mkdir -p "$msehrPath"/public_html
     version=$(echo "$vRelease" | cut -f2 -d "v")
     mv -f /tmp/MedShakeEHR-base-"$version"/* "$msehrPath"
-    echo "$msehrPath
-    " > "$msehrPath"/public_html/MEDSHAKEEHRPATH
     chown www-data:www-data -R "$msehrPath"
     chmod 755 "$msehrPath" "$msehrPath"/public_html
 
@@ -228,7 +227,7 @@ msehrInstall() {
     su www-data -s/bin/bash -c 'composer install --no-interaction --no-cache -o'
     cd "$msehrPath"/public_html || exit
     su www-data -s/bin/bash -c 'composer install --no-interaction --no-cache -o'
-    su www-data -s/bin/bash -c  "php $msehrPath/public_html/install.php -N -s localhost -d $msehrDbName -u $mysqlUser -p $mysqlUserPswd -r https -D $msehrDom -o localhost"
+    su www-data -s/bin/bash -c  "export MEDSHAKEEHRPATH=$msehrPath; php $msehrPath/public_html/install.php -N -s localhost -d $msehrDbName -u $mysqlUser -p $mysqlUserPswd -r https -D $msehrDom -o localhost"
 
     selectRemoveInstallFiles
 }  

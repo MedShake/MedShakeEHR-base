@@ -9,6 +9,7 @@
 	#ServerName www.example.com
 
 	ServerAdmin webmaster@localhost
+	SetEnv MEDSHAKEEHRPATH "/var/www/html"
 	DocumentRoot /var/www/html/public_html
         <Directory "/var/www/html/public_html/">
             AllowOverride all

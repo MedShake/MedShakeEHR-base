@@ -25,6 +25,7 @@
  * Créer une version CDA d'un document
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 
 
@@ -111,7 +112,7 @@ class msCDA
 	private function _ajouterTags()
 	{
 		if (isset($this->_objetTag['AuteurInitial_PSCodeProSpe'])) {
-			$codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CI-SIS.xml');
+			$codes = msExternalData::getJdvDataFromXml('JDV_J01-XdsAuthorSpecialty-CISIS.xml');
 			if (isset($codes[$this->_objetTag['AuteurInitial_PSCodeProSpe']]['codeSystem'])) {
 				$this->_objetTag['AuteurInitial_PSCodeProSpe_codeSystem'] = $codes[$this->_objetTag['AuteurInitial_PSCodeProSpe']]['codeSystem'];
 			}
@@ -120,7 +121,7 @@ class msCDA
 			}
 		}
 		if (isset($this->_objetTag['AuteurInitial_PSCodeStructureExercice'])) {
-			$codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CI-SIS.xml');
+			$codes = msExternalData::getJdvDataFromXml('JDV_J02-HealthcareFacilityTypeCode_CISIS.xml');
 			if (isset($codes[$this->_objetTag['AuteurInitial_PSCodeStructureExercice']]['codeSystem'])) {
 				$this->_objetTag['AuteurInitial_PSCodeStructureExercice_codeSystem'] = $codes[$this->_objetTag['AuteurInitial_PSCodeStructureExercice']]['codeSystem'];
 			}
@@ -165,7 +166,7 @@ class msCDA
 	 */
 	private function _getClinicalDocumentCode()
 	{
-		$tabVal = msExternalData::getJdvDataFromXml('JDV_J07-XdsTypeCode_CI-SIS.xml');
+		$tabVal = msExternalData::getJdvDataFromXml('JDV_J07-XdsTypeCode_CISIS.xml');
 		if (isset($tabVal[$this->_codeDocument])) {
 			$this->_objetTag['cda_clinicalDocument_code_code'] = $tabVal[$this->_codeDocument]['code'];
 			$this->_objetTag['cda_clinicalDocument_code_displayName'] = $tabVal[$this->_codeDocument]['displayName'];
