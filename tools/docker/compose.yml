@@ -35,7 +35,8 @@ services:
       - dicom
     labels:
       - "com.centurylinklabs.watchtower.no-pull=true" # For allow update with watchtower and local image if you build the image. Comment if you use dockerhub image
-  
+      - "com.github.nginx-proxy.nginx-proxy.ssl_verify_client=optional" # On production install the cetificate on your browser and set the option to on
+
   # https://hub.docker.com/_/mariadb
   db:
     image: mariadb:10.11
