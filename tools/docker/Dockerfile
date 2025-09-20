@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/php
-FROM php:8.2-apache
+FROM php:8.2-apache-bookworm
 ENV PHPSTAGE=production
 ARG DEBIAN_FRONTEND=noninteractive
 RUN set -ex; \
