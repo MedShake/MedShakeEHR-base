@@ -92,11 +92,6 @@ class msAgenda
 	 */
 	private $_addPublicHolidaysToEvents = false;
 
-  	public function __construct() {
-        $this->_tabTypeRdv = []; // Initialisation de la propriété
-    }
-
-
 	/**
 	 * set patientID
 	 * @param int $_patientID ID du patient
