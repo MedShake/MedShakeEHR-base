@@ -25,6 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ * @contrib Michaël Val
  *
  * SQLPREPOK
  */
@@ -353,4 +354,78 @@ class msSQL
 			return false;
 		}
 	}
+
+	/**
+     * Exécute un fichier SQL via PDO 
+     * @param string $sqlFile Chemin du fichier SQL
+     * @return bool True si succès
+     */
+    public static function sqlExecuteFile($sqlFile)
+    {
+        global $pdo;
+        if (!file_exists($sqlFile)) {
+            throw new Exception("Fichier SQL non trouvé: " . $sqlFile);
+        }
+
+        $sql = file_get_contents($sqlFile);
+        $stmt = $pdo->prepare($sql);
+        
+        try {
+            return $stmt->execute();
+        } catch(PDOException $e) {
+            throw new Exception("Erreur lors de l'exécution du SQL: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Sauvegarde la base de données via PDO
+     * @param string $backupFile Chemin du fichier de sauvegarde
+     * @return bool True si succès 
+     */
+    public static function sqlBackupDatabase($backupFile) 
+    {
+        global $pdo;
+        try {
+            $tables = self::sql2tabSimple("SHOW TABLES");
+            if (!is_array($tables)) {
+                throw new Exception("Aucune table trouvée dans la base de données");
+            }
+            
+            $dump = "";
+            foreach($tables as $table) {
+                // Structure
+                $create = self::sqlUnique("SHOW CREATE TABLE `$table`");
+                if (!is_array($create)) {
+                    // Essayer de récupérer comme une vue
+                    $create = self::sqlUnique("SHOW CREATE VIEW `$table`");
+                    if (!is_array($create)) {
+                        continue; // Skip this table/view if we can't get its structure
+                    }
+                    $dump .= "\n\n" . ($create['Create View'] ?? '') . ";\n\n";
+                } else {
+                    $dump .= "\n\n" . ($create['Create Table'] ?? '') . ";\n\n";
+                }
+                
+                // Données 
+                $rows = self::sql2tab("SELECT * FROM `$table`");
+                if (is_array($rows)) {
+                    foreach($rows as $row) {
+                        if (!empty($row)) {
+                            $dump .= "INSERT INTO `$table` VALUES (" . 
+                                    implode(',', array_map(function($value) use($pdo) {
+                                        return $pdo->quote($value ?? 'NULL');
+                                    }, $row)) . ");\n";
+                        }
+                    }
+                }
+            }
+            
+            if (file_put_contents($backupFile, $dump) === false) {
+                throw new Exception("Impossible d'écrire le fichier de sauvegarde");
+            }
+            return true;
+        } catch(Exception $e) {
+            throw new Exception("Erreur lors de la sauvegarde: " . $e->getMessage());
+        }
+    }
 }
