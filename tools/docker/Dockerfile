@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/php
-FROM php:8.2-apache-bookworm
+FROM php:8.2-apache
 ENV PHPSTAGE=production
 ARG DEBIAN_FRONTEND=noninteractive
 RUN set -ex; \
@@ -10,7 +10,6 @@ RUN set -ex; \
         ghostscript \
         git \
         imagemagick \
-        mariadb-client \
         pdftk-java \
     ; \
     rm -rf /var/lib/apt/lists/*
@@ -20,7 +19,6 @@ RUN set -ex; \
     \
     apt-get -y update;\
     apt-get install -y --no-install-recommends \
-    libc-client-dev \
     libgpgme11-dev \
     libmagickwand-dev \
     libyaml-dev \

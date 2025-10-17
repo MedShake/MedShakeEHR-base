@@ -1,7 +1,7 @@
 services:
   medshakeehr:
     container_name: msehr
-    # image: marsante/msehr:8.1.1
+    # image: marsante/msehr:latest
     build: 
       context: ./
       tags:
@@ -11,12 +11,14 @@ services:
     environment:
       TZ: ${TZ}
       VIRTUAL_HOST: ${VIRTUAL_HOST}
+      VIRTUAL_HOST_MSEHR: ${MSEHR_HOST}
       SELF_SIGNED_HOST: ${VIRTUAL_HOST}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      # PROTO: ${PROTO}
+      PORT: ${PORT}
+      PROTO: ${PROTO}
       # COOKIED: ${COOKIED}
       # FINGERPRINT: ${FINGERPRINT}
       # SQLVARPSWD: ${SQLVARPSWD}
@@ -86,12 +88,15 @@ services:
     profiles:
       - dicom
 
-  # https://hub.docker.com/r/jwilder/nginx-proxy
+  # https://hub.docker.com/r/nginxproxy/nginx-proxy
   nginx-proxy:
     image: nginxproxy/nginx-proxy:alpine
     restart: unless-stopped
     environment:
       TZ: ${TZ}
+      # Uncomment for custom ports
+      # HTTP_PORT: 8080 
+      # HTTPS_PORT: 4433
     ports:
       - "80:80"
       - "443:443"

@@ -25,6 +25,7 @@
  *
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
 
  */
 
@@ -72,8 +73,21 @@ msTools::checkAndBuildTargetDir($destiRessource, 0755);
 foreach ($bdpm['dataBdpm'] as $table => $v) {
 	$file = '/tmp/' . $v['file'];
 	@unlink($file);
-	exec("curl -L " . escapeshellarg($v['url']) . " -o " . escapeshellarg($file));
-	exec("sed -i '/^[[:space:]]*$/d' ".escapeshellarg($file));
+	
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $v['url']);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	$data = curl_exec($ch);
+	
+	if (curl_errno($ch)) {
+		throw new Exception('Erreur Curl: ' . curl_error($ch));
+	}
+	curl_close($ch);
+	
+	// Supprime les lignes vides
+	$data = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $data);
+	file_put_contents($file, $data);
 	if (!msSQL::sqlVerifyTableExist($table)) {
 		throw new Exception("La table n'existe pas en base");
 	}

@@ -24,6 +24,7 @@
  * Cron : sauvegarde de la base
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 
 // pour le configurateur de cron
@@ -58,9 +59,14 @@ $p['config'] = msYAML::yamlFileRead($homepath . 'config/config.yml');
 $p['homepath'] = $homepath;
 
 $today = date('Y-m-d');
-exec('mysqldump -u ' . escapeshellarg($p['config']['sqlUser']) . ' -p' . escapeshellarg($p['config']['sqlPass']) . ' ' . escapeshellarg($p['config']['sqlBase']) . ' > ' . escapeshellarg($p['config']['backupLocation'] . $p['config']['sqlBase'] . '_' . $today . '.sql'));
+$pdo = msSQL::sqlConnect();
+$tmpFile = $p['config']['backupLocation'] . $p['config']['sqlBase'] . '_' . $today . '.sql';
+msSQL::sqlBackupDatabase($tmpFile);
 
-exec('gzip ' . escapeshellarg($p['config']['backupLocation'] . $p['config']['sqlBase'] . '_' . $today . '.sql'));
+$gz = gzopen($tmpFile . '.gz', 'w9');
+gzwrite($gz, file_get_contents($tmpFile));
+gzclose($gz);
+unlink($tmpFile);
 
 $dumpsList = scandir($p['config']['backupLocation']);
 
