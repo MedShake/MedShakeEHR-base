@@ -29,7 +29,7 @@ if [ ! -e /var/www/html/config/config.yml ]; then
     FINGERPRINT=$(set_default_value "$FINGERPRINT" "$(generate_random_string)")
     SQLVARPSWD=$(set_default_value "$SQLVARPSWD" "$(generate_random_string)")
     PROTO=$(set_default_value "$PROTO" "https")
-    PORT=$(set_default_value "$PORT" "")
+    PORT=$(set_default_value "$PORT" \"\")
     COOKIED=$(set_default_value "$COOKIED" "31104000")
 
     echo "
@@ -38,7 +38,7 @@ sqlRootId: \"\"
 sqlRootPwd: \"\"
 sqlNotCreatDb: true
 protocol: $PROTO://
-host: $VIRTUAL_HOST
+host: $MSEHR_HOST
 port: $PORT
 urlHostSuffixe: \"\"
 webDirectory: /var/www/html/public_html/
