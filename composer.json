@@ -25,5 +25,9 @@
     "ext-xml": "*",
     "ext-yaml": "*",
     "ext-zip": "*"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.89",
+    "rector/rector": "^2.2"
   }
 }

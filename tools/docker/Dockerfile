@@ -9,7 +9,6 @@ RUN set -ex; \
         cron \
         ghostscript \
         git \
-        imagemagick \
         mariadb-client \
         pdftk-java \
     ; \
@@ -28,11 +27,9 @@ RUN set -ex; \
     ; \
     pecl install gnupg \
     && \
-    pecl install imagick \
-    && \
     pecl install yaml \
     && \
-    docker-php-ext-enable gnupg imagick yaml \
+    docker-php-ext-enable gnupg yaml \
     ; \
     docker-php-ext-configure gd \
 		--with-freetype \
