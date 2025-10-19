@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of MedShakeEHR.
  *
@@ -24,23 +25,31 @@
  * Outils pour les images
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 
 
 class msImageTools
 {
+    public static function rotate90($source, $dest, $direction = 'right')
+    {
+        if (!is_file($source)) {
+            return false;
+        }
 
-	public static function rotate90($source, $dest, $direction = 'right')
-	{
-		if (!is_file($source)) return false;
-		$image = new Imagick($source);
-		if ($direction == 'left') {
-			$angle = -90;
-		} else {
-			$angle = 90;
-		}
-		$image->rotateimage("#000", $angle);
-		$image->setImageOrientation(imagick::ORIENTATION_TOPLEFT);
-		return $image->writeImage($dest);
-	}
+        $image = imagecreatefromstring(file_get_contents($source));
+        if (!$image) {
+            return false;
+        }
+
+        $angle = ($direction === 'left') ? 90 : -90;
+        $rotatedImage = imagerotate($image, $angle, 0);
+
+        $result = imagejpeg($rotatedImage, $dest);
+        imagedestroy($image);
+        imagedestroy($rotatedImage);
+
+        return $result;
+    }
+
 }

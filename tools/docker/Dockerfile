@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/php
-FROM php:8.2-apache
+FROM php:8.2-apache-bookworm
 ENV PHPSTAGE=production
 ARG DEBIAN_FRONTEND=noninteractive
 RUN set -ex; \
@@ -9,7 +9,6 @@ RUN set -ex; \
         cron \
         ghostscript \
         git \
-        imagemagick \
         pdftk-java \
     ; \
     rm -rf /var/lib/apt/lists/*
@@ -19,6 +18,7 @@ RUN set -ex; \
     \
     apt-get -y update;\
     apt-get install -y --no-install-recommends \
+    libc-client-dev \
     libgpgme11-dev \
     libmagickwand-dev \
     libyaml-dev \
@@ -26,11 +26,9 @@ RUN set -ex; \
     ; \
     pecl install gnupg \
     && \
-    pecl install imagick \
-    && \
     pecl install yaml \
     && \
-    docker-php-ext-enable gnupg imagick yaml \
+    docker-php-ext-enable gnupg yaml \
     ; \
     docker-php-ext-configure gd \
 		--with-freetype \
