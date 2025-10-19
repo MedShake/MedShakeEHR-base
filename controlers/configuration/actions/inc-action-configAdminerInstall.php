@@ -24,6 +24,7 @@
  * Config : installer le script PHP Adminer
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 
 if (!msUser::checkUserIsAdmin()) {
@@ -31,5 +32,17 @@ if (!msUser::checkUserIsAdmin()) {
 }
 
 $output = $homepath . 'public_html/bddEdit.php';
-exec('curl -L https://www.adminer.org/latest.php -o ' . escapeshellarg($output));
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://www.adminer.org/latest.php');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+$data = curl_exec($ch);
+
+if (curl_errno($ch)) {
+    throw new Exception('Erreur Curl: ' . curl_error($ch));
+}
+curl_close($ch);
+
+file_put_contents($output, $data);
 msTools::redirection('/configuration/');

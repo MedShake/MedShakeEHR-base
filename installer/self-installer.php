@@ -33,17 +33,17 @@ setlocale(LC_ALL, "fr_FR.UTF-8");
 
 function command_exist($cmd)
 {
-	$return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
-	return !empty($return);
+    $return = shell_exec(sprintf("which %s", escapeshellarg((string) $cmd)));
+    return !empty($return);
 }
 
 function apacheModule_exist($moduleName)
 {
-	if (in_array($moduleName, apache_get_modules()) or strpos(shell_exec('/usr/local/apache/bin/apachectl -l'), $moduleName) !== false) {
-		return true;
-	} else {
-		return false;
-	}
+    if (in_array($moduleName, apache_get_modules()) or str_contains(shell_exec('/usr/local/apache/bin/apachectl -l'), (string) $moduleName)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 $template = '';
@@ -52,111 +52,111 @@ $dossierweb = getcwd();
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-	$errors_base = [];
-	if (!is_writable($dossierweb)) {
-		$errors_base[] = $dossierweb . " n'est pas accessible en écriture.";
-	}
-	if (!command_exist('git')) {
-		$errors_base[] = "Git ne semble pas installé.";
-	}
-	if (!apacheModule_exist('mod_rewrite')) {
-		$errors_base[] = "Le module Apache mod_rewrite ne semble pas installé.";
-	}
+    $errors_base = [];
+    if (!is_writable($dossierweb)) {
+        $errors_base[] = $dossierweb . " n'est pas accessible en écriture.";
+    }
+    if (!command_exist('git')) {
+        $errors_base[] = "Git ne semble pas installé.";
+    }
+    if (!apacheModule_exist('mod_rewrite')) {
+        $errors_base[] = "Le module Apache mod_rewrite ne semble pas installé.";
+    }
 
-	$modulesPHP = get_loaded_extensions();
-	$modulesPHPrequis = ['gd', 'intl', 'curl', 'zip', 'xml', 'imagick', 'imap', 'dom', 'gnupg', 'yaml', 'soap', 'bcmath'];
-	sort($modulesPHPrequis);
-	foreach ($modulesPHPrequis as $mod) {
-		if (!in_array($mod, $modulesPHP)) {
-			$errors_base[] = "Le module PHP " . $mod . " ne semble pas installé.";
-		}
-	}
+    $modulesPHP = get_loaded_extensions();
+    $modulesPHPrequis = ['gd', 'intl', 'curl', 'zip', 'xml', 'dom', 'gnupg', 'yaml', 'soap', 'bcmath'];
+    sort($modulesPHPrequis);
+    foreach ($modulesPHPrequis as $mod) {
+        if (!in_array($mod, $modulesPHP)) {
+            $errors_base[] = "Le module PHP " . $mod . " ne semble pas installé.";
+        }
+    }
 
-	if (empty($errors_base)) {
-		$template = 'bienvenue';
-	} else {
-		$template = 'erreurs-prerequis';
-	}
+    if (empty($errors_base)) {
+        $template = 'bienvenue';
+    } else {
+        $template = 'erreurs-prerequis';
+    }
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	$dossier = $_POST['destination'];
-	if (!is_dir($_POST['destination'])) {
-		mkdir($_POST['destination'], 0774, true);
-	}
-	if (!is_dir($_POST['destination']) or !is_writable($_POST['destination'])) {
-		$template = 'erreur-droits';
-	} else {
-		file_put_contents("MEDSHAKEEHRPATH", $_POST['destination']);
-		$dossier .= ($dossier[strlen($dossier) - 1]) != '/' ? '/' : '';
+    $dossier = $_POST['destination'];
+    if (!is_dir($_POST['destination'])) {
+        mkdir($_POST['destination'], 0774, true);
+    }
+    if (!is_dir($_POST['destination']) or !is_writable($_POST['destination'])) {
+        $template = 'erreur-droits';
+    } else {
+        file_put_contents("MEDSHAKEEHRPATH", $_POST['destination']);
+        $dossier .= ($dossier[strlen((string) $dossier) - 1]) != '/' ? '/' : '';
 
-		if (!isset($_POST['v'])) {
-			//récupération de la dernière version release
-			$ch = curl_init("https://api.github.com/repos/medshake/MedShakeEHR-base/releases/latest");
-			curl_setopt($ch, CURLOPT_USERAGENT, "linux");
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			$res = json_decode(curl_exec($ch), true);
-			curl_close($ch);
-			$releaseTagName = $res['tag_name'];
-		} else {
-			$releaseTagName = $_POST['v'];
-		}
-		//téléchargement de la dernière release
-		file_put_contents("/tmp/medshake.zip", fopen('https://github.com/medshake/MedShakeEHR-base/archive/' . $releaseTagName . '.zip', 'r'));
-		$zip = new ZipArchive;
-		if ($zip->open("/tmp/medshake.zip")) {
-			$zip->extractTo('/tmp/');
-			unlink("/tmp/medshake.zip");
-			//deplacement du contenu de public_html
-			$dossierdezip = '/tmp/MedShakeEHR-base-' . $releaseTagName;
-			if (!is_dir($dossierdezip)) {
-				$dossierdezip = '/tmp/MedShakeEHR-base-' . str_replace('v', '', $releaseTagName);
-			}
-			foreach (scandir($dossierdezip . '/public_html') as $f) {
-				if ($f != '.' and $f != '..') {
-					exec('mv ' . $dossierdezip . '/public_html/' . $f . ' ' . $dossierweb . '/' . $f);
-				}
-			}
-			rmdir($dossierdezip . '/public_html');
-			//deplacement du reste vers la destination
-			foreach (scandir($dossierdezip) as $f) {
-				if ($f != '.' and $f != '..') {
-					exec('mv ' . $dossierdezip . '/' . $f . ' ' . $dossier . $f);
-				}
-			}
-			chdir($dossier);
-			//telechargement de composer
-			file_put_contents("composer.phar", fopen("https://getcomposer.org/download/latest-stable/composer.phar", 'r'));
-			chmod("composer.phar", 0774);
-			exec('COMPOSER_HOME="/tmp/" php ./composer.phar install 2>&1', $ret);
-			json_encode($ret);
-			//exécution de composer pour la partie JS
-			chdir($dossierweb);
-			exec('COMPOSER_HOME="/tmp/" php ' . $dossier . 'composer.phar install 2>&1', $ret);
-			//Vérifie l'absence d'erreur dans le log Composer
-			$errormatches = array_filter($ret, function ($haystack) {
-				if (strpos(strtolower($haystack), 'error') === false) {
-					return false;
-				} else {
-					return true;
-				}
-			});
-			if (empty($errormatches)) {
-				unlink($dossierweb . '/self-installer.php');
-				$htaccess = "SetEnv MEDSHAKEEHRPATH " . $dossier . "\n";
-				$htaccess .= file_get_contents($dossierweb . "/.htaccess");
-				file_put_contents($dossierweb . "/.htaccess", $htaccess);
-				//lancement de la partie configuration
-				header('Location: ' . $_SERVER['SERVER_NAME'] . "/install.php");
-				die();
-			} else {
-				$ret = explode('<br>', $ret);
-				$template = 'erreur-inconnue';
-			}
-		} else {
-			$ret = "Impossible de dezipper le fichier /tmp/medshake.zip";
-			$template = 'erreur-inconnue';
-		}
-	}
+        if (!isset($_POST['v'])) {
+            //récupération de la dernière version release
+            $ch = curl_init("https://api.github.com/repos/medshake/MedShakeEHR-base/releases/latest");
+            curl_setopt($ch, CURLOPT_USERAGENT, "linux");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $res = json_decode(curl_exec($ch), true);
+            curl_close($ch);
+            $releaseTagName = $res['tag_name'];
+        } else {
+            $releaseTagName = $_POST['v'];
+        }
+        //téléchargement de la dernière release
+        file_put_contents("/tmp/medshake.zip", fopen('https://github.com/medshake/MedShakeEHR-base/archive/' . $releaseTagName . '.zip', 'r'));
+        $zip = new ZipArchive();
+        if ($zip->open("/tmp/medshake.zip")) {
+            $zip->extractTo('/tmp/');
+            unlink("/tmp/medshake.zip");
+            //deplacement du contenu de public_html
+            $dossierdezip = '/tmp/MedShakeEHR-base-' . $releaseTagName;
+            if (!is_dir($dossierdezip)) {
+                $dossierdezip = '/tmp/MedShakeEHR-base-' . str_replace('v', '', $releaseTagName);
+            }
+            foreach (scandir($dossierdezip . '/public_html') as $f) {
+                if ($f != '.' and $f != '..') {
+                    exec('mv ' . $dossierdezip . '/public_html/' . $f . ' ' . $dossierweb . '/' . $f);
+                }
+            }
+            rmdir($dossierdezip . '/public_html');
+            //deplacement du reste vers la destination
+            foreach (scandir($dossierdezip) as $f) {
+                if ($f != '.' and $f != '..') {
+                    exec('mv ' . $dossierdezip . '/' . $f . ' ' . $dossier . $f);
+                }
+            }
+            chdir($dossier);
+            //telechargement de composer
+            file_put_contents("composer.phar", fopen("https://getcomposer.org/download/latest-stable/composer.phar", 'r'));
+            chmod("composer.phar", 0774);
+            exec('COMPOSER_HOME="/tmp/" php ./composer.phar install 2>&1', $ret);
+            json_encode($ret);
+            //exécution de composer pour la partie JS
+            chdir($dossierweb);
+            exec('COMPOSER_HOME="/tmp/" php ' . $dossier . 'composer.phar install 2>&1', $ret);
+            //Vérifie l'absence d'erreur dans le log Composer
+            $errormatches = array_filter($ret, function ($haystack) {
+                if (!str_contains(strtolower($haystack), 'error')) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            if (empty($errormatches)) {
+                unlink($dossierweb . '/self-installer.php');
+                $htaccess = "SetEnv MEDSHAKEEHRPATH " . $dossier . "\n";
+                $htaccess .= file_get_contents($dossierweb . "/.htaccess");
+                file_put_contents($dossierweb . "/.htaccess", $htaccess);
+                //lancement de la partie configuration
+                header('Location: ' . $_SERVER['SERVER_NAME'] . "/install.php");
+                die();
+            } else {
+                $ret = explode('<br>', $ret);
+                $template = 'erreur-inconnue';
+            }
+        } else {
+            $ret = "Impossible de dezipper le fichier /tmp/medshake.zip";
+            $template = 'erreur-inconnue';
+        }
+    }
 }
 
 if ($template != '') : ?>
@@ -357,8 +357,8 @@ if ($template != '') : ?>
 		<div class="container-fluid" role="main">
 
 			<?php
-			if ($template == 'erreurs-prerequis') :
-			?>
+            if ($template == 'erreurs-prerequis') :
+                ?>
 				<h1>Installateur de MedShakeEHR</h1>
 				<div class="alert alert-danger" role="alert">
 					<h4 class="alert-heading">Alerte prérequis !</h4>
@@ -371,9 +371,8 @@ if ($template != '') : ?>
 
 				</div>
 
-			<?php
-			elseif ($template == 'bienvenue') :
-			?>
+			<?php elseif ($template == 'bienvenue') :
+			    ?>
 				<h1>Installateur de MedShakeEHR</h1>
 				<div id="inst">
 					<p>Nous allons commencer la procédure d'installation. Cela peut prendre plusieurs minutes.<br>
@@ -421,22 +420,20 @@ if ($template != '') : ?>
 						</g>
 					</svg>
 				</div>
-			<?php
-			elseif ($template == 'erreur-droits') :
-			?>
+			<?php elseif ($template == 'erreur-droits') :
+			    ?>
 				<h1>Erreur!</h1>
 				<p style="margin-top:50px;">Le dossier <?= $dossier ?> n'est pas accessible en écriture. Veuillez corriger le problème puis cliquez sur suivant.</p>
 				<a href=<?= $_SERVER['REQUEST_URI'] ?>><button class="btn btn-light">Suivant</button></a>
-			<?php
-			elseif ($template == 'erreur-inconnue') :
-			?>
+			<?php elseif ($template == 'erreur-inconnue') :
+			    ?>
 				<h1>Erreur!</h1>
 				<p style="margin-top:50px;">Une erreur s'est produite durant l'installation. Voici les messages :</p>
 				<p><?= $ret ?></p>
 
 			<?php
 			endif;
-			?>
+?>
 		</div>
 	</body>
 

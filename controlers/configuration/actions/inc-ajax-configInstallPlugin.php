@@ -24,6 +24,7 @@
  * Config : installer un plugin
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
+ * @contrib Michaël Val
  */
 
 if (!msUser::checkUserIsAdmin()) {
@@ -140,7 +141,7 @@ if (key_exists($pluginName, $installedPlugins)) {
 		uksort($sqlUpdateFiles, 'version_compare');
 		foreach ($sqlUpdateFiles as $file) {
 			includePhp($file, '_pre');
-			exec('mysql -h' . escapeshellarg($sqlParams['sqlServeur']) . ' -u ' . escapeshellarg($sqlParams['sqlUser']) . ' -p' . escapeshellarg($sqlParams['sqlPass']) . ' --default-character-set=utf8 ' . escapeshellarg($sqlParams['sqlBase']) . ' 2>&1 < ' . $file, $output);
+			msSQL::sqlExecuteFile($file);
 			includePhp($file, '_post');
 		}
 	}
@@ -148,7 +149,7 @@ if (key_exists($pluginName, $installedPlugins)) {
 // installation
 else {
 	$fileSqlInstall = $p['homepath'] . 'config/plugins/' . $pluginName . '/sqlInstall.sql';
-	exec('mysql -h' . escapeshellarg($sqlParams['sqlServeur']) . ' -u ' . escapeshellarg($sqlParams['sqlUser']) . ' -p' . escapeshellarg($sqlParams['sqlPass']) . ' --default-character-set=utf8 ' . escapeshellarg($sqlParams['sqlBase']) . ' 2>&1 < ' . $fileSqlInstall, $output);
+	msSQL::sqlExecuteFile($fileSqlInstall);
 }
 
 exit("ok");
