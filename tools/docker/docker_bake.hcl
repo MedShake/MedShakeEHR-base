@@ -7,7 +7,9 @@ target "production" {
   dockerfile = "Dockerfile"
   platforms = ["linux/amd64", "linux/arm64"]
   args = {
+    PHP_VERSION = "8.2"
     PHPSTAGE = "production"
+    COMPOSER_VERSION = "2.8"
     VRELEASE = "master"
   }
   tags = [
@@ -21,8 +23,10 @@ target "development" {
   dockerfile = "Dockerfile"
   platforms = ["linux/amd64", "linux/arm64"]
   args = {
+    PHP_VERSION = "8.4"
     PHPSTAGE = "development"
-    VRELEASE = "master"
+    COMPOSER_VERSION = "2.8"
+    VRELEASE = "dev"
   }
   tags = [
     "marsante/msehr:dev"

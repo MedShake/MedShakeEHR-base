@@ -52,8 +52,8 @@ services:
       MARIADB_AUTO_UPGRADE: ${MARIADB_AUTO_UPGRADE}
     volumes: 
       - db-data:/var/lib/mysql
-      # If you would import old database
-      # - ./db-data:/docker-entrypoint-initdb.d
+      # If you would import database the first time or old database
+      # - ../../upgrade/base/sqlInstall.sql:/docker-entrypoint-initdb.d/sqlInstall.sql
       # # for custom mariadb conf file
       # - ./config/custom-mariadb.cnf:/etc/mysql/conf.d/custom-mariadb.cnf:ro
     networks:
