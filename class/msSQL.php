@@ -380,67 +380,128 @@ class msSQL
     }
 
     /**
-     * Sauvegarde la base de données via PDO
+     * Vérifie si mysqldump est disponible sur le système
+     * @return string|false Chemin vers mysqldump ou false si non disponible
+     */
+    private static function getMysqlDumpPath()
+    {
+        $output = [];
+        $returnVal = null;
+        exec('which mysqldump 2>/dev/null', $output, $returnVal);
+        return ($returnVal === 0) ? trim($output[0]) : false;
+    }
+
+    /**
+     * Sauvegarde la base de données
+     * Utilise mysqldump si disponible, sinon PDO
      * @param string $backupFile Chemin du fichier de sauvegarde
      * @return bool True si succès
      */
     public static function sqlBackupDatabase($backupFile)
     {
-        global $pdo;
-        try {
-            $tables = self::sql2tabSimple("SHOW TABLES");
-            if (!is_array($tables)) {
-                throw new Exception("Aucune table trouvée dans la base de données");
-            }
+        global $p;
 
-            // Ouvrir le fichier en mode écriture avec buffer
+        // Si mysqldump est disponible, on l'utilise
+        if ($mysqldumpPath = self::getMysqlDumpPath()) {
+            $command = sprintf(
+                '%s --opt -h%s -u%s -p%s %s > %s',
+                escapeshellarg($mysqldumpPath),
+                escapeshellarg($p['config']['sqlServeur']),
+                escapeshellarg($p['config']['sqlUser']),
+                escapeshellarg($p['config']['sqlPass']),
+                escapeshellarg($p['config']['sqlBase']),
+                escapeshellarg($backupFile)
+            );
+
+            exec($command . ' 2>&1', $output, $returnVar);
+            if ($returnVar === 0) {
+                return true;
+            }
+        }
+
+        // Fallback sur implémentation PDO
+        try {
+            global $pdo;
             $fileHandle = fopen($backupFile, 'w');
             if (!$fileHandle) {
                 throw new Exception("Impossible d'ouvrir le fichier de sauvegarde");
             }
 
+            // En-tête style mysqldump
+            $serverTime = self::sqlUniqueChamp("SELECT NOW()");
+            $header = "-- MedShakeEHR PDO SQL Dump\n"
+                    . "--\n"
+                    . "-- Host: " . ($p['config']['sqlServeur'] ?? 'localhost') . "\n"
+                    . "-- Generation Time: " . $serverTime . "\n"
+                    . "-- Server version: " . $pdo->getAttribute(PDO::ATTR_SERVER_VERSION) . "\n";
+
+            $header .= "\nSET NAMES utf8mb4;\n"
+                    . "SET FOREIGN_KEY_CHECKS = 0;\n"
+                    . "SET time_zone = @@session.time_zone;\n"
+                    . "SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';\n\n";
+
+            fwrite($fileHandle, $header);
+
+            $tables = self::sql2tabSimple("SHOW TABLES");
+            if (!is_array($tables)) {
+                throw new Exception("Aucune table trouvée dans la base de données");
+            }
+
             foreach ($tables as $table) {
-                // Structure
+                fwrite($fileHandle, "\n--\n-- Table structure for table `$table`\n--\n\n");
+                fwrite($fileHandle, "DROP TABLE IF EXISTS `$table`;\n");
+
                 $create = self::sqlUnique("SHOW CREATE TABLE `$table`");
                 if (!is_array($create)) {
                     $create = self::sqlUnique("SHOW CREATE VIEW `$table`");
                     if (!is_array($create)) {
                         continue;
                     }
-                    fwrite($fileHandle, "\n\n" . ($create['Create View'] ?? '') . ";\n\n");
-                } else {
-                    fwrite($fileHandle, "\n\n" . ($create['Create Table'] ?? '') . ";\n\n");
+                    fwrite($fileHandle, "DROP VIEW IF EXISTS `$table`;\n");
+                    fwrite($fileHandle, ($create['Create View'] ?? '') . ";\n\n");
+                    continue;
                 }
 
-                // Données - traitement par lots
-                $offset = 0;
-                $limit = 1000; // Nombre de lignes par lot
+                fwrite($fileHandle, ($create['Create Table'] ?? '') . ";\n\n");
 
-                while (true) {
-                    $rows = self::sql2tab("SELECT * FROM `$table` LIMIT $offset, $limit");
-                    if (!is_array($rows) || empty($rows)) {
-                        break;
-                    }
+                // Données
+                $count = self::sqlUniqueChamp("SELECT COUNT(*) FROM `$table`");
+                if ($count > 0) {
+                    fwrite($fileHandle, "--\n-- Dumping data for table `$table`\n--\n\n");
 
-                    foreach ($rows as $row) {
-                        if (!empty($row)) {
+                    $offset = 0;
+                    $limit = 500;
+
+                    while ($rows = self::sql2tab("SELECT * FROM `$table` LIMIT $offset, $limit")) {
+                        $insertPrefix = "INSERT INTO `$table` VALUES";
+                        $valueStrings = [];
+
+                        foreach ($rows as $row) {
                             $values = array_map(function ($value) use ($pdo) {
                                 if (is_null($value)) {
                                     return 'NULL';
                                 }
                                 return $pdo->quote($value);
                             }, $row);
+                            $valueStrings[] = "(" . implode(',', $values) . ")";
+                        }
 
-                            fwrite($fileHandle, "INSERT INTO `$table` VALUES (" .
-                                implode(',', $values) . ");\n");
+                        if (!empty($valueStrings)) {
+                            // Regrouper plusieurs lignes par INSERT (comme mysqldump)
+                            fwrite($fileHandle, $insertPrefix . "\n  " . implode(",\n  ", $valueStrings) . ";\n");
+                        }
+
+                        $offset += $limit;
+                        if (count($rows) < $limit) {
+                            break;
                         }
                     }
-
-                    $offset += $limit;
-                    unset($rows); // Libérer la mémoire explicitement
+                    fwrite($fileHandle, "\n");
                 }
             }
 
+            // Footer
+            fwrite($fileHandle, "\nSET FOREIGN_KEY_CHECKS = 1;\n");
             fclose($fileHandle);
             return true;
 
