@@ -41,7 +41,7 @@ services:
 
   # https://hub.docker.com/_/mariadb
   db:
-    image: mariadb:10.11
+    image: mariadb:11.8
     restart: unless-stopped
     environment:
       TZ: ${TZ}
@@ -122,12 +122,11 @@ services:
 
   # https://hub.docker.com/r/containrrr/watchtower
   watchtower:
-    image: containrrr/watchtower 
+    image: nickfedor/watchtower 
     restart: unless-stopped
     environment:
       TZ: $TZ 
       # WATCHTOWER_SCHEDULE: ${WATCHTOWER_SCHEDULE}
-      WATCHTOWER_ROLLING_RESTART: ${WATCHTOWER_ROLLING_RESTART}
       WATCHTOWER_CLEANUP: ${WATCHTOWER_CLEANUP}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

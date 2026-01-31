@@ -7,7 +7,7 @@ target "production" {
   dockerfile = "Dockerfile"
   platforms = ["linux/amd64", "linux/arm64"]
   args = {
-    PHP_VERSION = "8.2"
+    PHP_VERSION = "8.4"
     PHPSTAGE = "production"
     COMPOSER_VERSION = "2.8"
     VRELEASE = "master"
@@ -23,7 +23,7 @@ target "development" {
   dockerfile = "Dockerfile"
   platforms = ["linux/amd64", "linux/arm64"]
   args = {
-    PHP_VERSION = "8.4"
+    PHP_VERSION = "8.5"
     PHPSTAGE = "development"
     COMPOSER_VERSION = "2.8"
     VRELEASE = "dev"

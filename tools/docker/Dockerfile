@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/php
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.4
 ARG COMPOSER_VERSION=2.8
 
 FROM php:${PHP_VERSION}-apache AS final-stage
