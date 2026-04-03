@@ -227,3 +227,42 @@ function getTable() {
         }
     });
 }
+
+function exportTableToCSV(selector, filename) {
+    var csv = [];
+    var rows = document.querySelectorAll(selector + " tr");
+
+    var datePrefix = moment().format('YYYY-MM-DD');
+    filename = datePrefix + '-' + filename;
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+
+        if (rows[i].style.display === 'none') {
+            continue;
+        }
+
+        for (var j = 0; j < cols.length; j++) {
+            var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, "").replace(/(\s\s)/gm, " ");
+            row.push(data);
+        }
+        csv.push(row.join(";"));
+    }
+
+    downloadCSV(csv.join("\n"), filename);
+}
+
+function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    csvFile = new Blob(["\uFEFF" + csv], {type: "text/csv;charset=utf-8;"});
+
+    downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}

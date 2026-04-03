@@ -52,6 +52,41 @@ if (!scriptsList) {
   };
 }
 
+// Gestionnaires de copie dans le presse-papiers pour les informations de contact des patients et leurs correspondants
+$('body').on('click', '.copyPatientEmail, .copyPatientPhone, .copyCorrespondant', function(e){
+  e.preventDefault();
+  var $btn = $(this);
+  var val = $btn.data('email') || $btn.data('phone');
+  if (!val) return;
+
+  function showSuccess() {
+    var $icon = $btn.find('i');
+    var oldClass = $icon.attr('class') || '';
+    $icon.attr('class', 'fas fa-check text-success');
+    setTimeout(function(){ $icon.attr('class', oldClass); }, 1500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(val).then(showSuccess).catch(function(){ fallbackCopy(val, showSuccess); });
+  } else {
+    fallbackCopy(val, showSuccess);
+  }
+});
+
+function fallbackCopy(text, cb) {
+  var $ta = $('<textarea>');
+  $ta.css({position: 'absolute', left: '-9999px'}).val(text);
+  $('body').append($ta);
+  $ta.select();
+  try {
+    document.execCommand('copy');
+    $ta.remove();
+    if (cb) cb();
+  } catch (e) {
+    $ta.remove();
+  }
+}
+
 var goToDicom = false;
 
 $(document).ready(function() {

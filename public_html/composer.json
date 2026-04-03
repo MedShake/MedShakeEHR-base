@@ -1,14 +1,13 @@
 {
     "config": {
-      "vendor-dir":"thirdparty",
-      "allow-plugins": {
+        "vendor-dir": "thirdparty",
+        "allow-plugins": {
             "robloach/component-installer": true,
             "composer/installers": true,
             "oomphinc/composer-installers-extender": true
         }
     },
     "repositories": [
-
         {
             "type": "package",
             "package": {
@@ -42,18 +41,6 @@
                     "url": "https://github.com/dennyferra/typewatch.git",
                     "type": "git",
                     "reference": "3.0.0"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "jquery/jquery",
-                "version": "3.6.1",
-                "source": {
-                    "url": "https://github.com/jquery/jquery.git",
-                    "type": "git",
-                    "reference": "3.6.1"
                 }
             }
         },
@@ -152,9 +139,12 @@
                     "reference": "1.1.3"
                 }
             }
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
         }
     ],
-
     "require": {
         "mattbryson/touchswipe-jquery-plugin": "1.6.18",
         "fezvrasta/popper.js": "v1.14.4",
@@ -164,17 +154,23 @@
         "dimsemenov/magnific-popup": "1.2.0",
         "dennyferra/typewatch": "3.0.0",
         "tinymce/tinymce": "^8.0.1",
-        "jquery/jquery": "3.6.1",
         "danielm/uploader": "v1.0.2",
         "brinley/jsignature": "2.1.3",
-        "fullcalendar/fullcalendar": "3.10.5",
         "swisnl/jquery-contextmenu": "2.5.0",
         "lrsjng/kjua": "v0.1.2",
         "jquery/jquery-mousewheel": "3.1.9",
         "joequery/stupid-table-plugin": "1.1.3",
         "thebingservices/codemirror": "v5.10.0",
         "fortawesome/font-awesome": "^6.7.2",
-        "fr33z00/panzoom": "v3.2.2.1+1Touch"
+        "fr33z00/panzoom": "v3.2.2.1+1Touch",
+        "npm-asset/fullcalendar--core": "^5",
+        "npm-asset/fullcalendar--daygrid": "^5",
+        "npm-asset/fullcalendar--timegrid": "^5",
+        "npm-asset/fullcalendar--interaction": "^5",
+        "npm-asset/fullcalendar--bootstrap": "^5",
+        "npm-asset/fullcalendar--moment": "^5",
+        "npm-asset/jquery": "3.6.1",
+        "npm-asset/jquery-ui": "^1.14.2"
     },
     "require-dev": {
         "chaijs/chai": "1.9.0",

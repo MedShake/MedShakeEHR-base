@@ -85,7 +85,7 @@ class msAgenda
 	 * Tableau des types de rdv
 	 * @var array
 	 */
-	private $_tabTypeRdv; 
+	private $_tabTypeRdv;
 	/**
 	 * Ajouter les jours fériés aux events
 	 * @var boolean
@@ -142,7 +142,8 @@ class msAgenda
 	 */
 	public function set_eventID($_eventID)
 	{
-		if (!is_numeric($_eventID)) throw new Exception('EventID is not numeric');
+		if (!is_numeric($_eventID))
+			throw new Exception('EventID is not numeric');
 		$this->_eventID = $_eventID;
 		return $this;
 	}
@@ -202,7 +203,8 @@ class msAgenda
 	 */
 	public function set_addPublicHolidaysToEvents($addPublicHolidaysToEvents)
 	{
-		if (!is_bool($addPublicHolidaysToEvents)) throw new Exception('addPublicHolidaysToEvents is not booleanc');
+		if (!is_bool($addPublicHolidaysToEvents))
+			throw new Exception('addPublicHolidaysToEvents is not boolean');
 		$this->_addPublicHolidaysToEvents = $addPublicHolidaysToEvents;
 	}
 
@@ -328,8 +330,8 @@ class msAgenda
 			while (!$file->eof()) {
 				$line = $file->fgets();
 				if (in_array(substr($line, 0, 4), [$startYear, $endYear])) {
-                $lineCSV = str_getcsv($line, ',', '"', '\\');
-				$tab[$lineCSV[0]] = $lineCSV;
+					$lineCSV = str_getcsv($line, ',', '"', '\\');
+					$tab[$lineCSV[0]] = $lineCSV;
 				}
 			}
 			unset($file);
@@ -410,22 +412,23 @@ class msAgenda
 	 * @param  array $e tableau datas rdv
 	 * @return array    rendez-vous formaté
 	 */
-    private function _formatEvent($e) {
-        global $p;
-        if (!isset($this->_tabTypeRdv)) {
-            if (is_file($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml')) {
-                $this->_tabTypeRdv = msYAML::yamlFileRead($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml');
-            } else {
-                $this->_tabTypeRdv = array(
-                    '[C]' => array(
-                        'descriptif' => 'Consultation',
-                        'backgroundColor' => '#2196f3',
-                        'borderColor' => '#1e88e5',
-                        'duree' => 15
-                    )
-                );
-            }
-        }
+	private function _formatEvent($e)
+	{
+		global $p;
+		if (!isset($this->_tabTypeRdv)) {
+			if (is_file($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml')) {
+				$this->_tabTypeRdv = msYAML::yamlFileRead($p['homepath'] . 'config/agendas/typesRdv' . $this->_userID . '.yml');
+			} else {
+				$this->_tabTypeRdv = array(
+					'[C]' => array(
+						'descriptif' => 'Consultation',
+						'backgroundColor' => '#2196f3',
+						'borderColor' => '#1e88e5',
+						'duree' => 15
+					)
+				);
+			}
+		}
 
 		if (isset($this->_tabTypeRdv[$e['type']]['textColor'])) {
 			$textColor = $this->_tabTypeRdv[$e['type']]['textColor'];
@@ -585,7 +588,8 @@ class msAgenda
 	 */
 	public function getHistoriquePatient($limit = 10)
 	{
-		if (!is_numeric($limit)) throw new Exception('Limit n\'est pas numérique');
+		if (!is_numeric($limit))
+			throw new Exception('Limit n\'est pas numérique');
 
 		$data['stats']['total'] = msSQL::sqlUniqueChamp(
 			"select count(id) from agenda where patientid = :patientid",
@@ -603,7 +607,7 @@ class msAgenda
 			"select count(id) from agenda where patientid = :patientid and absente='oui'",
 			['patientid' => $this->_patientID]
 		);
-		$data['historique'] = (array)msSQL::sql2tab(
+		$data['historique'] = (array) msSQL::sql2tab(
 			"select DATE_FORMAT(`start`, '%Y %m %d - %H:%i') as `start`, DATE_FORMAT(`start`, '%Y%m%d') as `dateJump`, DATE_FORMAT(`start`, '%Y-%m-%dT%TZ') as `dateiso`, `type`, `statut`, `absente`, `motif`, `userid` as agendaID from `agenda` where `patientid` = :patientid order by `start` desc limit " . $limit,
 			['patientid' => $this->_patientID]
 		);
@@ -766,7 +770,8 @@ class msAgenda
 				return $typesRdv;
 			} elseif (is_array($typesRdv)) {
 				foreach ($typesRdv as $k => $v) {
-					if (isset($v['utilisable']) and $v['utilisable'] == "non") unset($typesRdv[$k]);
+					if (isset($v['utilisable']) and $v['utilisable'] == "non")
+						unset($typesRdv[$k]);
 				}
 				return $typesRdv;
 			} else {
@@ -834,9 +839,12 @@ class msAgenda
 
 	public function getLastActiveEventsForPatient($limit = 1, $inTypes = [])
 	{
-		if (!is_numeric($limit)) throw new Exception('Limit n\'est pas numérique');
-		if (!msTools::validateDate($this->_startDate, "Y-m-d H:i:s")) throw new Exception('StartDate n\'est pas valide');
-		if (!msTools::validateDate($this->_endDate, "Y-m-d H:i:s")) throw new Exception('EndDate n\'est pas valide');
+		if (!is_numeric($limit))
+			throw new Exception('Limit n\'est pas numérique');
+		if (!msTools::validateDate($this->_startDate, "Y-m-d H:i:s"))
+			throw new Exception('StartDate n\'est pas valide');
+		if (!msTools::validateDate($this->_endDate, "Y-m-d H:i:s"))
+			throw new Exception('EndDate n\'est pas valide');
 
 		$marqueurs = [
 			'patientid' => $this->_patientID,
@@ -852,7 +860,7 @@ class msAgenda
 			$whereIn = '';
 		}
 
-		return (array)msSQL::sql2tab(
+		return (array) msSQL::sql2tab(
 			"select * from agenda where patientid= :patientid and start >= :start and start <= :end and statut = 'actif' " . $whereIn . " order by start asc limit " . $limit,
 			$marqueurs
 		);

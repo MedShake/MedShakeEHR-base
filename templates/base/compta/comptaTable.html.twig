@@ -48,15 +48,13 @@
                 <th style="width:0"></th>
               {% endif %}
               <th class="text-right">Montant facturé</th>
-              <th class="text-right">Chèque</th>
-              <th class="text-right">CB</th>
-              <th class="text-right">Espèces</th>
               {% if page.secteur %}
                 <th class="text-right">TP</th>
               {% else %}
                 <th style="width:0"></th>
               {% endif %}
               <th class="text-right">Payé</th>
+              <th class="text-right">Nature</th>
               <th class="text-right">Impayé</th>
               <th></th>
           </tr>
@@ -102,15 +100,6 @@
                   <td class="text-right">
                       {{ reg.regleFacture|number_format(2, '.', ' ')|e }}
                   </td>
-                  <td class="text-right">
-                      {% if reg.regleCheque > 0%}{{ reg.regleCheque|number_format(2, '.', ' ')|e }}{% endif %}
-                  </td>
-                  <td class="text-right">
-                      {% if reg.regleCB > 0%}{{ reg.regleCB|number_format(2, '.', ' ')|e }}{% endif %}
-                  </td>
-                  <td class="text-right">
-                      {% if reg.regleEspeces > 0%}{{ reg.regleEspeces|number_format(2, '.', ' ')|e }}{% endif %}
-                  </td>
                   {% if page.secteur %}
                     <td class="text-right">
                         {% if reg.regleTiersPayeur > 0%}{{ reg.regleTiersPayeur|number_format(2, '.', ' ')|e }}{% endif %}
@@ -122,8 +111,14 @@
                       {% if reg.dejaPaye > 0%}{{ reg.dejaPaye|number_format(2, '.', ' ')|e }}{% endif %}
                   </td>
                   <td class="text-right">
+                      {% if reg.regleCheque > 0 %}Chèque
+                      {% elseif reg.regleCB > 0 %}CB
+                      {% elseif reg.regleEspeces > 0 %}Espèces
+                      {% endif %}
+                  </td>   
+                  <td class="text-right">
                       {% if reg.regleFacture - reg.dejaPaye > 0 %}{{ (reg.regleFacture-reg.dejaPaye)|number_format(2, '.', ' ')|e }}{% endif %}
-                  </td>
+                  </td>             
                   <td class="text-right">
                       {% if reg.regleFacture - reg.dejaPaye > 0 %}
                       {% set apayer = reg.regleFacture - reg.dejaPaye %}
@@ -148,15 +143,13 @@
                 <th style="width:0"></th>
               {% endif %}
               <th class="text-right">Montant facturé</th>
-              <th class="text-right">Chèque</th>
-              <th class="text-right">CB</th>
-              <th class="text-right">Espèces</th>
               {% if page.secteur %}
                 <th class="text-right">TP</th>
               {% else %}
                 <th style="width:0"></th>
               {% endif %}
               <th class="text-right">Payé</th>
+              <th class="text-right"></th>
               <th class="text-right">Impayé</th>
               <th class="text-right"></th>
           </tr>
@@ -171,15 +164,13 @@
               {% endif %}
               <th class="text-right">Totaux</th>
               <th class="text-right">{{ page.tabTot.regleFacture|number_format(2, '.', ' ')|e }}</th>
-              <th class="text-right">{{ page.tabTot.regleCheque|number_format(2, '.', ' ')|e }}</th>
-              <th class="text-right">{{ page.tabTot.regleCB|number_format(2, '.', ' ')|e }}</th>
-              <th class="text-right">{{ page.tabTot.regleEspeces|number_format(2, '.', ' ')|e }}</th>
               {% if page.secteur %}
                 <th class="text-right">{{ page.tabTot.regleTiersPayeur|number_format(2, '.', ' ')|e }}</th>
               {% else %}
                 <th style="width:0"></th>
               {% endif %}
               <th class="text-right">{{ (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur)|number_format(2, '.', ' ')|e }}</th>
+               <th class="text-right"></th>
               <th class="text-right">{{ (page.tabTot.regleFacture - (page.tabTot.regleCheque + page.tabTot.regleCB + page.tabTot.regleEspeces + page.tabTot.regleTiersPayeur))|number_format(2, '.', ' ')|e }}</th>
               <th class="text-right">{% if page.tabReg|length > 0 %}{{ page.tabReg|length }} règlement{% if page.tabReg|length > 1 %}s{% endif %}{% endif %}</th>
           </tr>

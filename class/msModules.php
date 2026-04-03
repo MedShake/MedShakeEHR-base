@@ -38,7 +38,8 @@ class msModules
 	 */
 	public static function getInstalledModulesNames()
 	{
-		return msSQL::sql2tabKey("SELECT name FROM `system` WHERE groupe='module' order by name", "name", "name");
+		$modules = msSQL::sql2tabKey("SELECT name FROM `system` WHERE groupe='module' order by name", "name", "name");
+		return $modules ?: [];
 	}
 
 	/**

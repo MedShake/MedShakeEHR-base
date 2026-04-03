@@ -401,6 +401,9 @@ class msSQL
     {
         global $p;
 
+        // Vérifier et créer le dossier de destination si nécessaire
+        msTools::checkAndBuildTargetDir(dirname($backupFile));
+
         // Si mysqldump est disponible, on l'utilise
         if ($mysqldumpPath = self::getMysqlDumpPath()) {
             $command = sprintf(

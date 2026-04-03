@@ -60,6 +60,8 @@ twigDebug: false
 configForm: \"\"
 ...
         " > /var/www/html/config/config.yml
+mkdir -p /var/www/html/stockage/
+mkdir -p /var/www/html/backups/
 fi
 
 uid="$(id -u)"

@@ -29,11 +29,15 @@
 
 {% extends "page.html.twig" %}
 {% block title %}Agenda - {{ config.designAppName }}{% endblock %}
-
 {% block jsFiles %}
   {{ parent() }}
-  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.min.js?{{ modules.base }}'></script>
-  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/locale/fr.js?{{ modules.base }}'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--core/main.global.min.js?{{ modules.base }}'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--interaction/main.global.min.js?{{ modules.base }}'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--daygrid/main.global.min.js?{{ modules.base }}'></script>
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--timegrid/main.global.min.js?{{ modules.base }}'></script> 
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--moment/main.global.min.js?{{ modules.base }}'></script>   
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--bootstrap/main.global.min.js?{{ modules.base }}'></script>   
+  <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--core/locales/fr.global.js?{{ modules.base }}'></script>
   <script defer src='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.js?{{ modules.base }}'></script>
   {% if config.optionGeActiverVitaleLecture =='true' %}
     <script defer src="{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/js/vitale_functions.js?{{ modules.base }}"></script>
@@ -63,17 +67,20 @@
 
 {% block cssFiles %}
   {{ parent() }}
-  <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/fullcalendar/fullcalendar/dist/fullcalendar.min.css?{{ modules.base }}' rel='stylesheet' />
+  <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--common/main.min.css?{{ modules.base }}' rel='stylesheet' />
+  <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--daygrid/main.min.css?{{ modules.base }}' rel='stylesheet' />
+  <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--bootstrap/main.min.css?{{ modules.base }}' rel='stylesheet' />
+  <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/npm-asset/fullcalendar--timegrid/main.min.css?{{ modules.base }}' rel='stylesheet' />  
   <link href='{{ config.protocol }}{{ config.host }}{{ config.urlHostSuffixe }}/thirdparty/swisnl/jquery-contextmenu/dist/jquery.contextMenu.min.css?{{ modules.base }}' rel='stylesheet' />
 {% endblock %}
 
 {% block cssEmbed %}
   {{ parent() }}
-  a.eventAbsent .fc-title {
+  a.eventAbsent .fc-event-title {
     text-decoration: line-through;
   }
 
-  a.eventEnAttente .fc-title::before {
+  a.eventEnAttente .fc-event-title::before {
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     content: "\f4b8";
@@ -92,19 +99,35 @@
     padding-left: 5px;
   }
 
-  .fc-title, .fc-time {
+  .fc-event-title, .fc-event-time {
     font-size: 14px !important;
   }
 
-  .fc-right h2 {
+  .fc-toolbar-chunk h2 {
     font-size: 1.8em !important;
   }
 
-  .fc-nonbusiness {
-    background: #607d8b;
+  /* Pauses & fermetures programmées (arrière-plan) - #607d8b à 30% opacité */
+  .fc-bg-event.fc-nonbusiness,
+  div.fc-non-business {
+    background: #ced7db !important;
   }
 
-  th.fc-day-header a {
+  /* Fermetures & jours fériés (premier plan) - #607d8b à 65% opacité */
+  .fc-v-event.fc-nonbusiness,
+  .fc-h-event.fc-nonbusiness {
+    background: #889ea8 !important;
+    border-color: #889ea8 !important;
+  }
+
+  .fc-v-event.fc-nonbusiness .fc-event-main,
+  .fc-h-event.fc-nonbusiness .fc-event-main,
+  .fc-v-event.fc-nonbusiness .fc-event-title,
+  .fc-h-event.fc-nonbusiness .fc-event-title {
+    color: #ffffff !important;
+  }
+
+  th.fc-col-header-cell a {
     color : black;
   }
   {% if (config.agendaService in ['clicRDV'])==false %}
@@ -117,11 +140,11 @@
   .cursor-copy {cursor:copy}
   .cursor-cell {cursor:cell}
 
-  a.hideCalendarTime .fc-time{
+  a.hideCalendarTime .fc-event-time{
     display:none;
   }
 
-  a.hideCalendarTime .fc-title{
+  a.hideCalendarTime .fc-event-title{
     font-weight: bold;
   }
 
@@ -269,6 +292,24 @@
   </div>
 </div>
 
+
+{# modal confirmation générique (remplace window.confirm) #}
+<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="confirmModalTitle" class="modal-title font-weight-bold">Confirmation</h5>
+      </div>
+      <div class="modal-body">
+        <p id="confirmModalMessage"></p>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmModalOk" class="btn btn-primary btn-sm">Confirmer</button>
+        <button id="confirmModalCancel" class="btn btn-light btn-sm" data-dismiss="modal">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {# modal éditer off #}
 <div id="editerOff" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">

@@ -25,6 +25,7 @@
  *
  * @author Bertrand Boutillier <b.boutillier@gmail.com>
  * @contrib fr33z00 <https://github.com/fr33z00>
+ * @contrib Michaël Val
  */
 class msGetHtml
 {
@@ -77,7 +78,7 @@ class msGetHtml
 	 */
 	public function set_templatesDirectories(array $_templatesDirectories)
 	{
-		if (!array($_templatesDirectories)) {
+		if (!is_array($_templatesDirectories)) {
 			throw new Exception('TemplatesDirectories is not an array');
 		}
 		$this->_templatesDirectories = $_templatesDirectories;
@@ -263,10 +264,10 @@ class msGetHtml
 	 */
 	private function _construcDefaultTemplatesDirectories()
 	{
-		global $p;
+		global $p, $pdo;
 
 		$this->_templatesDirectories = [];
-		//templates utilisateur
+		// Templates utilisateur (le plus spécifique)
 		if (isset($p['user']['id'])) {
 			$userFolder = $p['config']['templatesFolder'] . 'templatesUser' . $p['user']['id'] . '/';
 			if (is_dir($userFolder)) {
@@ -274,38 +275,45 @@ class msGetHtml
 				$this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($userFolder, '/'));
 			}
 		}
-		//templates module
-		$moduleFolder = $p['config']['templatesFolder'] . (isset($p['user']['module']) ? $p['user']['module'] : "public");
-		if (is_dir($moduleFolder)) {
-			$this->_templatesDirectories[] = $moduleFolder;
-			$this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($moduleFolder, '/'));
-		}
 
-		//templates module non connecté (public) et contournement si base non installée (script install.php)
-		if (!isset($p['user']['module']) and isset($p['config']['sqlUser']) and !empty($p['config']['sqlUser'])) {
-			$modules = msModules::getInstalledModulesNames();
-			foreach ($modules as $module) {
-				if ($module != "base") {
-					$moduleFolder = $p['config']['templatesFolder'] . $module . '/public';
-					if (is_dir($moduleFolder)) {
-						$this->_templatesDirectories[] = $moduleFolder;
-						$this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($moduleFolder, '/'));
-					}
-				}
+		// Construire la liste des modules à scanner
+		$modulesToScan = [];
+
+		// Le module courant de l'utilisateur en premier pour la priorité
+		$currentModule = $p['user']['module'] ?? 'public';
+		$modulesToScan[] = $currentModule;
+
+		// Modules installés (gestion du cas de l'installation où la BDD n'est pas prête)
+		$installedModules = [];
+		if (isset($pdo) && $pdo instanceof PDO) {
+			try {
+				$installedModules = msModules::getInstalledModulesNames() ?: [];
+			} catch (Exception $e) {
+				// En cas d'erreur (installation), on continue avec une liste vide
+			}
+		}
+		$modulesToScan = array_merge($modulesToScan, array_keys($installedModules));
+
+		// Toujours inclure 'base' comme fallback
+		$modulesToScan[] = 'base';
+
+		// Ajout des répertoires de templates des modules
+		foreach (array_unique($modulesToScan) as $module) {
+			$moduleFolder = $p['config']['templatesFolder'] . $module . '/';
+			if (is_dir($moduleFolder)) {
+				$this->_templatesDirectories[] = $moduleFolder;
+				$this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($moduleFolder, '/'));
 			}
 		}
 
-		//templates base
-		$baseFolder = $p['config']['templatesFolder'] . "base";
-		if (is_dir($baseFolder)) {
-			$this->_templatesDirectories[] = $baseFolder;
-			$this->_templatesDirectories = array_merge($this->_templatesDirectories, msTools::getAllSubDirectories($baseFolder, '/'));
-		}
-
-		//templates pdf
+		// Templates PDF
 		if (isset($p['config']['templatesPdfFolder']) and is_dir($p['config']['templatesPdfFolder'])) {
 			$this->_templatesDirectories[] = $p['config']['templatesPdfFolder'];
 		}
+
+
+		$this->_templatesDirectories = array_values(array_unique($this->_templatesDirectories));
+
 		return $this->_templatesDirectories;
 	}
 }
