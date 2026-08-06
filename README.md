@@ -1,6 +1,3 @@
-**Les informations ci-dessous sont une rapide introduction !
-Consultez https://www.medshake.app/ pour toutes les informations sur le logiciel MedShakeEHR !**
-
 # MedShakeEHR-base
 [![latest medshakeehr-osteo tag][latest-tag]][latest-link]
 
@@ -10,9 +7,8 @@ Consultez https://www.medshake.app/ pour toutes les informations sur le logiciel
 Base pour MedShakeEHR, logiciel modulaire, libre et open source pour les praticiens santé.
 
 ## Avertissements
-Ce logiciel ne doit pas être utilisé en l'état pour la stockage de données patient sur un réseau ouvert.  
-Son utilisation doit être exclusivement limitée à un réseau privé sans utilisateur potentiellement hostile.
-Il est livré ici sans aucune garantie, conformément à la licence GPL v3.
+Ce logiciel est désormais un POC (Proof of Concept, ou "preuve de concept" en français) : il a pour but de démontrer ce que pourrait être un logiciel médical libre - parfaitement optimisé par et pour ses utilisateurs - dans le monde français (et francophone) de la santé. 
+**CE LOGICIEL NE DOIT EN AUCUN CAS ÊTRE UTILISÉ POUR LE STOCKAGE DE DONNÉES RÉELLES.**  
 
 ## Utilisation
 MedShakeEHR-base constitue le coeur commun du logiciel. Il peut être accompagné de l'un ou l'autre de ses modules pour fonctionner de façon optimale.
