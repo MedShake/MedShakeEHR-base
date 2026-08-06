@@ -384,6 +384,10 @@ $(document).ready(function () {
 			alert("Vous devez entrer une posologie !");
 			return;
 		}
+		if (!$('#lapConsignesPrescription').val()) {
+			alert("Vous devez entrer une posologie reconnue valide !");
+			return;
+		}
 		e.preventDefault();
 		//envoyer
 		sendToOrdonnance();
